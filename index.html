@@ -549,6 +549,19 @@ body {
   }
 }
 
+.daily-status {
+  min-height: 18px;
+  margin-top: 4px;
+  color: #d8c27a;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 12px rgba(212,175,55,.18);
+}
+
+.daily-status.locked {
+  color: #aeb8c8;
+}
+
 /* =========================
    LUXURY RESULT POLISH
    Layout intentionally unchanged
@@ -847,6 +860,8 @@ body {
       >
       </div>
 
+      <div class="daily-status" id="dailyStatus"></div>
+
       <div class="fortune-box">
 
         <div class="fortune-label" id="fortuneLabel">
@@ -908,6 +923,9 @@ body {
 */
 
 const AURA69_URL = "https://69aura11.com/";
+const DAILY_FORTUNE_API = ""; // Put your deployed backend URL here later
+let dailyFortune = null;
+let dailyLocked = false;
 
 
 /* ==================================================
@@ -1166,65 +1184,56 @@ function startGame() {
 let selected = null;
 
 
-function choose(type) {
+async function choose(type) {
+
+  if (dailyLocked) {
+    showResult(dailyFortune.symbol || type, dailyFortune);
+    return;
+  }
 
   selected = type;
 
   initAudio();
-
   tapSound();
-
   vibrate(25);
 
-  const reveal =
-    document.getElementById("reveal");
-
-  const revealImg =
-    document.getElementById("revealImg");
-
-  const revealText =
-    document.getElementById("revealText");
-
+  const reveal = document.getElementById("reveal");
+  const revealImg = document.getElementById("revealImg");
+  const revealText = document.getElementById("revealText");
 
   const imageMap = {
-
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
-
   };
 
-
-  revealImg.src =
-    imageMap[type];
-
-
-  revealText.textContent =
-    translations[language].reveal;
-
-
-  reveal.style.display =
-    "flex";
-
-
+  revealImg.src = imageMap[type];
+  revealText.textContent = translations[language].reveal;
+  reveal.style.display = "flex";
   createParticles();
 
-
   setTimeout(() => {
-
     revealSound();
-
     vibrate([30, 40, 70]);
-
   }, 700);
 
+  try {
+    const fortune = await getDailyFortune(type);
+    dailyFortune = fortune;
+    dailyLocked = !!fortune.alreadyPlayed;
 
-  setTimeout(() => {
+    setTimeout(() => {
+      showResult(fortune.symbol || type, fortune);
+    }, 2100);
 
-    showResult(type);
+  } catch (error) {
+    console.error(error);
 
-  }, 2100);
-
+    setTimeout(() => {
+      // Safe fallback so the game still works if the backend is not configured.
+      showResult(type, null);
+    }, 2100);
+  }
 }
 
 
@@ -1232,41 +1241,24 @@ function choose(type) {
    RESULT
 ================================================== */
 
-function showResult(type) {
+function showResult(type, fortuneData = null) {
 
-  const reveal =
-    document.getElementById("reveal");
+  document.getElementById("reveal").style.display = "none";
 
-  reveal.style.display =
-    "none";
-
-
-  const result =
-    document.getElementById("result");
-
-  const resultImg =
-    document.getElementById("resultImg");
-
+  const result = document.getElementById("result");
+  const resultImg = document.getElementById("resultImg");
 
   const imageMap = {
-
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
-
   };
 
+  resultImg.src = imageMap[type];
 
-  resultImg.src =
-    imageMap[type];
+  updateResultText(type, fortuneData);
 
-
-  updateResultText(type);
-
-
-  result.style.display =
-    "block";
-
+  result.style.display = "block";
 }
 
 
@@ -1274,90 +1266,59 @@ function showResult(type) {
    RESULT TEXT
 ================================================== */
 
-function updateResultText(type) {
+function updateResultText(type, fortuneData = null) {
 
-  const t =
-    translations[language];
+  const t = translations[language];
 
-
-  document
-    .getElementById("resultTitle")
-    .textContent =
-      t.resultTitle;
-
-
-  document
-    .getElementById("fortuneLabel")
-    .textContent =
-      t.fortuneLabel;
-
-
-  document
-    .getElementById("auraCTA")
-    .textContent =
-      t.auraCTA;
-
-
-  document
-    .getElementById("againBtn")
-    .textContent =
-      t.again;
-
-
-  document
-    .getElementById("disclaimer")
-    .textContent =
-      t.disclaimer;
-
+  document.getElementById("resultTitle").textContent = t.resultTitle;
+  document.getElementById("fortuneLabel").textContent = t.fortuneLabel;
+  document.getElementById("auraCTA").textContent = t.auraCTA;
+  document.getElementById("againBtn").textContent = t.again;
+  document.getElementById("disclaimer").textContent = t.disclaimer;
 
   let character = "";
   let fortune = "";
 
+  if (type === "dragon") character = t.dragonName;
+  if (type === "qilin") character = t.qilinName;
+  if (type === "toad") character = t.toadName;
 
-  if (type === "dragon") {
-
-    character =
-      t.dragonName;
-
-    fortune =
-      t.dragonFortune;
-
-  }
-
-
-  if (type === "qilin") {
-
-    character =
-      t.qilinName;
+  if (fortuneData) {
+    if (fortuneData.character_th && language === "th") character = fortuneData.character_th;
+    if (fortuneData.character_en && language === "en") character = fortuneData.character_en;
 
     fortune =
-      t.qilinFortune;
-
+      language === "en"
+        ? (fortuneData.fortune_en || fortuneData.fortune || "")
+        : (fortuneData.fortune_th || fortuneData.fortune || "");
   }
 
-
-  if (type === "toad") {
-
-    character =
-      t.toadName;
-
-    fortune =
-      t.toadFortune;
-
+  // Offline/local fallback keeps the current game usable.
+  if (!fortune) {
+    if (type === "dragon") fortune = t.dragonFortune;
+    if (type === "qilin") fortune = t.qilinFortune;
+    if (type === "toad") fortune = t.toadFortune;
   }
 
+  document.getElementById("resultCharacter").textContent = character;
+  document.getElementById("fortuneText").textContent = fortune;
 
-  document
-    .getElementById("resultCharacter")
-    .textContent =
-      character;
+  const status = document.getElementById("dailyStatus");
+  if (status) {
+    status.className = "daily-status" + (fortuneData && fortuneData.alreadyPlayed ? " locked" : "");
 
-
-  document
-    .getElementById("fortuneText")
-    .textContent =
-      fortune;
-
+    if (fortuneData && fortuneData.alreadyPlayed) {
+      status.textContent =
+        language === "th"
+          ? "🔒 คุณได้รับโชคของวันนี้แล้ว"
+          : "🔒 You already received today's luck";
+    } else {
+      status.textContent =
+        language === "th"
+          ? "✨ โชคประจำวันของคุณ"
+          : "✨ YOUR DAILY LUCK";
+    }
+  }
 }
 
 
@@ -1417,7 +1378,7 @@ function toggleLanguage() {
 
   if (selected) {
 
-    updateResultText(selected);
+    updateResultText(selected, dailyFortune);
 
   }
 
@@ -1431,19 +1392,17 @@ function toggleLanguage() {
 function playAgain() {
 
   tapSound();
-
   vibrate(20);
 
-  document
-    .getElementById("result")
-    .style.display = "none";
+  document.getElementById("result").style.display = "none";
 
-  document
-    .getElementById("main")
-    .style.display = "block";
+  if (dailyLocked && dailyFortune) {
+    showResult(dailyFortune.symbol, dailyFortune);
+    return;
+  }
 
+  document.getElementById("main").style.display = "block";
   selected = null;
-
 }
 
 
@@ -1534,6 +1493,56 @@ function createParticles() {
 
 }
 
+
+/* ==================================================
+   DAILY FORTUNE BACKEND
+================================================== */
+
+function getTelegramInitData() {
+  if (
+    window.Telegram &&
+    window.Telegram.WebApp &&
+    window.Telegram.WebApp.initData
+  ) {
+    return window.Telegram.WebApp.initData;
+  }
+  return "";
+}
+
+async function getDailyFortune(type) {
+
+  // Backend not configured yet: keep current local game behavior.
+  if (!DAILY_FORTUNE_API) {
+    return {
+      symbol: type,
+      alreadyPlayed: false
+    };
+  }
+
+  const initData = getTelegramInitData();
+
+  if (!initData) {
+    throw new Error("Telegram initData is missing.");
+  }
+
+  const response = await fetch(DAILY_FORTUNE_API + "/daily-fortune", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      initData: initData,
+      symbol: type,
+      language: language
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Daily fortune request failed.");
+  }
+
+  return await response.json();
+}
 
 /* ==================================================
    TELEGRAM
