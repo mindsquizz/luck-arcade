@@ -8,1542 +8,1549 @@
 
 <style>
 * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #020611;
-    color: white;
-    overflow-x: hidden;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at 50% 20%, #172d50 0%, #081323 42%, #02060c 100%);
+  color: white;
 }
 
 body {
-    min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* =========================
-   LANGUAGE
+   APP
 ========================= */
 
-.language {
-    position: fixed;
-    top: 18px;
-    right: 15px;
-    z-index: 500;
-
-    display: flex;
-    gap: 4px;
-
-    padding: 4px;
-
-    border-radius: 20px;
-
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(212,167,67,.25);
-
-    backdrop-filter: blur(10px);
+.app {
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
-
-.language button {
-    border: 0;
-    background: transparent;
-
-    color: rgba(255,255,255,.55);
-
-    padding: 6px 10px;
-    border-radius: 14px;
-
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.language button.active {
-    background: linear-gradient(135deg,#d4af37,#f6d875);
-    color: #111;
-}
-
 
 /* =========================
-   OPENING SCREEN
+   OPENING
 ========================= */
 
-#home {
-    position: fixed;
-    inset: 0;
-    z-index: 400;
+#opening {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(25,60,120,.55),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 50% 60%,
-            rgba(212,167,67,.12),
-            transparent 45%
-        ),
-        linear-gradient(
-            180deg,
-            #071329 0%,
-            #020611 100%
-        );
-
-    transition:
-        opacity .8s ease,
-        visibility .8s ease;
+  background:
+    radial-gradient(circle at center, rgba(212,175,55,.20), transparent 35%),
+    radial-gradient(circle at 50% 60%, #122542 0%, #050c17 55%, #02050a 100%);
 }
 
-#home.hide {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+.opening-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(212,175,55,.12);
+  filter: blur(45px);
+  animation: glowPulse 3s infinite alternate;
 }
 
-.home-content {
-    width: 100%;
-    max-width: 500px;
-
-    text-align: center;
-
-    padding: 30px;
+@keyframes glowPulse {
+  from { transform: scale(.85); opacity: .45; }
+  to { transform: scale(1.2); opacity: .9; }
 }
 
-
-/* =========================
-   HOME LOGO
-========================= */
-
-.home-logo {
-    width: min(240px, 65vw);
-
-    display: block;
-    margin: 0 auto;
-
-    filter:
-        drop-shadow(0 0 12px rgba(246,216,117,.35))
-        drop-shadow(0 0 40px rgba(212,167,67,.18));
-
-    animation:
-        logoFloat 4s ease-in-out infinite;
+.logo-opening {
+  width: min(72vw, 330px);
+  max-height: 180px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 22px rgba(212,175,55,.35));
+  animation: logoFloat 3s ease-in-out infinite;
 }
 
 @keyframes logoFloat {
-
-    0%,100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
+.opening-subtitle {
+  margin-top: 25px;
+  color: #d8c27a;
+  letter-spacing: 4px;
+  font-size: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.play-btn {
+  margin-top: 45px;
+  position: relative;
+  z-index: 2;
+
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 50px;
+  padding: 16px 55px;
+
+  background: linear-gradient(135deg, #f1d36a, #b98b24);
+  color: #111;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  box-shadow:
+    0 0 30px rgba(212,175,55,.35),
+    inset 0 1px rgba(255,255,255,.7);
+
+  cursor: pointer;
+}
+
+.play-btn:active {
+  transform: scale(.96);
+}
 
 /* =========================
-   HOME TITLE
+   MAIN
 ========================= */
 
-.home-title {
-    margin-top: 35px;
-
-    font-size: clamp(28px,8vw,44px);
-    font-weight: 800;
-
-    letter-spacing: 2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #fff,
-            #f6d875,
-            #fff
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+#main {
+  width: 100%;
+  height: 100%;
+  padding: 22px 16px;
+  overflow-y: auto;
+  display: none;
 }
 
-.home-subtitle {
-    margin-top: 10px;
-
-    color: rgba(255,255,255,.55);
-
-    font-size: 13px;
-    line-height: 1.6;
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-
-/* =========================
-   GOLD LINE
-========================= */
-
-.gold-line {
-    width: 100px;
-    height: 1px;
-
-    margin: 24px auto;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #d4af37,
-            transparent
-        );
+.logo-small {
+  width: 105px;
+  height: 45px;
+  object-fit: contain;
 }
 
-
-/* =========================
-   PLAY BUTTON
-========================= */
-
-.play-button {
-    position: relative;
-
-    margin-top: 22px;
-
-    width: 190px;
-    height: 58px;
-
-    border: 1px solid rgba(255,255,255,.25);
-    border-radius: 999px;
-
-    color: #111;
-
-    font-size: 17px;
-    font-weight: 900;
-
-    letter-spacing: 3px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #b88a19,
-            #f6d875,
-            #d4af37
-        );
-
-    box-shadow:
-        0 0 20px rgba(212,167,67,.25),
-        0 12px 35px rgba(0,0,0,.45);
-
-    cursor: pointer;
-
-    animation:
-        buttonPulse 2s ease-in-out infinite;
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
-}
-
-.play-button:active {
-    transform: scale(.94);
-}
-
-@keyframes buttonPulse {
-
-    0%,100% {
-        box-shadow:
-            0 0 20px rgba(212,167,67,.25),
-            0 12px 35px rgba(0,0,0,.45);
-    }
-
-    50% {
-        box-shadow:
-            0 0 35px rgba(246,216,117,.5),
-            0 15px 45px rgba(0,0,0,.55);
-    }
-}
-
-
-/* =========================
-   MAIN GAME
-========================= */
-
-#game {
-    min-height: 100vh;
-
-    opacity: 0;
-
-    transition: opacity .8s ease;
-
-    background:
-        radial-gradient(
-            circle at 50% 20%,
-            rgba(22,55,110,.45),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 20% 80%,
-            rgba(212,167,67,.08),
-            transparent 30%
-        ),
-        linear-gradient(
-            180deg,
-            #071126 0%,
-            #020611 100%
-        );
-}
-
-#game.show {
-    opacity: 1;
-}
-
-
-/* =========================
-   MAIN LOGO
-========================= */
-
-.logo-wrap {
-    text-align: center;
-    padding-top: 25px;
-}
-
-.logo {
-    width: 145px;
-    max-width: 45vw;
-
-    display: block;
-    margin: auto;
-
-    filter:
-        drop-shadow(0 0 10px rgba(212,167,67,.35));
-}
-
-
-/* =========================
-   GAME CONTAINER
-========================= */
-
-.container {
-    width: 100%;
-    max-width: 620px;
-
-    margin: auto;
-
-    padding: 18px 18px 40px;
-
-    text-align: center;
+.lang {
+  border: 1px solid rgba(212,175,55,.4);
+  background: rgba(10,20,35,.7);
+  color: #d8c27a;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .title {
-    margin-top: 12px;
-
-    font-size: clamp(28px,8vw,46px);
-    font-weight: 800;
-
-    letter-spacing: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #fff,
-            #f6d875,
-            #fff
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-top: 18px;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .subtitle {
-    margin-top: 8px;
-
-    color: rgba(255,255,255,.62);
-
-    font-size: 14px;
-    line-height: 1.5;
+  text-align: center;
+  color: #91a0b6;
+  font-size: 13px;
+  margin-top: 8px;
 }
-
 
 /* =========================
    CARDS
 ========================= */
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-
-    gap: 10px;
-
-    margin-top: 28px;
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 25px;
 }
 
-.card {
-    position: relative;
+.choice {
+  position: relative;
+  height: 245px;
+  border-radius: 20px;
+  overflow: hidden;
 
-    min-height: 235px;
+  border: 1px solid rgba(212,175,55,.30);
 
-    border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.3)),
+    rgba(7,16,28,.85);
 
-    overflow: hidden;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.35),
+    inset 0 0 30px rgba(212,175,55,.04);
 
-    cursor: pointer;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.08),
-            rgba(255,255,255,.025)
-        );
-
-    border: 1px solid rgba(212,167,67,.28);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 15px 40px rgba(0,0,0,.35);
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
+  cursor: pointer;
+  transition: .25s ease;
 }
 
-.card::before {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background:
-        radial-gradient(
-            circle at 50% 20%,
-            rgba(212,167,67,.15),
-            transparent 50%
-        );
+.choice:hover {
+  transform: translateY(-4px);
 }
 
-.card:active {
-    transform: scale(.96);
+.choice:active {
+  transform: scale(.97);
 }
 
-.card.selected {
-    transform: scale(1.03);
-
-    border-color: #f6d875;
-
-    box-shadow:
-        0 0 0 1px rgba(246,216,117,.35),
-        0 0 30px rgba(212,167,67,.45),
-        0 20px 60px rgba(0,0,0,.6);
+.choice img {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,.45));
 }
 
-.creature-img {
-    position: absolute;
+.choice-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 
-    left: 50%;
-    top: 5px;
+  padding: 13px 8px;
 
-    width: 125%;
-    height: 175px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
 
-    object-fit: contain;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0,0,0,.85)
+  );
 
-    transform: translateX(-50%);
-
-    filter:
-        drop-shadow(0 8px 15px rgba(0,0,0,.65));
-
-    transition:
-        transform .4s ease,
-        filter .4s ease;
+  color: #f4df91;
 }
 
-.card:hover .creature-img {
-    transform:
-        translateX(-50%)
-        scale(1.06);
+/* Make third card centered */
+
+.choice:nth-child(3) {
+  grid-column: 1 / 3;
+  width: 58%;
+  margin: 0 auto;
 }
-
-.card.selected .creature-img {
-    transform:
-        translateX(-50%)
-        scale(1.12);
-
-    filter:
-        drop-shadow(0 0 18px rgba(246,216,117,.65))
-        drop-shadow(0 15px 25px rgba(0,0,0,.75));
-}
-
-.card-name {
-    position: absolute;
-
-    left: 0;
-    right: 0;
-    bottom: 42px;
-
-    font-size: 15px;
-    font-weight: 800;
-}
-
-.card-desc {
-    position: absolute;
-
-    left: 0;
-    right: 0;
-    bottom: 19px;
-
-    color: rgba(255,255,255,.52);
-
-    font-size: 10px;
-}
-
 
 /* =========================
    REVEAL
 ========================= */
 
 #reveal {
-    position: fixed;
-    inset: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: none;
 
-    z-index: 999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background:
+    radial-gradient(circle at center,
+      rgba(212,175,55,.22),
+      rgba(4,10,18,.96) 48%,
+      #02050a 100%);
+}
 
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(20,45,90,.55),
-            rgba(0,0,0,.98) 65%
-        );
+.reveal-ring {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,.45);
+  box-shadow:
+    0 0 30px rgba(212,175,55,.25),
+    inset 0 0 30px rgba(212,175,55,.12);
 
+  animation: ringPulse 1.5s infinite;
+}
+
+@keyframes ringPulse {
+  0% {
+    transform: scale(.65);
     opacity: 0;
-    visibility: hidden;
-
-    transition:
-        opacity .5s ease,
-        visibility .5s ease;
-}
-
-#reveal.show {
+  }
+  40% {
     opacity: 1;
-    visibility: visible;
-}
-
-.reveal-content {
-    position: relative;
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    overflow: hidden;
-}
-
-.reveal-glow {
-    position: absolute;
-
-    width: 220px;
-    height: 220px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(246,216,117,.55),
-            rgba(212,167,67,.15) 35%,
-            transparent 70%
-        );
-
-    filter: blur(5px);
-
-    animation:
-        glowPulse 1.5s infinite alternate;
-}
-
-@keyframes glowPulse {
-
-    from {
-        transform: scale(.75);
-        opacity: .45;
-    }
-
-    to {
-        transform: scale(1.35);
-        opacity: 1;
-    }
-}
-
-.ring {
-    position: absolute;
-
-    width: 100px;
-    height: 100px;
-
-    border:
-        1px solid rgba(246,216,117,.55);
-
-    border-radius: 50%;
-
-    animation:
-        ringExpand 2s ease-out infinite;
-}
-
-.ring:nth-child(2) {
-    animation-delay: .4s;
-}
-
-.ring:nth-child(3) {
-    animation-delay: .8s;
-}
-
-@keyframes ringExpand {
-
-    0% {
-        transform: scale(.3);
-        opacity: .8;
-    }
-
-    100% {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-.reveal-image {
-    position: relative;
-
-    z-index: 5;
-
-    width: min(82vw,430px);
-    height: min(58vh,430px);
-
-    object-fit: contain;
-
+  }
+  100% {
+    transform: scale(1.5);
     opacity: 0;
-
-    transform:
-        scale(.45)
-        rotate(-8deg);
-
-    filter:
-        drop-shadow(0 0 30px rgba(246,216,117,.1));
-
-    transition:
-        opacity .4s ease,
-        transform 1s cubic-bezier(.16,1,.3,1),
-        filter 1s ease;
-}
-
-#reveal.show .reveal-image {
-    opacity: 1;
-
-    transform:
-        scale(1)
-        rotate(0deg);
-
-    filter:
-        drop-shadow(0 0 35px rgba(246,216,117,.65))
-        drop-shadow(0 20px 40px rgba(0,0,0,.8));
+  }
 }
 
 .reveal-text {
-    position: relative;
-
-    z-index: 10;
-
-    margin-top: -5px;
-
-    font-size: 15px;
-
-    color: rgba(255,255,255,.7);
-
-    letter-spacing: 2px;
-
-    animation:
-        textPulse 1.2s infinite alternate;
+  z-index: 2;
+  color: #d8c27a;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
 }
 
-.reveal-text.done {
-    display: none;
+.reveal-img {
+  z-index: 2;
+  width: 280px;
+  height: 280px;
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 0 30px rgba(212,175,55,.55));
+
+  animation: revealCharacter 1.5s ease forwards;
 }
 
-@keyframes textPulse {
-
-    from {
-        opacity: .45;
-    }
-
-    to {
-        opacity: 1;
-    }
+@keyframes revealCharacter {
+  0% {
+    transform: scale(.15) rotate(-10deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12) rotate(3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
 }
-
-.sparkle {
-    position: absolute;
-
-    width: 3px;
-    height: 3px;
-
-    background: #f6d875;
-
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 8px #f6d875,
-        0 0 15px rgba(246,216,117,.8);
-
-    animation:
-        sparkleFloat 2s linear forwards;
-}
-
-@keyframes sparkleFloat {
-
-    0% {
-        opacity: 0;
-        transform:
-            translateY(30px)
-            scale(.4);
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-
-        transform:
-            translateY(-180px)
-            scale(1.2);
-    }
-}
-
 
 /* =========================
    RESULT
 ========================= */
 
 #result {
-    position: fixed;
-    inset: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  display: none;
 
-    z-index: 1000;
+  overflow-y: auto;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 35px 20px 30px;
 
-    padding: 20px;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(15,40,80,.75),
-            rgba(1,5,15,.98) 70%
-        );
-
-    opacity: 0;
-    visibility: hidden;
-
-    transition:
-        opacity .5s ease,
-        visibility .5s ease;
+  background:
+    radial-gradient(circle at 50% 20%,
+      rgba(212,175,55,.22),
+      transparent 35%),
+    linear-gradient(180deg, #071426, #02060c 75%);
 }
 
-#result.show {
-    opacity: 1;
-    visibility: visible;
+.result-inner {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.result-box {
-    width: min(92vw,430px);
-
-    padding: 26px 20px 24px;
-
-    text-align: center;
-
-    border-radius: 26px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.10),
-            rgba(255,255,255,.035)
-        );
-
-    border:
-        1px solid rgba(246,216,117,.35);
-
-    box-shadow:
-        0 30px 80px rgba(0,0,0,.65),
-        0 0 40px rgba(212,167,67,.12);
-
-    backdrop-filter: blur(20px);
-
-    transform: scale(.85);
-
-    transition:
-        transform .6s cubic-bezier(.16,1,.3,1);
-}
-
-#result.show .result-box {
-    transform: scale(1);
-}
-
-.result-image {
-    width: 210px;
-    height: 210px;
-
-    object-fit: contain;
-
-    filter:
-        drop-shadow(0 0 25px rgba(246,216,117,.45));
+.result-small {
+  color: #d8c27a;
+  letter-spacing: 3px;
+  font-size: 11px;
+  margin-top: 8px;
 }
 
 .result-title {
-    margin-top: 5px;
+  font-size: 28px;
+  line-height: 1.25;
+  margin: 13px 0 8px;
 
-    font-size: 28px;
-    font-weight: 800;
+  background: linear-gradient(
+    90deg,
+    #fff,
+    #f0d36b,
+    #fff
+  );
 
-    background:
-        linear-gradient(
-            90deg,
-            #fff,
-            #f6d875,
-            #fff
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.result-message {
-    margin-top: 10px;
+.result-img {
+  width: 230px;
+  height: 230px;
+  object-fit: contain;
 
-    color: rgba(255,255,255,.68);
+  margin: 5px 0 0;
 
-    font-size: 14px;
-    line-height: 1.6;
+  filter:
+    drop-shadow(0 0 25px rgba(212,175,55,.45));
+
+  animation: resultFloat 3s ease-in-out infinite;
 }
 
-.play-again {
-    margin-top: 22px;
-
-    border: 0;
-
-    border-radius: 999px;
-
-    padding: 13px 30px;
-
-    font-size: 14px;
-    font-weight: 800;
-
-    color: #111;
-
-    background:
-        linear-gradient(
-            135deg,
-            #c99d28,
-            #f6d875,
-            #c99d28
-        );
-
-    box-shadow:
-        0 8px 25px rgba(212,167,67,.25);
-
-    cursor: pointer;
+@keyframes resultFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
 }
 
-.play-again:active {
-    transform: scale(.95);
+.result-character {
+  color: #f0d36b;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: -3px;
 }
 
+.fortune-box {
+  width: 100%;
+  max-width: 420px;
+
+  margin-top: 18px;
+  padding: 22px 18px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(212,175,55,.10),
+      rgba(255,255,255,.025)
+    );
+
+  border: 1px solid rgba(212,175,55,.28);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.35),
+    inset 0 0 25px rgba(212,175,55,.04);
+}
+
+.fortune-label {
+  color: #9daabd;
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.fortune-text {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #f6f2e8;
+}
+
+.aura-cta {
+  width: 100%;
+  max-width: 420px;
+
+  margin-top: 18px;
+
+  padding: 16px 20px;
+
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,.35);
+
+  background:
+    linear-gradient(135deg, #f1d36a, #b88720);
+
+  color: #111;
+  font-size: 15px;
+  font-weight: bold;
+
+  box-shadow:
+    0 0 30px rgba(212,175,55,.25);
+
+  cursor: pointer;
+}
+
+.aura-cta:active {
+  transform: scale(.97);
+}
+
+.again-btn {
+  margin-top: 12px;
+
+  border: 1px solid rgba(212,175,55,.30);
+  background: rgba(10,20,35,.7);
+  color: #d8c27a;
+
+  padding: 13px 25px;
+  border-radius: 50px;
+
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.disclaimer {
+  margin-top: 16px;
+  max-width: 390px;
+
+  color: #66758b;
+  font-size: 10px;
+  line-height: 1.5;
+}
 
 /* =========================
-   DESKTOP
+   PARTICLES
 ========================= */
 
-@media (min-width:700px) {
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #e8c75b;
 
-    .cards {
-        gap: 18px;
-    }
+  box-shadow: 0 0 8px #e8c75b;
 
-    .card {
-        min-height: 310px;
-    }
+  pointer-events: none;
 
-    .creature-img {
-        height: 230px;
-    }
-
-    .card-name {
-        bottom: 50px;
-        font-size: 17px;
-    }
-
-    .card-desc {
-        bottom: 25px;
-        font-size: 11px;
-    }
+  animation: particleMove 2s linear forwards;
 }
+
+@keyframes particleMove {
+  0% {
+    transform: translate(0,0) scale(.5);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(
+      calc((var(--x) - .5) * 500px),
+      calc((var(--y) - .5) * 700px)
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+@media (max-height: 700px) {
+  .choice {
+    height: 205px;
+  }
+
+  .choice img {
+    height: 155px;
+  }
+
+  .result-img {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+/* =========================
+   LUXURY RESULT POLISH
+   Layout intentionally unchanged
+========================= */
+
+#result {
+  background:
+    radial-gradient(circle at 50% 16%,
+      rgba(212,175,55,.26),
+      transparent 34%),
+    radial-gradient(circle at 50% 48%,
+      rgba(212,175,55,.055),
+      transparent 52%),
+    linear-gradient(180deg, #071426, #02060c 75%);
+}
+
+.result-inner {
+  position: relative;
+}
+
+.result-small {
+  text-shadow: 0 0 14px rgba(212,175,55,.20);
+  animation: resultFadeUp .65s ease both;
+}
+
+.result-title {
+  text-shadow:
+    0 0 18px rgba(212,175,55,.20),
+    0 0 35px rgba(212,175,55,.08);
+  animation: resultTitleReveal .8s .08s ease both;
+}
+
+.result-img {
+  filter:
+    drop-shadow(0 0 28px rgba(212,175,55,.55))
+    drop-shadow(0 12px 20px rgba(0,0,0,.42));
+  animation:
+    resultFloat 3s ease-in-out infinite,
+    resultImageReveal .9s .16s ease both;
+}
+
+.result-character {
+  text-shadow:
+    0 0 12px rgba(240,211,107,.28),
+    0 0 26px rgba(212,175,55,.12);
+  animation: resultFadeUp .7s .22s ease both;
+}
+
+.fortune-box {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(212,175,55,.13),
+      rgba(255,255,255,.028)
+    );
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.38),
+    0 0 28px rgba(212,175,55,.055),
+    inset 0 0 25px rgba(212,175,55,.055);
+  animation: resultFadeUp .75s .28s ease both;
+}
+
+.fortune-label {
+  text-shadow: 0 0 10px rgba(212,175,55,.12);
+}
+
+.fortune-text {
+  text-shadow: 0 1px 12px rgba(0,0,0,.25);
+}
+
+.aura-cta {
+  box-shadow:
+    0 0 30px rgba(212,175,55,.30),
+    0 10px 30px rgba(0,0,0,.28),
+    inset 0 1px rgba(255,255,255,.7);
+  animation:
+    resultFadeUp .75s .36s ease both,
+    ctaGlow 2.8s 1.1s ease-in-out infinite;
+}
+
+.again-btn {
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  animation: resultFadeUp .75s .42s ease both;
+}
+
+.disclaimer {
+  animation: resultFadeUp .75s .48s ease both;
+}
+
+@keyframes resultFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes resultTitleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.985);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes resultImageReveal {
+  from {
+    opacity: 0;
+    transform: scale(.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ctaGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 30px rgba(212,175,55,.26),
+      0 10px 30px rgba(0,0,0,.28),
+      inset 0 1px rgba(255,255,255,.7);
+  }
+  50% {
+    box-shadow:
+      0 0 42px rgba(212,175,55,.40),
+      0 10px 30px rgba(0,0,0,.28),
+      inset 0 1px rgba(255,255,255,.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-small,
+  .result-title,
+  .result-img,
+  .result-character,
+  .fortune-box,
+  .aura-cta,
+  .again-btn,
+  .disclaimer {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 
-
 <body>
 
+<div class="app">
 
-<!-- LANGUAGE -->
+  <!-- =====================
+       OPENING
+  ====================== -->
 
-<div class="language">
+  <section id="opening">
 
-    <button
-        id="thBtn"
-        class="active"
-        onclick="setLanguage('th')">
-        ไทย
+    <div class="opening-glow"></div>
+
+    <img
+      src="aura69.png"
+      class="logo-opening"
+      alt="AURA69"
+    >
+
+    <div class="opening-subtitle">
+      YOUR LUCK. YOUR CHOICE.
+    </div>
+
+    <button class="play-btn" onclick="startGame()">
+      PLAY
     </button>
 
-    <button
-        id="enBtn"
-        onclick="setLanguage('en')">
+  </section>
+
+
+  <!-- =====================
+       MAIN GAME
+  ====================== -->
+
+  <main id="main">
+
+    <div class="topbar">
+
+      <img
+        src="aura69.png"
+        class="logo-small"
+        alt="AURA69"
+      >
+
+      <button
+        class="lang"
+        onclick="toggleLanguage()"
+        id="langButton"
+      >
         EN
-    </button>
+      </button>
 
-</div>
+    </div>
+
+    <div class="title" id="title">
+      เลือกโชคของคุณ
+    </div>
+
+    <div class="subtitle" id="subtitle">
+      เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ
+    </div>
 
 
-<!-- =========================
-     HOME SCREEN
-========================= -->
+    <div class="choices">
 
-<div id="home">
+      <div class="choice" onclick="choose('dragon')">
+        <img src="dragon.png" alt="Dragon">
+        <div class="choice-name" id="dragonName">
+          🐉 มังกร
+        </div>
+      </div>
 
-    <div class="home-content">
 
-        <img
-            class="home-logo"
-            src="aura69.png"
-            alt="AURA69"
+      <div class="choice" onclick="choose('qilin')">
+        <img src="qilin.png" alt="Qilin">
+        <div class="choice-name" id="qilinName">
+          🦌 กิเลน
+        </div>
+      </div>
+
+
+      <div class="choice" onclick="choose('toad')">
+        <img src="toad.png" alt="Golden Toad">
+        <div class="choice-name" id="toadName">
+          🐸 คางคกทอง
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================
+       CINEMATIC REVEAL
+  ====================== -->
+
+  <section id="reveal">
+
+    <div class="reveal-ring"></div>
+
+    <div class="reveal-text" id="revealText">
+      กำลังเปิดโชคของคุณ...
+    </div>
+
+    <img
+      id="revealImg"
+      class="reveal-img"
+      src=""
+      alt=""
+    >
+
+  </section>
+
+
+  <!-- =====================
+       RESULT
+  ====================== -->
+
+  <section id="result">
+
+    <div class="result-inner">
+
+      <div class="result-small">
+        AURA69 • YOUR LUCK
+      </div>
+
+      <div class="result-title" id="resultTitle">
+        ✨ โชคของคุณถูกเปิดแล้ว ✨
+      </div>
+
+      <img
+        id="resultImg"
+        class="result-img"
+        src=""
+        alt=""
+      >
+
+      <div
+        class="result-character"
+        id="resultCharacter"
+      >
+      </div>
+
+      <div class="fortune-box">
+
+        <div class="fortune-label" id="fortuneLabel">
+          คำทำนายของคุณ
+        </div>
+
+        <div
+          class="fortune-text"
+          id="fortuneText"
         >
-
-        <div
-            class="home-title"
-            id="homeTitle">
-            Choose Your Luck
         </div>
 
-        <div
-            class="home-subtitle"
-            id="homeSubtitle">
-            เปิดโชคของคุณ
-        </div>
+      </div>
 
-        <div class="gold-line"></div>
 
-        <button
-            class="play-button"
-            onclick="startGame()"
-            id="playButton">
-            PLAY
-        </button>
+      <button
+        class="aura-cta"
+        onclick="auraCTA()"
+        id="auraCTA"
+      >
+        ✨ รับโชคต่อที่ AURA69
+      </button>
+
+
+      <button
+        class="again-btn"
+        onclick="playAgain()"
+        id="againBtn"
+      >
+        ↻ เล่นอีกครั้ง
+      </button>
+
+
+      <div class="disclaimer" id="disclaimer">
+        เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์
+        ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง
+      </div>
 
     </div>
 
-</div>
-
-
-<!-- =========================
-     GAME
-========================= -->
-
-<div id="game">
-
-    <div class="logo-wrap">
-
-        <img
-            class="logo"
-            src="aura69.png"
-            alt="AURA69">
-
-    </div>
-
-
-    <div class="container">
-
-        <div
-            class="title"
-            id="title">
-            เลือกโชคของคุณ
-        </div>
-
-        <div
-            class="subtitle"
-            id="subtitle">
-            เลือกหนึ่งสัญลักษณ์ แล้วเปิดคำทำนายแห่งโชคของคุณ
-        </div>
-
-        <div class="gold-line"></div>
-
-
-        <div class="cards">
-
-
-            <!-- DRAGON -->
-
-            <div
-                class="card"
-                onclick="chooseLuck('dragon',this)">
-
-                <img
-                    class="creature-img"
-                    src="dragon.png"
-                    alt="Dragon">
-
-                <div
-                    class="card-name"
-                    data-th="มังกร"
-                    data-en="Dragon">
-                    มังกร
-                </div>
-
-                <div
-                    class="card-desc"
-                    data-th="พลัง • อำนาจ"
-                    data-en="Power • Strength">
-                    พลัง • อำนาจ
-                </div>
-
-            </div>
-
-
-            <!-- QILIN -->
-
-            <div
-                class="card"
-                onclick="chooseLuck('qilin',this)">
-
-                <img
-                    class="creature-img"
-                    src="qilin.png"
-                    alt="Qilin">
-
-                <div
-                    class="card-name"
-                    data-th="กิเลน"
-                    data-en="Qilin">
-                    กิเลน
-                </div>
-
-                <div
-                    class="card-desc"
-                    data-th="โชคลาภ • สิริมงคล"
-                    data-en="Prosperity • Fortune">
-                    โชคลาภ • สิริมงคล
-                </div>
-
-            </div>
-
-
-            <!-- TOAD -->
-
-            <div
-                class="card"
-                onclick="chooseLuck('toad',this)">
-
-                <img
-                    class="creature-img"
-                    src="toad.png"
-                    alt="Golden Toad">
-
-                <div
-                    class="card-name"
-                    data-th="คางคกทอง"
-                    data-en="Golden Toad">
-                    คางคกทอง
-                </div>
-
-                <div
-                    class="card-desc"
-                    data-th="ทรัพย์ • ความมั่งคั่ง"
-                    data-en="Wealth • Abundance">
-                    ทรัพย์ • ความมั่งคั่ง
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================
-     REVEAL
-========================= -->
-
-<div id="reveal">
-
-    <div class="reveal-content">
-
-        <div class="reveal-glow"></div>
-
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-
-        <img
-            id="revealImage"
-            class="reveal-image"
-            src=""
-            alt="">
-
-        <div
-            id="revealText"
-            class="reveal-text">
-            กำลังเปิดโชคของคุณ...
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================
-     RESULT
-========================= -->
-
-<div id="result">
-
-    <div class="result-box">
-
-        <img
-            id="resultImage"
-            class="result-image"
-            src=""
-            alt="">
-
-        <div
-            id="resultTitle"
-            class="result-title">
-            โชคของคุณ
-        </div>
-
-        <div
-            id="resultMessage"
-            class="result-message">
-        </div>
-
-        <button
-            class="play-again"
-            onclick="playAgain()"
-            id="playAgain">
-            เล่นอีกครั้ง
-        </button>
-
-    </div>
+  </section>
 
 </div>
 
 
 <script>
 
-/* =========================
-   TELEGRAM
-========================= */
+/* ==================================================
+   SETTINGS
+================================================== */
 
-if (window.Telegram && Telegram.WebApp) {
+/*
+   ใส่ URL เว็บไซต์ AURA69 ของคุณตรงนี้ภายหลัง
 
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+   ตัวอย่าง:
+   const AURA69_URL = "https://yourwebsite.com";
 
-}
+   ตอนนี้ปล่อยว่างไว้ก่อน
+*/
+
+const AURA69_URL = "";
 
 
-/* =========================
+/* ==================================================
    LANGUAGE
-========================= */
+================================================== */
 
-let currentLanguage = "th";
-
-
-function setLanguage(lang) {
-
-    currentLanguage = lang;
+let language = "th";
 
 
-    document
-        .getElementById("thBtn")
-        .classList
-        .toggle("active", lang === "th");
+const translations = {
+
+  th: {
+
+    title: "เลือกโชคของคุณ",
+
+    subtitle:
+      "เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ",
+
+    dragon:
+      "🐉 มังกร",
+
+    qilin:
+      "🦌 กิเลน",
+
+    toad:
+      "🐸 คางคกทอง",
+
+    reveal:
+      "กำลังเปิดโชคของคุณ...",
+
+    resultTitle:
+      "✨ โชคของคุณถูกเปิดแล้ว ✨",
+
+    fortuneLabel:
+      "คำทำนายของคุณ",
+
+    dragonFortune:
+      "พลังแห่งความมั่นใจกำลังพาคุณไปสู่โอกาสใหม่ จงเชื่อในตัวเองและกล้าที่จะก้าวไปข้างหน้า",
+
+    qilinFortune:
+      "จังหวะแห่งความก้าวหน้าและสิ่งดี ๆ กำลังเข้ามา เปิดใจรับโอกาสใหม่ที่กำลังปรากฏตรงหน้า",
+
+    toadFortune:
+      "พลังแห่งทรัพย์และความอุดมสมบูรณ์กำลังเปิดออก ใช้โอกาสอย่างฉลาดและสร้างจังหวะของตัวเอง",
+
+    dragonName:
+      "🐉 มังกร",
+
+    qilinName:
+      "🦌 กิเลน",
+
+    toadName:
+      "🐸 คางคกทอง",
+
+    auraCTA:
+      "✨ รับโชคต่อที่ AURA69",
+
+    again:
+      "↻ เล่นอีกครั้ง",
+
+    disclaimer:
+      "เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์ ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง"
+
+  },
 
 
-    document
-        .getElementById("enBtn")
-        .classList
-        .toggle("active", lang === "en");
+  en: {
 
+    title:
+      "Choose Your Luck",
 
-    if (lang === "th") {
+    subtitle:
+      "Choose one symbol and reveal your luck",
 
-        document.getElementById("homeTitle")
-            .textContent = "เลือกโชคของคุณ";
+    dragon:
+      "🐉 Dragon",
 
-        document.getElementById("homeSubtitle")
-            .textContent = "เปิดโชคของคุณ";
+    qilin:
+      "🦌 Qilin",
 
-        document.getElementById("title")
-            .textContent = "เลือกโชคของคุณ";
+    toad:
+      "🐸 Golden Toad",
 
-        document.getElementById("subtitle")
-            .textContent =
-            "เลือกหนึ่งสัญลักษณ์ แล้วเปิดคำทำนายแห่งโชคของคุณ";
+    reveal:
+      "Revealing your luck...",
 
-        document.getElementById("playAgain")
-            .textContent = "เล่นอีกครั้ง";
+    resultTitle:
+      "✨ Your Luck Has Been Revealed ✨",
 
-    } else {
+    fortuneLabel:
+      "YOUR FORTUNE",
 
-        document.getElementById("homeTitle")
-            .textContent = "Choose Your Luck";
+    dragonFortune:
+      "The power of confidence is opening new opportunities for you. Trust yourself and dare to move forward.",
 
-        document.getElementById("homeSubtitle")
-            .textContent = "Reveal your fortune";
+    qilinFortune:
+      "A wave of progress and positive opportunities is approaching. Stay open to the possibilities appearing before you.",
 
-        document.getElementById("title")
-            .textContent = "Choose Your Luck";
+    toadFortune:
+      "The energy of wealth and abundance is opening up. Use opportunities wisely and create your own momentum.",
 
-        document.getElementById("subtitle")
-            .textContent =
-            "Choose one symbol and reveal your fortune";
+    dragonName:
+      "🐉 Dragon",
 
-        document.getElementById("playAgain")
-            .textContent = "Play Again";
+    qilinName:
+      "🦌 Qilin",
 
-    }
+    toadName:
+      "🐸 Golden Toad",
 
+    auraCTA:
+      "✨ Continue Your Luck at AURA69",
 
-    document
-        .querySelectorAll("[data-th]")
-        .forEach(el => {
+    again:
+      "↻ Play Again",
 
-            el.textContent =
-                lang === "th"
-                    ? el.dataset.th
-                    : el.dataset.en;
+    disclaimer:
+      "This game is created for entertainment and brand experience. Game results do not affect real-money betting or rewards."
 
-        });
-
-}
-
-
-/* =========================
-   START GAME
-========================= */
-
-function startGame() {
-
-    const home =
-        document.getElementById("home");
-
-    const game =
-        document.getElementById("game");
-
-
-    home.classList.add("hide");
-
-
-    setTimeout(() => {
-
-        game.classList.add("show");
-
-    }, 250);
-
-}
-
-
-/* =========================
-   GAME DATA
-========================= */
-
-const luckData = {
-
-    dragon: {
-
-        image: "dragon.png",
-
-        th: {
-            title: "มังกรแห่งพลัง",
-            message:
-            "พลังและความกล้ากำลังเปิดทางให้คุณ ก้าวไปข้างหน้าด้วยความมั่นใจ และอย่ากลัวที่จะเลือกสิ่งที่ยิ่งใหญ่"
-        },
-
-        en: {
-            title: "Dragon of Power",
-            message:
-            "Power and courage are opening a new path for you. Move forward with confidence and embrace bold choices."
-        }
-
-    },
-
-
-    qilin: {
-
-        image: "qilin.png",
-
-        th: {
-            title: "กิเลนแห่งสิริมงคล",
-            message:
-            "พลังแห่งความสงบและโชคดีอยู่รอบตัวคุณ จังหวะใหม่กำลังเข้ามา เปิดใจรับโอกาสที่กำลังเกิดขึ้น"
-        },
-
-        en: {
-            title: "Qilin of Fortune",
-            message:
-            "A peaceful energy surrounds you. A new opportunity may be closer than you think. Stay open and trust your timing."
-        }
-
-    },
-
-
-    toad: {
-
-        image: "toad.png",
-
-        th: {
-            title: "คางคกทองแห่งทรัพย์",
-            message:
-            "สัญลักษณ์แห่งความมั่งคั่งกำลังส่งพลังให้คุณ มองเห็นคุณค่าของโอกาสเล็ก ๆ และเปลี่ยนมันให้กลายเป็นสิ่งที่ยิ่งใหญ่"
-        },
-
-        en: {
-            title: "Golden Toad of Wealth",
-            message:
-            "The energy of abundance surrounds you. Notice the small opportunities around you and turn them into something meaningful."
-        }
-
-    }
+  }
 
 };
 
 
-let isPlaying = false;
+/* ==================================================
+   AUDIO
+================================================== */
+
+let audioCtx = null;
+let soundEnabled = true;
 
 
-/* =========================
-   CHOOSE LUCK
-========================= */
+function initAudio() {
 
-function chooseLuck(type, card) {
+  if (!audioCtx) {
+    audioCtx =
+      new (window.AudioContext ||
+           window.webkitAudioContext)();
+  }
 
-    if (isPlaying) return;
-
-    isPlaying = true;
-
-
-    document
-        .querySelectorAll(".card")
-        .forEach(c =>
-            c.classList.remove("selected")
-        );
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
 
 
-    card.classList.add("selected");
+function tone(
+  frequency,
+  duration,
+  type = "sine",
+  volume = 0.04
+) {
+
+  if (!soundEnabled) return;
+
+  initAudio();
+
+  const oscillator =
+    audioCtx.createOscillator();
+
+  const gain =
+    audioCtx.createGain();
+
+  oscillator.type = type;
+
+  oscillator.frequency.value =
+    frequency;
+
+  gain.gain.setValueAtTime(
+    volume,
+    audioCtx.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioCtx.currentTime + duration
+  );
+
+  oscillator.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  oscillator.start();
+
+  oscillator.stop(
+    audioCtx.currentTime + duration
+  );
+}
 
 
-    const data =
-        luckData[type];
+function tapSound() {
+  tone(500, .08, "sine", .035);
+}
 
 
-    const reveal =
-        document.getElementById("reveal");
+function revealSound() {
 
-    const revealImage =
-        document.getElementById("revealImage");
+  tone(350, .18, "sine", .035);
 
-    const revealText =
-        document.getElementById("revealText");
+  setTimeout(() => {
+    tone(500, .18, "sine", .035);
+  }, 120);
 
-
-    revealImage.src =
-        data.image;
-
-
-    revealText.classList.remove("done");
-
-
-    revealText.textContent =
-        currentLanguage === "th"
-            ? "กำลังเปิดโชคของคุณ..."
-            : "Revealing your luck...";
-
-
-    createSparkles();
-
-
-    reveal.classList.add("show");
-
-
-    setTimeout(() => {
-
-        revealText.classList.add("done");
-
-    },1200);
-
-
-    setTimeout(() => {
-
-        showResult(type);
-
-    },2400);
+  setTimeout(() => {
+    tone(760, .35, "sine", .055);
+  }, 240);
 
 }
 
 
-/* =========================
-   SPARKLES
-========================= */
+/* ==================================================
+   HAPTICS
+================================================== */
 
-function createSparkles() {
+function vibrate(pattern) {
 
-    const container =
-        document.querySelector(".reveal-content");
+  if (
+    navigator.vibrate &&
+    window.Telegram &&
+    window.Telegram.WebApp
+  ) {
 
+    try {
+      navigator.vibrate(pattern);
+    } catch(e) {}
 
-    for(let i=0;i<28;i++) {
-
-        const sparkle =
-            document.createElement("div");
-
-
-        sparkle.className =
-            "sparkle";
-
-
-        sparkle.style.left =
-            Math.random()*100 + "%";
-
-
-        sparkle.style.top =
-            (45 + Math.random()*40) + "%";
-
-
-        sparkle.style.animationDelay =
-            Math.random()*.9 + "s";
-
-
-        sparkle.style.animationDuration =
-            (1.2 + Math.random()*1.4) + "s";
-
-
-        container.appendChild(sparkle);
-
-
-        setTimeout(() => {
-
-            sparkle.remove();
-
-        },3000);
-
-    }
+  }
 
 }
 
 
-/* =========================
+/* ==================================================
+   OPEN GAME
+================================================== */
+
+function startGame() {
+
+  initAudio();
+
+  tapSound();
+
+  document
+    .getElementById("opening")
+    .style.display = "none";
+
+  document
+    .getElementById("main")
+    .style.display = "block";
+
+}
+
+
+/* ==================================================
+   CHOOSE
+================================================== */
+
+let selected = null;
+
+
+function choose(type) {
+
+  selected = type;
+
+  initAudio();
+
+  tapSound();
+
+  vibrate(25);
+
+  const reveal =
+    document.getElementById("reveal");
+
+  const revealImg =
+    document.getElementById("revealImg");
+
+  const revealText =
+    document.getElementById("revealText");
+
+
+  const imageMap = {
+
+    dragon: "dragon.png",
+    qilin: "qilin.png",
+    toad: "toad.png"
+
+  };
+
+
+  revealImg.src =
+    imageMap[type];
+
+
+  revealText.textContent =
+    translations[language].reveal;
+
+
+  reveal.style.display =
+    "flex";
+
+
+  createParticles();
+
+
+  setTimeout(() => {
+
+    revealSound();
+
+    vibrate([30, 40, 70]);
+
+  }, 700);
+
+
+  setTimeout(() => {
+
+    showResult(type);
+
+  }, 2100);
+
+}
+
+
+/* ==================================================
    RESULT
-========================= */
+================================================== */
 
 function showResult(type) {
 
-    const data =
-        luckData[type];
+  const reveal =
+    document.getElementById("reveal");
+
+  reveal.style.display =
+    "none";
 
 
-    const reveal =
-        document.getElementById("reveal");
+  const result =
+    document.getElementById("result");
+
+  const resultImg =
+    document.getElementById("resultImg");
 
 
-    const result =
-        document.getElementById("result");
+  const imageMap = {
+
+    dragon: "dragon.png",
+    qilin: "qilin.png",
+    toad: "toad.png"
+
+  };
 
 
-    const resultImage =
-        document.getElementById("resultImage");
+  resultImg.src =
+    imageMap[type];
 
 
-    const resultTitle =
-        document.getElementById("resultTitle");
+  updateResultText(type);
 
 
-    const resultMessage =
-        document.getElementById("resultMessage");
-
-
-    resultImage.src =
-        data.image;
-
-
-    resultTitle.textContent =
-        currentLanguage === "th"
-            ? data.th.title
-            : data.en.title;
-
-
-    resultMessage.textContent =
-        currentLanguage === "th"
-            ? data.th.message
-            : data.en.message;
-
-
-    reveal.classList.remove("show");
-
-
-    setTimeout(() => {
-
-        result.classList.add("show");
-
-    },350);
+  result.style.display =
+    "block";
 
 }
 
 
-/* =========================
+/* ==================================================
+   RESULT TEXT
+================================================== */
+
+function updateResultText(type) {
+
+  const t =
+    translations[language];
+
+
+  document
+    .getElementById("resultTitle")
+    .textContent =
+      t.resultTitle;
+
+
+  document
+    .getElementById("fortuneLabel")
+    .textContent =
+      t.fortuneLabel;
+
+
+  document
+    .getElementById("auraCTA")
+    .textContent =
+      t.auraCTA;
+
+
+  document
+    .getElementById("againBtn")
+    .textContent =
+      t.again;
+
+
+  document
+    .getElementById("disclaimer")
+    .textContent =
+      t.disclaimer;
+
+
+  let character = "";
+  let fortune = "";
+
+
+  if (type === "dragon") {
+
+    character =
+      t.dragonName;
+
+    fortune =
+      t.dragonFortune;
+
+  }
+
+
+  if (type === "qilin") {
+
+    character =
+      t.qilinName;
+
+    fortune =
+      t.qilinFortune;
+
+  }
+
+
+  if (type === "toad") {
+
+    character =
+      t.toadName;
+
+    fortune =
+      t.toadFortune;
+
+  }
+
+
+  document
+    .getElementById("resultCharacter")
+    .textContent =
+      character;
+
+
+  document
+    .getElementById("fortuneText")
+    .textContent =
+      fortune;
+
+}
+
+
+/* ==================================================
+   LANGUAGE
+================================================== */
+
+function toggleLanguage() {
+
+  language =
+    language === "th"
+      ? "en"
+      : "th";
+
+
+  const t =
+    translations[language];
+
+
+  document
+    .getElementById("langButton")
+    .textContent =
+      language === "th"
+        ? "EN"
+        : "ไทย";
+
+
+  document
+    .getElementById("title")
+    .textContent =
+      t.title;
+
+
+  document
+    .getElementById("subtitle")
+    .textContent =
+      t.subtitle;
+
+
+  document
+    .getElementById("dragonName")
+    .textContent =
+      t.dragonName;
+
+
+  document
+    .getElementById("qilinName")
+    .textContent =
+      t.qilinName;
+
+
+  document
+    .getElementById("toadName")
+    .textContent =
+      t.toadName;
+
+
+  if (selected) {
+
+    updateResultText(selected);
+
+  }
+
+}
+
+
+/* ==================================================
    PLAY AGAIN
-========================= */
+================================================== */
 
 function playAgain() {
 
-    document
-        .getElementById("result")
-        .classList
-        .remove("show");
+  tapSound();
+
+  vibrate(20);
+
+  document
+    .getElementById("result")
+    .style.display = "none";
+
+  document
+    .getElementById("main")
+    .style.display = "block";
+
+  selected = null;
+
+}
 
 
-    document
-        .querySelectorAll(".card")
-        .forEach(c =>
-            c.classList.remove("selected")
-        );
+/* ==================================================
+   AURA69 CTA
+================================================== */
+
+function auraCTA() {
+
+  tapSound();
+
+  vibrate(25);
 
 
-    isPlaying = false;
+  if (AURA69_URL) {
+
+    window.open(
+      AURA69_URL,
+      "_blank"
+    );
+
+  } else {
+
+    alert(
+      language === "th"
+        ? "ใส่ลิงก์เว็บไซต์ AURA69 ใน AURA69_URL ก่อนใช้งานปุ่มนี้"
+        : "Add your AURA69 website URL to AURA69_URL before using this button."
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   PARTICLES
+================================================== */
+
+function createParticles() {
+
+  const reveal =
+    document.getElementById("reveal");
+
+
+  for (let i = 0; i < 28; i++) {
+
+    const p =
+      document.createElement("div");
+
+    p.className =
+      "particle";
+
+
+    p.style.left =
+      (Math.random() * 100) + "%";
+
+
+    p.style.top =
+      (Math.random() * 100) + "%";
+
+
+    p.style.setProperty(
+      "--x",
+      Math.random()
+    );
+
+
+    p.style.setProperty(
+      "--y",
+      Math.random()
+    );
+
+
+    p.style.animationDelay =
+      (Math.random() * .8) + "s";
+
+
+    reveal.appendChild(p);
+
+
+    setTimeout(() => {
+
+      p.remove();
+
+    }, 2800);
+
+  }
+
+}
+
+
+/* ==================================================
+   TELEGRAM
+================================================== */
+
+if (
+  window.Telegram &&
+  window.Telegram.WebApp
+) {
+
+  try {
+
+    window.Telegram.WebApp.ready();
+
+    window.Telegram.WebApp.expand();
+
+  } catch(e) {}
 
 }
 
