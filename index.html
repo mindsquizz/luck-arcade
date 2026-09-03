@@ -99,6 +99,34 @@ body {
   z-index: 2;
 }
 
+.opening-lang {
+  margin-top: 24px;
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(212,175,55,.55);
+  border-radius: 999px;
+  padding: 8px 18px;
+  background: rgba(2,8,16,.45);
+  color: #f1d36a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 16px rgba(212,175,55,.10);
+  transition: .2s ease;
+}
+
+.opening-lang:hover {
+  transform: translateY(-1px);
+  border-color: rgba(241,211,106,.9);
+  box-shadow: 0 0 22px rgba(212,175,55,.18);
+}
+
+.opening-lang:active {
+  transform: scale(.97);
+}
+
 .play-btn {
   margin-top: 45px;
   position: relative;
@@ -474,6 +502,28 @@ body {
   transform: scale(.97);
 }
 
+.aura-share {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 12px;
+  padding: 14px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(212,175,55,.34);
+  background: rgba(10,20,35,.78);
+  color: #e5d18b;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: .04em;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.aura-share:hover {
+  border-color: rgba(212,175,55,.65);
+  box-shadow: 0 10px 30px rgba(0,0,0,.28), 0 0 18px rgba(212,175,55,.10);
+}
+.aura-share:active { transform: scale(.97); }
+
 .again-btn {
   margin-top: 12px;
 
@@ -695,6 +745,7 @@ body {
   .result-character,
   .fortune-box,
   .aura-cta,
+  .aura-share,
   .again-btn,
   .disclaimer {
     animation: none;
@@ -870,11 +921,20 @@ body {
       alt="AURA69"
     >
 
-    <div class="opening-subtitle">
+    <div class="opening-subtitle" id="openingSubtitle">
       YOUR LUCK. YOUR CHOICE.
     </div>
 
-    <button class="play-btn" onclick="startGame()">
+    <button
+      class="opening-lang"
+      onclick="toggleLanguage()"
+      id="openingLangButton"
+      aria-label="Change language"
+    >
+      EN
+    </button>
+
+    <button class="play-btn" onclick="startGame()" id="playButton">
       PLAY
     </button>
 
@@ -1009,6 +1069,15 @@ body {
 
       </div>
 
+
+      <button
+        class="aura-share"
+        type="button"
+        onclick="shareFortune()"
+        id="shareFortuneBtn"
+      >
+        🔗 <span id="shareFortuneText">SHARE MY FORTUNE</span>
+      </button>
 
       <button
         class="aura-cta"
@@ -1203,6 +1272,9 @@ const translations = {
     auraCTA:
       "✨ รับโชคต่อที่ AURA69",
 
+    shareFortune:
+      "🔗 แชร์โชคของฉัน",
+
     again:
       "↻ เล่นอีกครั้ง",
 
@@ -1348,6 +1420,9 @@ const translations = {
 
     auraCTA:
       "✨ Continue Your Luck at AURA69",
+
+    shareFortune:
+      "🔗 SHARE MY FORTUNE",
 
     again:
       "↻ Play Again",
@@ -1629,6 +1704,11 @@ function updateResultText(type) {
     .textContent =
       t.auraCTA;
 
+  document
+    .getElementById("shareFortuneText")
+    .textContent =
+      t.shareFortune;
+
 
   document
     .getElementById("againBtn")
@@ -1715,6 +1795,27 @@ function toggleLanguage() {
       language === "th"
         ? "EN"
         : "ไทย";
+
+  document
+    .getElementById("openingLangButton")
+    .textContent =
+      language === "th"
+        ? "EN"
+        : "ไทย";
+
+  document
+    .getElementById("openingSubtitle")
+    .textContent =
+      language === "th"
+        ? "YOUR LUCK. YOUR CHOICE."
+        : "โชคของคุณ ทางเลือกของคุณ";
+
+  document
+    .getElementById("playButton")
+    .textContent =
+      language === "th"
+        ? "PLAY"
+        : "เล่น";
 
 
   document
@@ -1822,6 +1923,78 @@ function closeAuraPopup(event) {
   if (popup) {
     popup.classList.remove("show");
   }
+}
+
+
+function shareFortune() {
+
+  if (!selected) return;
+
+  tapSound();
+  vibrate(20);
+
+  const t = translations[language];
+  let fortune = "";
+  let title = "";
+
+  if (selected === "dragon") {
+    title = language === "th" ? "🐉 มังกร — โชคของฉัน" : "🐉 Dragon — My Fortune";
+    fortune = t.dragonFortunes[selectedFortuneIndex];
+  }
+
+  if (selected === "qilin") {
+    title = language === "th" ? "🦌 กิเลน — โชคของฉัน" : "🦌 Qilin — My Fortune";
+    fortune = t.qilinFortunes[selectedFortuneIndex];
+  }
+
+  if (selected === "toad") {
+    title = language === "th" ? "🐸 คางคกทอง — โชคของฉัน" : "🐸 Golden Toad — My Fortune";
+    fortune = t.toadFortunes[selectedFortuneIndex];
+  }
+
+  const shareUrl = "https://t.me/aura69luckbot?startapp&mode=compact";
+
+  const shareText = language === "th"
+    ? `${title}\n${fortune}\n\n✨ เปิดโชคของคุณกับ AURA69`
+    : `${title}\n${fortune}\n\n✨ Discover your fortune with AURA69`;
+
+  // Native share sheet on supported phones/browsers.
+  if (navigator.share) {
+    navigator.share({
+      title: "AURA69 — Choose Your Luck",
+      text: shareText,
+      url: shareUrl
+    }).catch(() => {});
+    return;
+  }
+
+  // Desktop / older-browser fallback.
+  const fallbackText = `${shareText}\n${shareUrl}`;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(fallbackText)
+      .then(() => {
+        showAuraPopup(
+          language === "th"
+            ? "คัดลอกข้อความแชร์แล้ว ✨ นำไปวางใน Telegram ได้เลย"
+            : "Your fortune share text was copied ✨ Paste it into Telegram to share."
+        );
+      })
+      .catch(() => {
+        showAuraPopup(
+          language === "th"
+            ? `คัดลอกลิงก์นี้เพื่อแชร์โชคของคุณ:\n${shareUrl}`
+            : `Copy this link to share your fortune:\n${shareUrl}`
+        );
+      });
+  } else {
+    showAuraPopup(
+      language === "th"
+        ? `คัดลอกลิงก์นี้เพื่อแชร์โชคของคุณ:\n${shareUrl}`
+        : `Copy this link to share your fortune:\n${shareUrl}`
+    );
+  }
+
 }
 
 
