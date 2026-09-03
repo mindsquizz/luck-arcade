@@ -1275,6 +1275,12 @@ const translations = {
     shareFortune:
       "🔗 แชร์โชคของฉัน",
 
+    dailyUsed:
+      "วันนี้คุณเปิดคำทำนายไปแล้ว ✨ กลับมาเปิดโชคใหม่ได้พรุ่งนี้",
+
+    dailyChecking:
+      "กำลังตรวจสอบสิทธิ์การเปิดโชค...",
+
     again:
       "↻ เล่นอีกครั้ง",
 
@@ -1424,6 +1430,12 @@ const translations = {
     shareFortune:
       "🔗 SHARE MY FORTUNE",
 
+    dailyUsed:
+      "You have already revealed today’s fortune ✨ Come back tomorrow for a new one.",
+
+    dailyChecking:
+      "Checking your daily fortune...",
+
     again:
       "↻ Play Again",
 
@@ -1563,6 +1575,53 @@ function startGame() {
 
 
 /* ==================================================
+   ONE FORTUNE PER DAY
+   Simple localStorage version
+================================================== */
+
+const DAILY_FORTUNE_KEY = "aura69_daily_fortune_v2";
+let dailyFortuneUsed = false;
+let dailyFortuneChecking = false;
+
+function getTodayKey() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function getDailyFortuneRecord() {
+  try {
+    const raw = localStorage.getItem(DAILY_FORTUNE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function checkDailyFortune() {
+  const record = getDailyFortuneRecord();
+  dailyFortuneUsed = !!(record && record.date === getTodayKey());
+  return dailyFortuneUsed;
+}
+
+function saveDailyFortune(record) {
+  try {
+    localStorage.setItem(DAILY_FORTUNE_KEY, JSON.stringify(record));
+  } catch (e) {}
+  dailyFortuneUsed = true;
+}
+
+function showDailyUsedPopup() {
+  showAuraPopup(translations[language].dailyUsed);
+}
+
+// Check once when the app loads.
+checkDailyFortune();
+
+
+/* ==================================================
    CHOOSE
 ================================================== */
 
@@ -1572,10 +1631,29 @@ let selectedFortuneIndex = 0;
 
 function choose(type) {
 
+  if (dailyFortuneChecking) return;
+
+  // One reading per day.
+  if (checkDailyFortune()) {
+    showDailyUsedPopup();
+    return;
+  }
+
+  dailyFortuneChecking = true;
+
   selected = type;
 
   const fortunePool = translations[language][type + "Fortunes"];
   selectedFortuneIndex = Math.floor(Math.random() * fortunePool.length);
+
+  // Save immediately so the user cannot start another reading today.
+  saveDailyFortune({
+    date: getTodayKey(),
+    type: type,
+    fortuneIndex: selectedFortuneIndex
+  });
+
+  dailyFortuneChecking = false;
 
   initAudio();
 
@@ -1862,6 +1940,11 @@ function toggleLanguage() {
 ================================================== */
 
 function playAgain() {
+
+  if (dailyFortuneUsed) {
+    showDailyUsedPopup();
+    return;
+  }
 
   tapSound();
 
