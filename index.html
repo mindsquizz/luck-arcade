@@ -498,41 +498,6 @@ body {
 }
 
 /* =========================
-   DAILY FORTUNE
-========================= */
-
-.daily-status {
-  text-align: center;
-  min-height: 18px;
-  margin-top: 12px;
-  color: #d8c27a;
-  font-size: 11px;
-  letter-spacing: .4px;
-  text-shadow: 0 0 12px rgba(212,175,55,.16);
-}
-
-.choice.locked {
-  opacity: .45;
-  filter: saturate(.65);
-  cursor: default;
-  pointer-events: none;
-}
-
-.choice.locked::after {
-  content: "✓ TODAY'S LUCK";
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 5px 8px;
-  border-radius: 12px;
-  background: rgba(212,175,55,.14);
-  border: 1px solid rgba(212,175,55,.32);
-  color: #d8c27a;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-
-/* =========================
    PARTICLES
 ========================= */
 
@@ -736,12 +701,160 @@ body {
   }
 }
 
+
+/* =========================
+   AURA69 CUSTOM POPUP
+   Replaces browser alert()
+========================= */
+.aura-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 4, 10, .76);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.aura-popup-overlay.show {
+  display: flex;
+  animation: auraPopupFade .22s ease both;
+}
+
+.aura-popup {
+  width: min(100%, 390px);
+  position: relative;
+  padding: 28px 24px 22px;
+  border: 1px solid rgba(212,175,55,.55);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212,175,55,.16), transparent 48%),
+    linear-gradient(145deg, rgba(18,37,66,.98), rgba(3,9,18,.99));
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.62),
+    0 0 38px rgba(212,175,55,.16),
+    inset 0 1px rgba(255,255,255,.10);
+  text-align: center;
+  transform: translateY(8px) scale(.97);
+  animation: auraPopupIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.aura-popup::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(212,175,55,.10);
+  border-radius: 17px;
+  pointer-events: none;
+}
+
+.aura-popup-logo {
+  width: 88px;
+  height: 44px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 0 14px rgba(212,175,55,.28));
+}
+
+.aura-popup-brand {
+  color: #d8c27a;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  margin-bottom: 13px;
+}
+
+.aura-popup-message {
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.65;
+  white-space: pre-line;
+  text-shadow: 0 1px 10px rgba(0,0,0,.25);
+}
+
+.aura-popup-ok {
+  width: 100%;
+  margin-top: 22px;
+  padding: 13px 20px;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f1d36a, #b98b24);
+  color: #111;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow:
+    0 0 24px rgba(212,175,55,.28),
+    inset 0 1px rgba(255,255,255,.7);
+  transition: transform .16s ease, filter .16s ease;
+}
+
+.aura-popup-ok:active {
+  transform: scale(.98);
+  filter: brightness(.94);
+}
+
+@keyframes auraPopupFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes auraPopupIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-popup-overlay,
+  .aura-popup {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="app">
+
+  <!-- =====================
+       AURA69 CUSTOM POPUP
+       Replaces browser alert()
+  ====================== -->
+  <div
+    id="auraPopup"
+    class="aura-popup-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="auraPopupBrand"
+    onclick="closeAuraPopup(event)"
+  >
+    <div class="aura-popup" onclick="event.stopPropagation()">
+      <img src="aura69.png" class="aura-popup-logo" alt="AURA69">
+      <div class="aura-popup-brand" id="auraPopupBrand">AURA69</div>
+      <div class="aura-popup-message" id="auraPopupMessage"></div>
+      <button
+        type="button"
+        class="aura-popup-ok"
+        id="auraPopupOk"
+        onclick="closeAuraPopup()"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+
 
   <!-- =====================
        OPENING
@@ -800,7 +913,6 @@ body {
       เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ
     </div>
 
-    <div class="daily-status" id="dailyStatus"></div>
 
     <div class="choices">
 
@@ -929,11 +1041,22 @@ body {
 
 
 <script>
+
 /* ==================================================
    SETTINGS
 ================================================== */
 
+/*
+   ใส่ URL เว็บไซต์ AURA69 ของคุณตรงนี้ภายหลัง
+
+   ตัวอย่าง:
+   const AURA69_URL = "https://yourwebsite.com";
+
+   ตอนนี้ปล่อยว่างไว้ก่อน
+*/
+
 const AURA69_URL = "https://69aura11.com/";
+
 
 /* ==================================================
    LANGUAGE
@@ -941,245 +1064,301 @@ const AURA69_URL = "https://69aura11.com/";
 
 let language = "th";
 
+
 const translations = {
+
   th: {
+
     title: "เลือกโชคของคุณ",
-    subtitle: "เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ",
-    dragon: "🐉 มังกร",
-    qilin: "🦌 กิเลน",
-    toad: "🐸 คางคกทอง",
-    reveal: "กำลังเปิดโชคของคุณ...",
-    resultTitle: "✨ โชคของคุณถูกเปิดแล้ว ✨",
-    fortuneLabel: "คำทำนายของคุณ",
-    dragonName: "🐉 มังกร",
-    qilinName: "🦌 กิเลน",
-    toadName: "🐸 คางคกทอง",
-    auraCTA: "✨ รับโชคต่อที่ AURA69",
-    again: "↻ กลับไปดูโชคของวันนี้",
-    againLocked: "✓ เปิดโชควันนี้แล้ว • กลับมาใหม่พรุ่งนี้",
-    dailyPlayed: "✨ คุณเปิดโชคของวันนี้แล้ว • กลับมาใหม่พรุ่งนี้",
-    dailyReady: "✨ วันนี้คุณมีโชคหนึ่งครั้งรออยู่",
-    disclaimer: "เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์ ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง"
+
+    subtitle:
+      "เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ",
+
+    dragon:
+      "🐉 มังกร",
+
+    qilin:
+      "🦌 กิเลน",
+
+    toad:
+      "🐸 คางคกทอง",
+
+    reveal:
+      "กำลังเปิดโชคของคุณ...",
+
+    resultTitle:
+      "✨ โชคของคุณถูกเปิดแล้ว ✨",
+
+    fortuneLabel:
+      "คำทำนายของคุณ",
+
+    dragonFortunes: [
+      "พลังแห่งความมั่นใจกำลังเปิดประตูสู่โอกาสใหม่ เชื่อในตัวเองแล้วก้าวไปข้างหน้า",
+      "จังหวะดีด้านการเงินกำลังเข้ามา สิ่งเล็ก ๆ ที่คุณเริ่มวันนี้อาจต่อยอดเป็นผลลัพธ์ที่ใหญ่ขึ้น",
+      "มีเกณฑ์ได้รับข่าวดีแบบไม่ทันตั้งตัว เปิดใจรับโอกาสที่กำลังเข้ามา",
+      "ความกล้าที่จะตัดสินใจจะพาคุณไปพบทางเลือกที่ดีกว่าเดิม",
+      "วันนี้พลังของคุณโดดเด่น เหมาะกับการเริ่มต้นสิ่งที่เคยลังเล",
+      "โอกาสด้านงานและความสำเร็จกำลังขยับเข้าใกล้ จงอย่าปล่อยให้ความกลัวหยุดคุณ",
+      "โชคกำลังมาจากการลงมือทำ ยิ่งขยับ ยิ่งมีโอกาสเห็นผลลัพธ์ที่ดี",
+      "คนรอบตัวกำลังมองเห็นคุณค่าในตัวคุณ จงใช้ความสามารถอย่างเต็มที่",
+      "สิ่งที่เคยติดขัดกำลังเริ่มคลี่คลาย และทางใหม่กำลังปรากฏ",
+      "มีเกณฑ์ได้พบโอกาสที่ช่วยยกระดับชีวิต หากกล้าคว้าไว้ในเวลาที่เหมาะสม",
+      "พลังแห่งความสำเร็จกำลังสะสมอย่างเงียบ ๆ ผลลัพธ์จะชัดขึ้นในไม่ช้า",
+      "การตัดสินใจครั้งหนึ่งอาจเปิดประตูหลายบานให้คุณ จงเลือกด้วยความมั่นใจ",
+      "โชคของคุณเด่นจากความพยายามที่ทำต่อเนื่อง สิ่งที่สร้างไว้กำลังออกดอกผล",
+      "มีเกณฑ์ได้รับความช่วยเหลือจากคนที่มีประสบการณ์ ใช้คำแนะนำให้เกิดประโยชน์",
+      "วันนี้เหมาะกับการวางเป้าหมายใหญ่ แล้วเริ่มจากก้าวเล็กที่ทำได้จริง",
+      "พลังแห่งการเป็นผู้นำกำลังโดดเด่น คุณมีโอกาสเป็นคนกำหนดทิศทางเอง",
+      "เงินและโอกาสมีแนวโน้มขยับดีขึ้นเมื่อคุณจัดลำดับความสำคัญให้ชัดเจน",
+      "สิ่งที่คุณเคยลงทุนทั้งเวลาและแรงกำลังมีโอกาสให้ผลตอบแทนที่น่าพอใจ",
+      "จงเชื่อในสัญชาตญาณของตัวเอง วันนี้ความรู้สึกแรกอาจพาคุณไปถูกทาง",
+      "มีเกณฑ์เกิดจังหวะใหม่ในเรื่องงาน ธุรกิจ หรือการติดต่อที่คุณรอคอย",
+      "ความสำเร็จครั้งต่อไปจะมาจากการไม่ยอมแพ้ในวันที่ยังมองไม่เห็นผล",
+      "คุณกำลังเข้าใกล้ช่วงเวลาที่โดดเด่น ใช้ความมั่นใจเปลี่ยนโอกาสให้เป็นผลลัพธ์",
+      "โชคพิเศษอาจมาในรูปของคนใหม่ ความคิดใหม่ หรือช่องทางใหม่",
+      "วันนี้เหมาะกับการออกจากกรอบเดิม ๆ เพราะสิ่งดีอาจรออยู่ในพื้นที่ที่ไม่คุ้นเคย",
+      "พลังของคุณกำลังดึงดูดโอกาสที่สอดคล้องกับเป้าหมายระยะยาว",
+      "มีสัญญาณของการเปลี่ยนแปลงที่ดี อย่ากลัวที่จะเริ่มบทใหม่ของชีวิต",
+      "ความชัดเจนกำลังมา หลังจากช่วงเวลาที่ต้องคิดและรอคอย",
+      "จังหวะทองอาจมาเร็วและสั้น เมื่อเห็นโอกาสที่ใช่ จงพร้อมลงมือ",
+      "วันนี้คุณมีพลังในการเปลี่ยนเรื่องธรรมดาให้กลายเป็นโอกาสที่มีค่า",
+      "ดวงมังกรหนุนให้คุณกล้าใหญ่ คิดใหญ่ และเดินหน้าอย่างมีแผน"
+    ],
+
+    qilinFortunes: [
+      "พลังแห่งกิเลนกำลังนำพาความก้าวหน้าและโอกาสดี ๆ เข้ามาอย่างนุ่มนวล",
+      "สิ่งที่คุณรอคอยมีแนวโน้มขยับไปในทิศทางที่ดี เปิดใจรับข่าวใหม่",
+      "วันนี้เหมาะกับการพบปะ ติดต่อ และสร้างความสัมพันธ์ที่อาจมีประโยชน์ในอนาคต",
+      "โชคของคุณเด่นจากคนรอบข้าง คนหนึ่งอาจนำโอกาสสำคัญมาให้",
+      "เส้นทางที่ดูช้าไม่ได้แปลว่าไม่ดี สิ่งดี ๆ กำลังเติบโตอย่างมั่นคง",
+      "มีเกณฑ์ได้รับความร่วมมือที่ช่วยให้เรื่องยากกลายเป็นเรื่องง่ายขึ้น",
+      "โอกาสใหม่กำลังปรากฏตรงหน้า จงมองให้ไกลกว่าสิ่งที่เห็นในครั้งแรก",
+      "ความสงบและความคิดที่ชัดเจนจะช่วยให้คุณตัดสินใจได้ถูกจังหวะ",
+      "มีพลังสนับสนุนด้านงานและความก้าวหน้า เหมาะกับการเสนอไอเดียใหม่",
+      "สิ่งที่คุณสร้างด้วยความตั้งใจกำลังได้รับการยอมรับมากขึ้น",
+      "โชคกำลังมาในรูปแบบของจังหวะที่พอดี ทั้งเวลา คน และโอกาส",
+      "มีเกณฑ์ได้พบคนที่ช่วยเปิดมุมมองใหม่และพาคุณไปไกลกว่าเดิม",
+      "การเปลี่ยนแปลงเล็ก ๆ วันนี้อาจนำไปสู่ผลลัพธ์ที่ใหญ่ในอนาคต",
+      "จังหวะทางการเงินมีแนวโน้มดีขึ้นเมื่อคุณวางแผนอย่างรอบคอบ",
+      "ความสำเร็จจะเกิดจากการประสานพลังกับคนที่มีเป้าหมายคล้ายกัน",
+      "วันนี้เหมาะกับการเริ่มต้นความร่วมมือหรือโปรเจกต์ที่คุณเชื่อมั่น",
+      "สิ่งดีที่เคยทำไว้กำลังย้อนกลับมาในรูปของโอกาสและความไว้วางใจ",
+      "มีเกณฑ์ได้รับคำชม การยอมรับ หรือข่าวที่ทำให้คุณมีกำลังใจมากขึ้น",
+      "อย่ารีบตัดสินสิ่งที่ยังไม่ชัด เพราะโชคดีอาจซ่อนอยู่หลังรายละเอียดเล็ก ๆ",
+      "พลังแห่งความสมดุลกำลังช่วยให้คุณจัดการเรื่องสำคัญได้อย่างลงตัว",
+      "คุณกำลังเข้าสู่ช่วงที่มีทางเลือกมากขึ้น เลือกสิ่งที่พาคุณเติบโต",
+      "โอกาสจากการเดินทาง การพบคนใหม่ หรือการเปลี่ยนบรรยากาศมีความน่าสนใจ",
+      "ความตั้งใจของคุณกำลังถูกมองเห็น จงรักษามาตรฐานและเดินหน้าต่อ",
+      "มีเกณฑ์ได้รับโอกาสที่ดูธรรมดาแต่สามารถต่อยอดได้ไกล",
+      "โชคของกิเลนคือการรู้ว่าเมื่อไรควรรอ และเมื่อไรควรคว้า",
+      "วันนี้เหมาะกับการเปิดรับไอเดียใหม่ เพราะคำตอบอาจมาจากมุมที่ไม่คาดคิด",
+      "ความสัมพันธ์ที่ดีจะนำพาความมั่นคงและโอกาสใหม่เข้ามาในชีวิต",
+      "มีสัญญาณของความก้าวหน้าอย่างต่อเนื่อง แม้ยังไม่เห็นผลทั้งหมดในทันที",
+      "สิ่งที่กำลังเริ่มต้นมีพลังของความยั่งยืน หากคุณดูแลมันอย่างสม่ำเสมอ",
+      "กิเลนเปิดทางให้โชคที่นุ่มนวลแต่มั่นคง จงเดินต่อด้วยใจที่นิ่ง"
+    ],
+
+    toadFortunes: [
+      "พลังคางคกทองเปิดทางด้านทรัพย์และความอุดมสมบูรณ์ ใช้โอกาสอย่างฉลาด",
+      "มีเกณฑ์พบช่องทางเพิ่มรายได้ หรือเห็นวิธีจัดการเงินที่มีประสิทธิภาพขึ้น",
+      "โอกาสทางการเงินอาจมาจากสิ่งที่คุณมีอยู่แล้ว ลองมองคุณค่าให้ลึกกว่าเดิม",
+      "โชคกำลังขยับจากการวางแผนที่ดี ยิ่งจัดระบบ ยิ่งเห็นผล",
+      "มีพลังแห่งทรัพย์สะสม สิ่งที่เริ่มเล็ก ๆ วันนี้มีโอกาสเติบโตในอนาคต",
+      "ข่าวดีด้านเงิน งาน หรือธุรกิจมีโอกาสเข้ามาแบบไม่ทันตั้งตัว",
+      "จังหวะนี้เหมาะกับการปิดเรื่องค้างคา แล้วเปิดพื้นที่ให้โอกาสใหม่เข้ามา",
+      "มีเกณฑ์ได้ผลตอบแทนจากความพยายามที่ผ่านมา อย่ามองข้ามสิ่งที่สร้างไว้",
+      "โชคด้านการค้าหรือการเจรจากำลังเด่น พูดอย่างมั่นใจและรู้คุณค่าของตัวเอง",
+      "โอกาสที่ดูเล็กอาจกลายเป็นแหล่งความมั่งคั่งใหม่ หากคุณลงมืออย่างจริงจัง",
+      "พลังแห่งความอุดมสมบูรณ์กำลังเพิ่มขึ้น จงใช้เงินอย่างมีเป้าหมายและมีวินัย",
+      "มีสัญญาณของเงินก้อนหรือผลประโยชน์ใหม่ แต่ควรตัดสินใจอย่างรอบคอบ",
+      "วันนี้เหมาะกับการวางแผนการเงินระยะยาว และตัดสิ่งที่ไม่จำเป็นออก",
+      "คนหนึ่งอาจนำข่าวหรือโอกาสที่เกี่ยวกับรายได้มาให้คุณ",
+      "สิ่งที่คุณลงทุนด้วยเวลาและความตั้งใจกำลังมีโอกาสให้ผลลัพธ์ที่คุ้มค่า",
+      "โชคของคุณเด่นเมื่อกล้าคิดเรื่องใหม่ แต่ยังคงมีแผนรองรับอย่างรอบคอบ",
+      "มีเกณฑ์พบวิธีทำให้ทรัพยากรเดิมสร้างมูลค่าได้มากขึ้น",
+      "จังหวะการเงินกำลังค่อย ๆ เปิด อย่าเร่งจนพลาดรายละเอียดสำคัญ",
+      "ความมั่งคั่งจะมาจากความสม่ำเสมอมากกว่าความรีบร้อน วันนี้เริ่มวางระบบได้เลย",
+      "มีพลังแห่งการเก็บเกี่ยว สิ่งที่ทำต่อเนื่องกำลังพร้อมให้ผลตอบแทน",
+      "โอกาสด้านธุรกิจหรือรายได้เสริมกำลังส่งสัญญาณให้คุณลองศึกษา",
+      "จงเปิดตาให้กว้าง เพราะทรัพย์อาจมาในรูปแบบของโอกาสที่คุณไม่เคยนับมาก่อน",
+      "วันนี้เหมาะกับการเจรจาเรื่องผลตอบแทนและคุณค่าของงานอย่างมั่นใจ",
+      "สิ่งที่เคยเสียเวลาอาจกลายเป็นบทเรียนที่ช่วยให้คุณหาเงินได้ฉลาดขึ้น",
+      "พลังคางคกทองหนุนให้คุณสร้างความมั่นคงทีละขั้น แล้วผลลัพธ์จะตามมา",
+      "มีเกณฑ์ได้รับข้อเสนอใหม่ ควรพิจารณาทั้งผลดีและความเสี่ยงก่อนเลือก",
+      "ความโชคดีจะเด่นขึ้นเมื่อคุณรู้จักรักษาสิ่งที่มี พร้อมเปิดรับสิ่งใหม่",
+      "จังหวะทองของวันนี้คือการเปลี่ยนความคิดให้กลายเป็นแผนที่ทำได้จริง",
+      "มีพลังของความอุดมสมบูรณ์และการเติบโต เงินที่เข้ามาควรถูกต่อยอดอย่างมีสติ",
+      "คางคกทองนำโชคด้านทรัพย์มาให้ จงรับโอกาสด้วยสติและสร้างความมั่งคั่งอย่างยั่งยืน"
+    ],
+
+    dragonName:
+      "🐉 มังกร",
+
+    qilinName:
+      "🦌 กิเลน",
+
+    toadName:
+      "🐸 คางคกทอง",
+
+    auraCTA:
+      "✨ รับโชคต่อที่ AURA69",
+
+    again:
+      "↻ เล่นอีกครั้ง",
+
+    disclaimer:
+      "เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์ ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง"
+
   },
 
+
   en: {
-    title: "Choose Your Luck",
-    subtitle: "Choose one symbol and reveal your luck",
-    dragon: "🐉 Dragon",
-    qilin: "🦌 Qilin",
-    toad: "🐸 Golden Toad",
-    reveal: "Revealing your luck...",
-    resultTitle: "✨ Your Luck Has Been Revealed ✨",
-    fortuneLabel: "YOUR FORTUNE",
-    dragonName: "🐉 Dragon",
-    qilinName: "🦌 Qilin",
-    toadName: "🐸 Golden Toad",
-    auraCTA: "✨ Continue Your Luck at AURA69",
-    again: "↻ View Today's Luck",
-    againLocked: "✓ Today's luck is already revealed • Come back tomorrow",
-    dailyPlayed: "✨ Today's luck has already been revealed • Come back tomorrow",
-    dailyReady: "✨ You have one luck reveal waiting today",
-    disclaimer: "This game is created for entertainment and brand experience. Game results do not affect real-money betting or rewards."
+
+    title:
+      "Choose Your Luck",
+
+    subtitle:
+      "Choose one symbol and reveal your luck",
+
+    dragon:
+      "🐉 Dragon",
+
+    qilin:
+      "🦌 Qilin",
+
+    toad:
+      "🐸 Golden Toad",
+
+    reveal:
+      "Revealing your luck...",
+
+    resultTitle:
+      "✨ Your Luck Has Been Revealed ✨",
+
+    fortuneLabel:
+      "YOUR FORTUNE",
+
+    dragonFortunes: [
+      "The power of confidence is opening new doors. Trust yourself and move forward.",
+      "A positive money opportunity is approaching. Small steps today may grow into something bigger.",
+      "Good news may arrive unexpectedly. Stay open to what is coming.",
+      "A brave decision can lead you toward a better path.",
+      "Your energy is strong today. It is a good time to begin what you have been delaying.",
+      "Career and success opportunities are moving closer. Do not let fear stop you.",
+      "Your luck grows through action. The more you move, the more opportunities you create.",
+      "People around you are noticing your value. Use your talents with confidence.",
+      "A blocked situation is beginning to clear, revealing a new path.",
+      "An opportunity to elevate your life may appear. Be ready to claim it.",
+      "Your success is quietly building. The results will become clearer soon.",
+      "One decision may open several doors. Choose with confidence.",
+      "Your persistence is creating momentum, and your efforts are beginning to pay off.",
+      "Helpful guidance may come from someone experienced. Use it wisely.",
+      "Set a bold goal today, then take one practical step toward it.",
+      "Your leadership energy is strong. You have the power to set the direction.",
+      "Money and opportunity can improve when you make your priorities clear.",
+      "Time and effort you invested may soon bring a satisfying return.",
+      "Trust your instinct. Your first feeling may point you in the right direction.",
+      "A new opening may appear in work, business, or an important connection.",
+      "Your next success will come from staying with it when results are not visible yet.",
+      "You are approaching a standout moment. Turn opportunity into results with confidence.",
+      "Special luck may arrive through a new person, idea, or channel.",
+      "Step outside the usual path. Something valuable may be waiting somewhere unfamiliar.",
+      "Your energy is attracting opportunities aligned with your long-term goals.",
+      "A positive change is forming. Do not be afraid to begin a new chapter.",
+      "Clarity is coming after a period of waiting and thinking.",
+      "A golden opportunity may be brief. When the right moment appears, be ready to act.",
+      "You have the power to turn an ordinary moment into a valuable opportunity.",
+      "Dragon energy favors bold thinking, bold goals, and confident action."
+    ],
+
+    qilinFortunes: [
+      "Qilin energy is bringing progress and positive opportunities with graceful momentum.",
+      "Something you have been waiting for may begin moving in the right direction.",
+      "Today favors connections, conversations, and relationships that may help your future.",
+      "Your luck is connected to people. Someone may bring an important opportunity.",
+      "A slow path is not a bad path. Something good is growing steadily.",
+      "Support from others may make a difficult situation much easier.",
+      "A new opportunity is appearing. Look beyond the first impression.",
+      "Calm thinking will help you make the right decision at the right time.",
+      "Career progress is supported today. Consider sharing a fresh idea.",
+      "Something you built with care is gaining more recognition.",
+      "Luck is arriving through the perfect combination of timing, people, and opportunity.",
+      "You may meet someone who opens a new perspective and takes you further.",
+      "A small change today may lead to a much bigger result later.",
+      "Financial momentum can improve when you plan carefully.",
+      "Success will grow through cooperation with people who share your direction.",
+      "Today favors starting a partnership or project you genuinely believe in.",
+      "Past good actions may return as opportunity, trust, or support.",
+      "Praise, recognition, or encouraging news may arrive soon.",
+      "Do not judge too quickly. Good fortune may be hidden in the details.",
+      "Balanced energy is helping you handle important matters with greater ease.",
+      "You are entering a period with more choices. Choose what helps you grow.",
+      "Travel, new connections, or a change of environment may bring something valuable.",
+      "Your effort is being noticed. Keep your standards high and continue forward.",
+      "An ordinary-looking opportunity may have more potential than it first appears.",
+      "Qilin luck is knowing when to wait and when to take the opportunity.",
+      "Open yourself to new ideas. The answer may come from an unexpected angle.",
+      "A good relationship may bring stability and a new opportunity into your life.",
+      "Progress is building steadily, even if the full result is not visible yet.",
+      "What you are beginning now has lasting potential if you nurture it consistently.",
+      "Qilin opens a gentle but steady path to luck. Keep moving with a calm heart."
+    ],
+
+    toadFortunes: [
+      "Golden Toad energy opens the way to wealth and abundance. Use opportunities wisely.",
+      "A new way to increase income or manage money more effectively may appear.",
+      "A financial opportunity may come from something you already have. Look deeper at its value.",
+      "Your luck is shifting through good planning. The better the system, the better the results.",
+      "Wealth-building energy is growing. Something small today may expand over time.",
+      "Good news about money, work, or business may arrive unexpectedly.",
+      "Clear unfinished matters and make room for new opportunities.",
+      "You may receive returns from efforts you made in the past. Do not overlook what you built.",
+      "Trading, negotiation, or business energy is strong. Speak confidently about your value.",
+      "A small opportunity could become a new source of abundance if you take it seriously.",
+      "Abundance energy is increasing. Give your money a clear purpose and structure.",
+      "A larger financial benefit may be possible, but make decisions carefully.",
+      "Today is good for long-term financial planning and removing unnecessary expenses.",
+      "Someone may bring you news or an opportunity connected to income.",
+      "Time and effort you invested may soon produce a worthwhile return.",
+      "Your luck improves when you think differently while keeping a solid plan.",
+      "You may discover a way to create more value from resources you already have.",
+      "Financial momentum is opening gradually. Do not rush past important details.",
+      "Wealth grows through consistency more than speed. Start building your system today.",
+      "A harvest period is approaching. What you have done consistently is ready to reward you.",
+      "A business or side-income opportunity may be worth exploring.",
+      "Keep your eyes open. Wealth can arrive as an opportunity you did not count before.",
+      "Today favors confident conversations about compensation and the value of your work.",
+      "A past mistake may become a lesson that helps you earn more intelligently.",
+      "Golden Toad energy favors building stability step by step. Results will follow.",
+      "A new offer may appear. Consider both the upside and the risk before choosing.",
+      "Good fortune grows when you protect what you have while staying open to more.",
+      "Today’s golden moment is turning an idea into a practical plan.",
+      "Abundance and growth are strong. Put incoming resources to work with awareness.",
+      "Golden Toad brings wealth energy. Receive opportunity wisely and build lasting prosperity."
+    ],
+
+    dragonName:
+      "🐉 Dragon",
+
+    qilinName:
+      "🦌 Qilin",
+
+    toadName:
+      "🐸 Golden Toad",
+
+    auraCTA:
+      "✨ Continue Your Luck at AURA69",
+
+    again:
+      "↻ Play Again",
+
+    disclaimer:
+      "This game is created for entertainment and brand experience. Game results do not affect real-money betting or rewards."
+
   }
+
 };
 
-/* ==================================================
-   DAILY FORTUNE POOL
-   Only this index.html is needed.
-   Each day, one fortune is randomly selected and
-   saved on the user's device for that day.
-================================================== */
-
-const fortunePools = {
-  dragon: [
-    {
-      th: "พลังแห่งความมั่นใจกำลังพาคุณไปสู่โอกาสใหม่ จงเชื่อในตัวเองและกล้าที่จะก้าวไปข้างหน้า",
-      en: "The power of confidence is opening new opportunities for you. Trust yourself and dare to move forward."
-    },
-    {
-      th: "จังหวะของคุณกำลังมา สิ่งที่รอคอยอาจเริ่มขยับในแบบที่คุณคาดไม่ถึง",
-      en: "Your timing is changing. Something you've been waiting for may begin moving in an unexpected way."
-    },
-    {
-      th: "ความกล้าหนึ่งครั้งอาจเปิดประตูหลายบาน อย่าปล่อยให้ความลังเลหยุดโอกาสของคุณ",
-      en: "One brave decision can open many doors. Don't let hesitation stop your opportunity."
-    },
-    {
-      th: "วันนี้เหมาะกับการเริ่มต้นสิ่งที่คุณคิดมานาน พลังของการลงมือทำจะนำทางคุณ",
-      en: "Today favors a fresh start. The energy of taking action will guide you forward."
-    },
-    {
-      th: "มีสัญญาณแห่งความก้าวหน้าอยู่ใกล้ตัว จงสังเกตโอกาสเล็ก ๆ ที่กำลังปรากฏ",
-      en: "Signs of progress are close. Pay attention to the small opportunities appearing around you."
-    },
-    {
-      th: "เมื่อใจนิ่ง คุณจะมองเห็นทางเลือกที่ดีที่สุดชัดขึ้น เชื่อสัญชาตญาณของตัวเอง",
-      en: "When your mind is calm, the best choice becomes clearer. Trust your intuition."
-    },
-    {
-      th: "พลังของคุณโดดเด่นกว่าที่คิด วันนี้เหมาะกับการแสดงความสามารถและความเป็นผู้นำ",
-      en: "Your energy is stronger than you think. Today is a good day to show your ability and leadership."
-    },
-    {
-      th: "เรื่องที่ดูเหมือนช้าอาจกำลังจัดจังหวะให้เหมาะสม อดทนอีกนิดแล้วเดินหน้าต่อ",
-      en: "What seems slow may simply be finding the right timing. Be patient and keep moving."
-    },
-    {
-      th: "โอกาสดีมักมากับการตัดสินใจที่ชัดเจน เลือกสิ่งที่ทำให้คุณเติบโต",
-      en: "Good opportunities often come with clear decisions. Choose what helps you grow."
-    },
-    {
-      th: "วันนี้พลังแห่งการเริ่มใหม่อยู่กับคุณ ปล่อยสิ่งเก่าแล้วเปิดพื้นที่ให้สิ่งที่ดีกว่า",
-      en: "The energy of a new beginning is with you today. Release the old and make room for better things."
-    }
-  ],
-
-  qilin: [
-    {
-      th: "จังหวะแห่งความก้าวหน้าและสิ่งดี ๆ กำลังเข้ามา เปิดใจรับโอกาสใหม่ที่กำลังปรากฏตรงหน้า",
-      en: "A wave of progress and positive opportunities is approaching. Stay open to the possibilities appearing before you."
-    },
-    {
-      th: "ความสงบและความสมดุลจะช่วยให้คุณเห็นทางที่เหมาะสมที่สุดในวันนี้",
-      en: "Calmness and balance will help you see the path that suits you best today."
-    },
-    {
-      th: "สิ่งดี ๆ อาจมาในรูปแบบที่เรียบง่าย อย่ามองข้ามโอกาสเล็ก ๆ รอบตัว",
-      en: "Good things may arrive in simple forms. Don't overlook the small opportunities around you."
-    },
-    {
-      th: "คนดีและพลังดีมีแนวโน้มเข้ามาใกล้ตัว เปิดพื้นที่ให้มิตรภาพและความร่วมมือ",
-      en: "Positive people and energy may draw closer. Make room for friendship and collaboration."
-    },
-    {
-      th: "วันนี้เหมาะกับการวางแผนระยะยาว สิ่งที่เริ่มอย่างมีระบบจะเติบโตได้มั่นคง",
-      en: "Today is good for long-term planning. What begins with structure can grow steadily."
-    },
-    {
-      th: "ความตั้งใจที่ดีของคุณกำลังสะสมเป็นผลลัพธ์ อย่ารีบตัดสินว่าความพยายามสูญเปล่า",
-      en: "Your good intentions are building toward results. Don't assume your efforts are wasted."
-    },
-    {
-      th: "ข่าวดีหรือความคืบหน้าอาจมาจากช่องทางที่คุณไม่ได้คาดไว้ จงเปิดใจและรับฟัง",
-      en: "Good news or progress may come from an unexpected direction. Stay open and listen."
-    },
-    {
-      th: "ความมั่นคงกำลังค่อย ๆ ก่อตัว สิ่งที่ทำสม่ำเสมอวันนี้จะกลายเป็นพลังในวันข้างหน้า",
-      en: "Stability is gradually forming. What you do consistently today can become strength for tomorrow."
-    },
-    {
-      th: "หากมีเรื่องให้เลือก จงเลือกทางที่นำความสบายใจและความก้าวหน้าไปพร้อมกัน",
-      en: "When faced with a choice, choose the path that brings both peace of mind and progress."
-    },
-    {
-      th: "พลังแห่งความเมตตาและความจริงใจจะเปิดทางให้คุณในแบบที่คาดไม่ถึง",
-      en: "Kindness and sincerity can open a door for you in an unexpected way."
-    }
-  ],
-
-  toad: [
-    {
-      th: "พลังแห่งทรัพย์และความอุดมสมบูรณ์กำลังเปิดออก ใช้โอกาสอย่างฉลาดและสร้างจังหวะของตัวเอง",
-      en: "The energy of wealth and abundance is opening up. Use opportunities wisely and create your own momentum."
-    },
-    {
-      th: "โอกาสด้านการเงินอาจเริ่มจากเรื่องเล็ก ๆ จัดการสิ่งที่มีให้ดีแล้วผลลัพธ์จะค่อย ๆ เติบโต",
-      en: "A financial opportunity may begin with something small. Manage what you have well and let it grow."
-    },
-    {
-      th: "วันนี้เหมาะกับการจัดระเบียบเรื่องเงินและเป้าหมาย เมื่อชัดเจนแล้วโอกาสจะมองเห็นง่ายขึ้น",
-      en: "Today is good for organizing your finances and goals. Clarity makes opportunities easier to see."
-    },
-    {
-      th: "สิ่งที่ลงทุนด้วยเวลาและความตั้งใจมีโอกาสให้ผลตอบแทนในอนาคต อย่าหยุดสร้างคุณค่า",
-      en: "What you invest with time and intention can reward you later. Keep creating value."
-    },
-    {
-      th: "จังหวะแห่งความอุดมสมบูรณ์กำลังขยับ ใช้ทรัพยากรอย่างมีสติแล้วให้โอกาสทำงานแทนคุณ",
-      en: "The energy of abundance is shifting. Use your resources wisely and let opportunities work for you."
-    },
-    {
-      th: "วันนี้อาจมีไอเดียที่เปลี่ยนมุมมองเรื่องรายได้ จดไว้และค่อย ๆ เปลี่ยนให้เป็นแผน",
-      en: "An idea today may change how you view income. Write it down and turn it into a plan."
-    },
-    {
-      th: "ความมั่งคั่งไม่ได้มาเพียงจากโชค แต่จากการเลือกที่ดีซ้ำ ๆ วันนี้คืออีกหนึ่งก้าว",
-      en: "Wealth comes not only from luck, but from making good choices repeatedly. Today is another step."
-    },
-    {
-      th: "โอกาสที่เหมาะสมอาจมาพร้อมความรับผิดชอบที่มากขึ้น หากพร้อมเติบโต อย่ากลัวที่จะรับมัน",
-      en: "The right opportunity may come with greater responsibility. If you're ready to grow, don't fear it."
-    },
-    {
-      th: "พลังแห่งการเก็บเกี่ยวกำลังมา สิ่งที่คุณทำต่อเนื่องเริ่มมีโอกาสเห็นผลชัดขึ้น",
-      en: "Harvest energy is approaching. What you've done consistently may soon show clearer results."
-    },
-    {
-      th: "เปิดใจรับสิ่งใหม่ แต่ใช้เหตุผลนำทาง โชคที่ดีมักอยู่ข้างคนที่พร้อมและมีสติ",
-      en: "Welcome the new, but let reason guide you. Good fortune often favors those who are prepared and mindful."
-    }
-  ]
-};
-
-/* ==================================================
-   DAILY STORAGE
-================================================== */
-
-const DAILY_STORAGE_KEY = "aura69_daily_fortune_v2";
-let selected = null;
-let dailyRecord = null;
-let currentFortune = null;
-
-function todayKey() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function loadDailyRecord() {
-  try {
-    const raw = localStorage.getItem(DAILY_STORAGE_KEY);
-    if (!raw) return null;
-
-    const record = JSON.parse(raw);
-
-    if (
-      record &&
-      record.date === todayKey() &&
-      fortunePools[record.type] &&
-      Number.isInteger(record.index) &&
-      fortunePools[record.type][record.index]
-    ) {
-      return record;
-    }
-
-    return null;
-  } catch (e) {
-    return null;
-  }
-}
-
-function saveDailyRecord(record) {
-  dailyRecord = record;
-
-  try {
-    localStorage.setItem(
-      DAILY_STORAGE_KEY,
-      JSON.stringify(record)
-    );
-  } catch (e) {}
-}
-
-function getStoredFortune(record) {
-  if (!record || !fortunePools[record.type]) return null;
-  return fortunePools[record.type][record.index] || null;
-}
-
-function hasPlayedToday() {
-  return !!dailyRecord && dailyRecord.date === todayKey();
-}
 
 /* ==================================================
    AUDIO
@@ -1188,7 +1367,9 @@ function hasPlayedToday() {
 let audioCtx = null;
 let soundEnabled = true;
 
+
 function initAudio() {
+
   if (!audioCtx) {
     audioCtx =
       new (window.AudioContext ||
@@ -1200,12 +1381,14 @@ function initAudio() {
   }
 }
 
+
 function tone(
   frequency,
   duration,
   type = "sine",
   volume = 0.04
 ) {
+
   if (!soundEnabled) return;
 
   initAudio();
@@ -1217,7 +1400,9 @@ function tone(
     audioCtx.createGain();
 
   oscillator.type = type;
-  oscillator.frequency.value = frequency;
+
+  oscillator.frequency.value =
+    frequency;
 
   gain.gain.setValueAtTime(
     volume,
@@ -1239,11 +1424,14 @@ function tone(
   );
 }
 
+
 function tapSound() {
   tone(500, .08, "sine", .035);
 }
 
+
 function revealSound() {
+
   tone(350, .18, "sine", .035);
 
   setTimeout(() => {
@@ -1253,30 +1441,39 @@ function revealSound() {
   setTimeout(() => {
     tone(760, .35, "sine", .055);
   }, 240);
+
 }
+
 
 /* ==================================================
    HAPTICS
 ================================================== */
 
 function vibrate(pattern) {
+
   if (
     navigator.vibrate &&
     window.Telegram &&
     window.Telegram.WebApp
   ) {
+
     try {
       navigator.vibrate(pattern);
     } catch(e) {}
+
   }
+
 }
+
 
 /* ==================================================
    OPEN GAME
 ================================================== */
 
 function startGame() {
+
   initAudio();
+
   tapSound();
 
   document
@@ -1287,53 +1484,28 @@ function startGame() {
     .getElementById("main")
     .style.display = "block";
 
-  dailyRecord = loadDailyRecord();
-
-  if (hasPlayedToday()) {
-    updateDailyStatus();
-
-    setTimeout(() => {
-      showResult(
-        dailyRecord.type,
-        getStoredFortune(dailyRecord)
-      );
-    }, 120);
-  } else {
-    updateDailyStatus();
-  }
 }
+
 
 /* ==================================================
    CHOOSE
 ================================================== */
 
+let selected = null;
+let selectedFortuneIndex = 0;
+
+
 function choose(type) {
-  if (hasPlayedToday()) {
-    showResult(
-      dailyRecord.type,
-      getStoredFortune(dailyRecord)
-    );
-    return;
-  }
 
   selected = type;
 
-  const pool = fortunePools[type];
-  const index = Math.floor(Math.random() * pool.length);
-  const fortune = pool[index];
-
-  /* Save immediately so double-taps cannot create
-     a second result during the reveal animation. */
-  saveDailyRecord({
-    date: todayKey(),
-    type: type,
-    index: index
-  });
-
-  currentFortune = fortune;
+  const fortunePool = translations[language][type + "Fortunes"];
+  selectedFortuneIndex = Math.floor(Math.random() * fortunePool.length);
 
   initAudio();
+
   tapSound();
+
   vibrate(25);
 
   const reveal =
@@ -1345,43 +1517,61 @@ function choose(type) {
   const revealText =
     document.getElementById("revealText");
 
+
   const imageMap = {
+
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
+
   };
+
 
   revealImg.src =
     imageMap[type];
 
+
   revealText.textContent =
     translations[language].reveal;
+
 
   reveal.style.display =
     "flex";
 
+
   createParticles();
 
-  setTimeout(() => {
-    revealSound();
-    vibrate([30, 40, 70]);
-  }, 700);
 
   setTimeout(() => {
-    showResult(type, fortune);
+
+    revealSound();
+
+    vibrate([30, 40, 70]);
+
+  }, 700);
+
+
+  setTimeout(() => {
+
+    showResult(type);
+
   }, 2100);
+
 }
+
 
 /* ==================================================
    RESULT
 ================================================== */
 
-function showResult(type, fortune = null) {
+function showResult(type) {
+
   const reveal =
     document.getElementById("reveal");
 
   reveal.style.display =
     "none";
+
 
   const result =
     document.getElementById("result");
@@ -1389,135 +1579,135 @@ function showResult(type, fortune = null) {
   const resultImg =
     document.getElementById("resultImg");
 
+
   const imageMap = {
+
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
+
   };
 
-  selected = type;
-  currentFortune =
-    fortune ||
-    getStoredFortune(dailyRecord) ||
-    fortunePools[type][0];
 
   resultImg.src =
     imageMap[type];
 
+
   updateResultText(type);
+
 
   result.style.display =
     "block";
 
-  updateDailyStatus();
 }
+
 
 /* ==================================================
    RESULT TEXT
 ================================================== */
 
 function updateResultText(type) {
+
   const t =
     translations[language];
+
 
   document
     .getElementById("resultTitle")
     .textContent =
       t.resultTitle;
 
+
   document
     .getElementById("fortuneLabel")
     .textContent =
       t.fortuneLabel;
+
 
   document
     .getElementById("auraCTA")
     .textContent =
       t.auraCTA;
 
+
   document
     .getElementById("againBtn")
     .textContent =
-      hasPlayedToday()
-        ? t.againLocked
-        : t.again;
+      t.again;
+
 
   document
     .getElementById("disclaimer")
     .textContent =
       t.disclaimer;
 
+
   let character = "";
+  let fortune = "";
+
 
   if (type === "dragon") {
-    character = t.dragonName;
+
+    character =
+      t.dragonName;
+
+    fortune =
+      t.dragonFortunes[selectedFortuneIndex];
+
   }
+
 
   if (type === "qilin") {
-    character = t.qilinName;
+
+    character =
+      t.qilinName;
+
+    fortune =
+      t.qilinFortunes[selectedFortuneIndex];
+
   }
 
+
   if (type === "toad") {
-    character = t.toadName;
+
+    character =
+      t.toadName;
+
+    fortune =
+      t.toadFortunes[selectedFortuneIndex];
+
   }
+
 
   document
     .getElementById("resultCharacter")
     .textContent =
       character;
 
-  const fortuneText =
-    currentFortune
-      ? currentFortune[language]
-      : "";
 
   document
     .getElementById("fortuneText")
     .textContent =
-      fortuneText;
+      fortune;
+
 }
 
-/* ==================================================
-   DAILY STATUS
-================================================== */
-
-function updateDailyStatus() {
-  const status =
-    document.getElementById("dailyStatus");
-
-  if (!status) return;
-
-  const t =
-    translations[language];
-
-  status.textContent =
-    hasPlayedToday()
-      ? t.dailyPlayed
-      : t.dailyReady;
-
-  document
-    .querySelectorAll(".choice")
-    .forEach(card => {
-      if (hasPlayedToday()) {
-        card.classList.add("locked");
-      } else {
-        card.classList.remove("locked");
-      }
-    });
-}
 
 /* ==================================================
    LANGUAGE
 ================================================== */
 
 function toggleLanguage() {
+
   language =
     language === "th"
       ? "en"
       : "th";
 
+
   const t =
     translations[language];
+
 
   document
     .getElementById("langButton")
@@ -1526,55 +1716,55 @@ function toggleLanguage() {
         ? "EN"
         : "ไทย";
 
+
   document
     .getElementById("title")
     .textContent =
       t.title;
+
 
   document
     .getElementById("subtitle")
     .textContent =
       t.subtitle;
 
+
   document
     .getElementById("dragonName")
     .textContent =
       t.dragonName;
+
 
   document
     .getElementById("qilinName")
     .textContent =
       t.qilinName;
 
+
   document
     .getElementById("toadName")
     .textContent =
       t.toadName;
 
-  updateDailyStatus();
 
   if (selected) {
+
     updateResultText(selected);
+
   }
+
 }
+
 
 /* ==================================================
    PLAY AGAIN
 ================================================== */
 
 function playAgain() {
+
   tapSound();
+
   vibrate(20);
-
-  if (hasPlayedToday()) {
-    alert(
-      language === "th"
-        ? "คุณเปิดโชคของวันนี้ไปแล้ว ✨\nกลับมาใหม่พรุ่งนี้นะ"
-        : "You have already revealed today's luck ✨\nCome back tomorrow."
-    );
-
-    return;
-  }
 
   document
     .getElementById("result")
@@ -1585,67 +1775,139 @@ function playAgain() {
     .style.display = "block";
 
   selected = null;
-  currentFortune = null;
-  updateDailyStatus();
+
 }
+
 
 /* ==================================================
    AURA69 CTA
 ================================================== */
 
+
+/* ==================================================
+   AURA69 CUSTOM POPUP
+   Replaces browser alert()
+================================================== */
+
+function showAuraPopup(message) {
+  const popup = document.getElementById("auraPopup");
+  const messageEl = document.getElementById("auraPopupMessage");
+  const okEl = document.getElementById("auraPopupOk");
+
+  if (!popup || !messageEl || !okEl) {
+    return;
+  }
+
+  messageEl.textContent = message;
+
+  okEl.textContent =
+    language === "th"
+      ? "ตกลง"
+      : "OK";
+
+  popup.classList.add("show");
+
+  setTimeout(() => {
+    okEl.focus();
+  }, 40);
+}
+
+function closeAuraPopup(event) {
+  if (event && event.target !== event.currentTarget) {
+    return;
+  }
+
+  const popup = document.getElementById("auraPopup");
+
+  if (popup) {
+    popup.classList.remove("show");
+  }
+}
+
+
 function auraCTA() {
+
   tapSound();
+
   vibrate(25);
 
+
   if (AURA69_URL) {
+
     window.open(
       AURA69_URL,
       "_blank"
     );
+
+  } else {
+
+    showAuraPopup(
+      language === "th"
+        ? "ใส่ลิงก์เว็บไซต์ AURA69 ใน AURA69_URL ก่อนใช้งานปุ่มนี้"
+        : "Add your AURA69 website URL to AURA69_URL before using this button."
+    );
+
   }
+
 }
+
 
 /* ==================================================
    PARTICLES
 ================================================== */
 
 function createParticles() {
+
   const reveal =
     document.getElementById("reveal");
 
+
   for (let i = 0; i < 28; i++) {
+
     const p =
       document.createElement("div");
 
     p.className =
       "particle";
 
+
     p.style.left =
       (Math.random() * 100) + "%";
 
+
     p.style.top =
       (Math.random() * 100) + "%";
+
 
     p.style.setProperty(
       "--x",
       Math.random()
     );
 
+
     p.style.setProperty(
       "--y",
       Math.random()
     );
 
+
     p.style.animationDelay =
       (Math.random() * .8) + "s";
 
+
     reveal.appendChild(p);
 
+
     setTimeout(() => {
+
       p.remove();
+
     }, 2800);
+
   }
+
 }
+
 
 /* ==================================================
    TELEGRAM
@@ -1655,14 +1917,17 @@ if (
   window.Telegram &&
   window.Telegram.WebApp
 ) {
+
   try {
+
     window.Telegram.WebApp.ready();
+
     window.Telegram.WebApp.expand();
+
   } catch(e) {}
+
 }
 
-/* Load today's saved result if one exists. */
-dailyRecord = loadDailyRecord();
 </script>
 
 </body>
