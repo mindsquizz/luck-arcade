@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luck Arcade</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #090909;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 40px;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .choice {
+            width: 100px;
+            height: 130px;
+            border: 1px solid #555;
+            border-radius: 18px;
+            background: #151515;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .choice:hover {
+            transform: translateY(-5px);
+        }
+
+        .symbol {
+            display: block;
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        #result {
+            display: none;
+        }
+
+        #resultSymbol {
+            font-size: 80px;
+        }
+
+        button {
+            transition: 0.2s;
+        }
+
+        .play-again {
+            margin-top: 25px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div id="game">
+        <h1>LUCK ARCADE</h1>
+
+        <div class="subtitle">
+            Choose Your Luck
+        </div>
+
+        <div class="choices">
+
+            <button class="choice" onclick="chooseLuck('Dragon', '🐉')">
+                <span class="symbol">🐉</span>
+                Dragon
+            </button>
+
+            <button class="choice" onclick="chooseLuck('Qilin', '🦌')">
+                <span class="symbol">🦌</span>
+                Qilin
+            </button>
+
+            <button class="choice" onclick="chooseLuck('Toad', '🐸')">
+                <span class="symbol">🐸</span>
+                Toad
+            </button>
+
+        </div>
+    </div>
+
+    <div id="result">
+
+        <div id="resultSymbol"></div>
+
+        <h1 id="resultTitle"></h1>
+
+        <p id="resultText"></p>
+
+        <button class="play-again" onclick="playAgain()">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+function chooseLuck(name, symbol) {
+
+    document.getElementById("game").style.display = "none";
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("resultSymbol").innerText = symbol;
+
+    document.getElementById("resultTitle").innerText =
+        name.toUpperCase();
+
+    if (name === "Dragon") {
+
+        document.getElementById("resultText").innerText =
+            "Power and fortune.";
+
+    } else if (name === "Qilin") {
+
+        document.getElementById("resultText").innerText =
+            "Prosperity and auspicious fortune.";
+
+    } else {
+
+        document.getElementById("resultText").innerText =
+            "Wealth and abundance.";
+
+    }
+}
+
+function playAgain() {
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("game").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
