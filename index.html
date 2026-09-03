@@ -12,11 +12,12 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100%;
-    background: #030712;
+    background: #020611;
     font-family: Arial, "Noto Sans Thai", sans-serif;
     color: white;
 }
@@ -28,161 +29,287 @@ body {
 
 .app {
     min-height: 100vh;
-    padding: 18px 14px 30px;
-    background:
-        radial-gradient(circle at 50% 20%, rgba(0, 73, 170, 0.30), transparent 35%),
-        radial-gradient(circle at 50% 75%, rgba(255, 184, 0, 0.10), transparent 35%),
-        linear-gradient(180deg, #020817 0%, #07152d 50%, #020611 100%);
+    padding: 18px 12px 30px;
     position: relative;
     overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 18%,
+            rgba(0, 85, 190, 0.32),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 50% 70%,
+            rgba(255, 185, 30, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #020817 0%,
+            #071631 52%,
+            #020611 100%
+        );
 }
 
-/* Floating particles */
+/* =====================================
+   BACKGROUND PARTICLES
+===================================== */
 
 .particle {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: #ffd75a;
     border-radius: 50%;
-    opacity: .65;
+    background: #ffd65c;
+    opacity: .55;
     animation: float 5s infinite ease-in-out;
+    pointer-events: none;
 }
 
-.p1 { left: 8%; top: 18%; animation-delay: 0s; }
-.p2 { left: 88%; top: 25%; animation-delay: 1s; }
-.p3 { left: 15%; top: 68%; animation-delay: 2s; }
-.p4 { left: 80%; top: 72%; animation-delay: 3s; }
-.p5 { left: 50%; top: 12%; animation-delay: 1.5s; }
+.p1 {
+    left: 8%;
+    top: 18%;
+}
+
+.p2 {
+    left: 89%;
+    top: 25%;
+    animation-delay: 1s;
+}
+
+.p3 {
+    left: 14%;
+    top: 68%;
+    animation-delay: 2s;
+}
+
+.p4 {
+    left: 82%;
+    top: 72%;
+    animation-delay: 3s;
+}
+
+.p5 {
+    left: 51%;
+    top: 12%;
+    animation-delay: 1.5s;
+}
 
 @keyframes float {
-    0%,100% { transform: translateY(0); opacity: .3; }
-    50% { transform: translateY(-18px); opacity: 1; }
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: .25;
+    }
+
+    50% {
+        transform: translateY(-18px);
+        opacity: 1;
+    }
 }
 
-/* Header */
+
+/* =====================================
+   HEADER
+===================================== */
 
 .header {
+    position: relative;
+    z-index: 5;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    z-index: 2;
 }
 
 .logo {
-    width: min(240px, 65vw);
+    width: min(240px, 64vw);
     height: auto;
     display: block;
-    filter: drop-shadow(0 0 18px rgba(255, 196, 55, .28));
+
+    filter:
+        drop-shadow(
+            0 0 18px rgba(255, 196, 55, .30)
+        );
 }
 
-/* Language button */
+
+/* =====================================
+   LANGUAGE SWITCH
+===================================== */
 
 .lang {
     position: absolute;
-    right: 2px;
     top: 3px;
+    right: 0;
+
     display: flex;
-    border: 1px solid rgba(255, 204, 70, .6);
+
+    border: 1px solid rgba(255, 205, 80, .65);
     border-radius: 30px;
     overflow: hidden;
-    background: rgba(0,0,0,.45);
+
+    background: rgba(0, 0, 0, .45);
+
     backdrop-filter: blur(8px);
 }
 
 .lang button {
     border: 0;
     background: transparent;
+
     color: #aaa;
+
     padding: 7px 11px;
+
     font-size: 12px;
+
     cursor: pointer;
 }
 
 .lang button.active {
-    background: linear-gradient(135deg, #ffe27a, #c88b00);
     color: #111;
+
     font-weight: bold;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0a0,
+            #d49a19
+        );
 }
 
-/* Title */
+
+/* =====================================
+   HERO
+===================================== */
 
 .hero {
-    text-align: center;
-    margin: 16px auto 22px;
     position: relative;
-    z-index: 2;
+    z-index: 4;
+
+    text-align: center;
+
+    margin: 15px auto 20px;
 }
 
 .divider {
     width: 80%;
     max-width: 320px;
+
     height: 1px;
+
     margin: 0 auto 12px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        #e6b83d,
-        #fff0a6,
-        #e6b83d,
-        transparent
-    );
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d9a932,
+            #fff1a8,
+            #d9a932,
+            transparent
+        );
 }
 
 .hero h1 {
     margin: 0;
-    font-size: clamp(28px, 8vw, 42px);
+
+    font-size:
+        clamp(28px, 8vw, 42px);
+
     line-height: 1.1;
-    color: #ffe28a;
+
+    color: #ffe18a;
+
     text-shadow:
         0 2px 0 #765300,
-        0 0 18px rgba(255, 196, 55, .35);
+        0 0 18px rgba(255, 195, 55, .35);
 }
 
 .hero p {
-    margin: 10px 0 0;
+    margin: 9px 0 0;
+
     color: #ddd;
+
     font-size: 14px;
 }
 
-/* Cards */
+
+/* =====================================
+   CHOICE CARDS
+===================================== */
 
 .choices {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
-    max-width: 620px;
-    margin: 0 auto;
     position: relative;
-    z-index: 3;
+    z-index: 4;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
 }
 
 .card {
     position: relative;
-    min-height: 310px;
+
+    min-width: 0;
+
+    padding: 6px;
+
     border-radius: 18px;
-    padding: 8px;
+
     cursor: pointer;
-    border: 1px solid rgba(255, 211, 81, .65);
-    background:
-        linear-gradient(180deg, rgba(27,36,65,.96), rgba(5,11,24,.98));
-    box-shadow:
-        inset 0 0 18px rgba(255, 198, 50, .08),
-        0 8px 25px rgba(0,0,0,.4);
-    transition:
-        transform .25s ease,
-        opacity .25s ease,
-        box-shadow .25s ease;
+
     overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255, 211, 81, .72);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(24, 34, 62, .97),
+            rgba(4, 10, 23, .99)
+        );
+
+    box-shadow:
+        inset 0 0 18px
+        rgba(255, 198, 50, .08),
+
+        0 8px 25px
+        rgba(0, 0, 0, .45);
+
+    transition:
+        transform .28s ease,
+        opacity .28s ease,
+        box-shadow .28s ease;
 }
 
 .card::before {
     content: "";
+
     position: absolute;
+
     inset: 2px;
+
     border-radius: 15px;
-    border: 1px solid rgba(255,255,255,.08);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
     pointer-events: none;
 }
 
@@ -194,312 +321,681 @@ body {
     transform: scale(.96);
 }
 
+
+/* Selected card */
+
 .card.selected {
-    transform: scale(1.06) translateY(-8px);
+
+    transform:
+        scale(1.055)
+        translateY(-7px);
+
     box-shadow:
-        0 0 20px rgba(255,207,71,.65),
-        0 0 55px rgba(255,174,0,.25);
-    z-index: 5;
+
+        0 0 22px
+        rgba(255, 210, 70, .72),
+
+        0 0 55px
+        rgba(255, 174, 0, .28);
+
+    z-index: 10;
 }
 
-.choices.has-selection .card:not(.selected) {
+.choices.has-selection
+.card:not(.selected) {
+
     opacity: .30;
+
     transform: scale(.94);
 }
 
+
+/* =====================================
+   CHARACTER IMAGE
+===================================== */
+
 .card-image {
+
     height: 205px;
+
     border-radius: 13px;
+
+    position: relative;
+
     display: flex;
+
     justify-content: center;
     align-items: center;
-    position: relative;
+
     overflow: hidden;
 }
 
+
+/* Dragon background */
+
 .dragon .card-image {
+
     background:
-        radial-gradient(circle at 50% 35%, #1768b5, transparent 35%),
-        linear-gradient(145deg, #061c3d, #020711);
+
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(15, 105, 210, .55),
+            transparent 52%
+        ),
+
+        linear-gradient(
+            145deg,
+            #061d42,
+            #020712
+        );
 }
+
+
+/* Qilin background */
 
 .qilin .card-image {
+
     background:
-        radial-gradient(circle at 50% 35%, #d19b21, transparent 35%),
-        linear-gradient(145deg, #39260a, #090704);
+
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(230, 170, 40, .40),
+            transparent 52%
+        ),
+
+        linear-gradient(
+            145deg,
+            #39260a,
+            #080603
+        );
 }
+
+
+/* Toad background */
 
 .toad .card-image {
+
     background:
-        radial-gradient(circle at 50% 35%, #e3a820, transparent 35%),
-        linear-gradient(145deg, #392708, #090704);
+
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(238, 180, 35, .48),
+            transparent 52%
+        ),
+
+        linear-gradient(
+            145deg,
+            #3b2808,
+            #080603
+        );
 }
 
-.creature {
-    font-size: 105px;
-    filter: drop-shadow(0 8px 15px rgba(0,0,0,.7));
-    animation: creatureFloat 3s ease-in-out infinite;
+
+/* Actual artwork */
+
+.creature-img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    filter:
+        drop-shadow(
+            0 8px 12px rgba(0, 0, 0, .65)
+        );
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
 }
 
-@keyframes creatureFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+.card:hover .creature-img {
+
+    transform: scale(1.045);
+
+    filter:
+        drop-shadow(
+            0 0 16px
+            rgba(255, 207, 80, .28)
+        );
 }
+
+.card.selected .creature-img {
+
+    transform: scale(1.08);
+
+    filter:
+        drop-shadow(
+            0 0 20px
+            rgba(255, 211, 76, .55)
+        );
+}
+
+
+/* =====================================
+   CARD TEXT
+===================================== */
 
 .card-info {
+
     text-align: center;
-    padding: 9px 3px 4px;
+
+    padding:
+        8px
+        2px
+        5px;
 }
 
 .card-title {
-    font-size: 19px;
-    font-weight: 800;
+
+    font-size:
+        clamp(15px, 4.3vw, 21px);
+
+    font-weight: 900;
+
     color: #ffe080;
-    text-shadow: 0 1px 4px #000;
+
+    text-shadow:
+        0 1px 4px #000;
 }
 
 .card-desc {
-    font-size: 10px;
-    color: #ddd;
+
     margin-top: 5px;
+
+    font-size:
+        clamp(8px, 2.5vw, 11px);
+
     line-height: 1.3;
+
+    color: #ddd;
 }
 
-/* Instruction */
+
+/* =====================================
+   INSTRUCTION
+===================================== */
 
 .instruction {
-    text-align: center;
-    margin: 22px auto 18px;
-    font-size: 14px;
-    color: #f4f4f4;
+
     position: relative;
-    z-index: 2;
+    z-index: 4;
+
+    text-align: center;
+
+    margin:
+        21px
+        auto
+        17px;
+
+    font-size: 14px;
+
+    color: #f4f4f4;
 }
 
 .instruction span {
+
     color: #ffd85c;
 }
 
-/* Bottom panel */
+
+/* =====================================
+   FEATURES
+===================================== */
 
 .bottom-panel {
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 13px 8px;
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 4px;
-    border: 1px solid rgba(220,170,45,.5);
-    border-radius: 14px;
-    background: rgba(2,7,17,.72);
-    box-shadow: 0 0 25px rgba(0,0,0,.3);
+
     position: relative;
-    z-index: 2;
+    z-index: 4;
+
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    padding: 12px 6px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 3px;
+
+    border:
+        1px solid
+        rgba(220, 170, 45, .5);
+
+    border-radius: 14px;
+
+    background:
+        rgba(2, 7, 17, .74);
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 0, 0, .3);
 }
 
 .feature {
+
     text-align: center;
+
     padding: 2px;
-    border-right: 1px solid rgba(255,255,255,.12);
+
+    border-right:
+        1px solid
+        rgba(255, 255, 255, .12);
 }
 
 .feature:last-child {
+
     border-right: 0;
 }
 
 .feature-icon {
+
     font-size: 20px;
 }
 
 .feature-title {
-    font-size: 9px;
-    color: #ffe28a;
+
     margin-top: 4px;
+
+    font-size: 9px;
+
     font-weight: bold;
+
+    color: #ffe28a;
 }
 
 .feature-text {
-    font-size: 7px;
-    color: #aaa;
+
     margin-top: 2px;
-}
 
-/* Result screen */
+    font-size: 7px;
 
-.result-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 20;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 25px;
-    background:
-        radial-gradient(circle at center, rgba(20,60,120,.4), transparent 45%),
-        rgba(1,5,14,.97);
-}
-
-.result-screen.show {
-    display: flex;
-    animation: fadeIn .4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.result-box {
-    width: 100%;
-    max-width: 390px;
-    text-align: center;
-    padding: 30px 22px;
-    border: 1px solid #dcae36;
-    border-radius: 24px;
-    background: linear-gradient(180deg,#101d39,#030914);
-    box-shadow:
-        0 0 35px rgba(255,191,45,.25),
-        inset 0 0 30px rgba(255,191,45,.05);
-    animation: resultPop .55s cubic-bezier(.2,1.5,.4,1);
-}
-
-@keyframes resultPop {
-    from {
-        transform: scale(.7);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.result-creature {
-    font-size: 100px;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 0 20px rgba(255,201,66,.45));
-}
-
-.result-small {
     color: #aaa;
-    font-size: 13px;
 }
 
-.result-title {
-    color: #ffe083;
-    font-size: 31px;
-    font-weight: 900;
-    margin: 8px 0;
-}
 
-.result-message {
-    color: white;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 22px;
-}
-
-.play-again {
-    width: 100%;
-    border: 0;
-    border-radius: 14px;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #17100a;
-    background: linear-gradient(135deg,#fff0a1,#d99a16);
-    box-shadow: 0 5px 20px rgba(255,190,40,.25);
-    cursor: pointer;
-}
-
-.play-again:active {
-    transform: scale(.97);
-}
-
-/* Reveal loading */
+/* =====================================
+   REVEAL SCREEN
+===================================== */
 
 .reveal {
+
     position: fixed;
+
     inset: 0;
-    z-index: 30;
+
+    z-index: 50;
+
     display: none;
-    align-items: center;
-    justify-content: center;
-    background: #020611;
+
     flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(20, 65, 130, .42),
+            transparent 48%
+        ),
+
+        #020611;
 }
 
 .reveal.show {
+
     display: flex;
 }
 
 .reveal-symbol {
-    font-size: 95px;
-    animation: revealPulse 1s infinite ease-in-out;
+
+    font-size: 100px;
+
+    animation:
+        revealPulse
+        1s
+        infinite
+        ease-in-out;
 }
 
 @keyframes revealPulse {
-    0%,100% {
+
+    0%,
+    100% {
+
         transform: scale(.9);
-        filter: drop-shadow(0 0 5px rgba(255,205,70,.2));
+
+        filter:
+            drop-shadow(
+                0 0 5px
+                rgba(255, 205, 70, .2)
+            );
     }
+
     50% {
+
         transform: scale(1.08);
-        filter: drop-shadow(0 0 30px rgba(255,205,70,.8));
+
+        filter:
+            drop-shadow(
+                0 0 32px
+                rgba(255, 205, 70, .85)
+            );
     }
 }
 
 .reveal-text {
+
     margin-top: 20px;
+
     color: #ffe083;
+
     font-size: 17px;
+
+    text-align: center;
 }
 
+
+/* =====================================
+   RESULT SCREEN
+===================================== */
+
+.result-screen {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 40;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 24px;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            rgba(18, 65, 125, .42),
+            transparent 48%
+        ),
+
+        rgba(1, 5, 14, .97);
+}
+
+.result-screen.show {
+
+    display: flex;
+
+    animation:
+        fadeIn
+        .4s
+        ease;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.result-box {
+
+    width: 100%;
+    max-width: 390px;
+
+    text-align: center;
+
+    padding:
+        28px
+        22px
+        25px;
+
+    border:
+        1px solid
+        #dcae36;
+
+    border-radius: 24px;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #101d39,
+            #030914
+        );
+
+    box-shadow:
+
+        0 0 35px
+        rgba(255, 191, 45, .25),
+
+        inset 0 0 30px
+        rgba(255, 191, 45, .05);
+
+    animation:
+        resultPop
+        .55s
+        cubic-bezier(.2, 1.5, .4, 1);
+}
+
+@keyframes resultPop {
+
+    from {
+
+        transform: scale(.7);
+
+        opacity: 0;
+    }
+
+    to {
+
+        transform: scale(1);
+
+        opacity: 1;
+    }
+}
+
+
+/* Result artwork */
+
+.result-art {
+
+    width: 190px;
+    height: 190px;
+
+    object-fit: contain;
+
+    display: block;
+
+    margin: 0 auto 8px;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(255, 203, 70, .55)
+        );
+
+    animation:
+        resultGlow
+        2s
+        infinite
+        ease-in-out;
+}
+
+@keyframes resultGlow {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+}
+
+.result-small {
+
+    color: #aaa;
+
+    font-size: 13px;
+}
+
+.result-title {
+
+    margin:
+        8px
+        0;
+
+    color: #ffe083;
+
+    font-size: 31px;
+
+    font-weight: 900;
+}
+
+.result-message {
+
+    color: white;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin-bottom: 22px;
+}
+
+
+/* =====================================
+   PLAY AGAIN
+===================================== */
+
+.play-again {
+
+    width: 100%;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    padding: 14px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    color: #17100a;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #fff0a1,
+            #d99a16
+        );
+
+    box-shadow:
+        0 5px 20px
+        rgba(255, 190, 40, .25);
+
+    cursor: pointer;
+}
+
+.play-again:active {
+
+    transform: scale(.97);
+}
+
+
+/* =====================================
+   SMALL PHONES
+===================================== */
+
 @media (max-width: 370px) {
+
+    .app {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .choices {
+        gap: 6px;
+    }
+
     .card {
-        min-height: 275px;
+        padding: 5px;
+        border-radius: 15px;
     }
 
     .card-image {
         height: 175px;
     }
 
-    .creature {
-        font-size: 85px;
+    .card-info {
+        padding-top: 7px;
     }
 
     .card-title {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .card-desc {
-        font-size: 9px;
+        font-size: 8px;
+    }
+
+    .result-art {
+        width: 165px;
+        height: 165px;
     }
 }
 
+
+/* =====================================
+   TABLETS / DESKTOP
+===================================== */
+
 @media (min-width: 700px) {
+
     .app {
         padding-top: 30px;
     }
 
-    .card {
-        min-height: 360px;
-    }
-
     .card-image {
-        height: 250px;
+        height: 270px;
     }
 
-    .creature {
-        font-size: 130px;
+    .logo {
+        width: 260px;
     }
 }
 </style>
 </head>
 
+
 <body>
 
+
 <div class="app">
+
+
+    <!-- Background particles -->
 
     <div class="particle p1"></div>
     <div class="particle p2"></div>
@@ -507,25 +1003,41 @@ body {
     <div class="particle p4"></div>
     <div class="particle p5"></div>
 
+
+    <!-- HEADER -->
+
     <header class="header">
 
         <img
             class="logo"
             src="aura69.png"
-            alt="AURA69">
+            alt="AURA69"
+        >
+
 
         <div class="lang">
-            <button id="thBtn" class="active" onclick="setLanguage('th')">
+
+            <button
+                id="thBtn"
+                class="active"
+                onclick="setLanguage('th')"
+            >
                 ไทย
             </button>
 
-            <button id="enBtn" onclick="setLanguage('en')">
+            <button
+                id="enBtn"
+                onclick="setLanguage('en')"
+            >
                 EN
             </button>
+
         </div>
 
     </header>
 
+
+    <!-- HERO -->
 
     <section class="hero">
 
@@ -542,29 +1054,44 @@ body {
     </section>
 
 
-    <section class="choices" id="choices">
+    <!-- CHOICES -->
+
+    <section
+        class="choices"
+        id="choices"
+    >
+
 
         <!-- DRAGON -->
 
         <div
             class="card dragon"
-            onclick="chooseLuck('dragon', this)">
+            onclick="chooseLuck('dragon', this)"
+        >
 
             <div class="card-image">
 
-                <div class="creature">
-                    🐉
-                </div>
+                <img
+                    class="creature-img"
+                    src="dragon.png"
+                    alt="Dragon"
+                >
 
             </div>
 
             <div class="card-info">
 
-                <div class="card-title" id="dragonTitle">
+                <div
+                    class="card-title"
+                    id="dragonTitle"
+                >
                     มังกร
                 </div>
 
-                <div class="card-desc" id="dragonDesc">
+                <div
+                    class="card-desc"
+                    id="dragonDesc"
+                >
                     พลังและโชคลาภ
                 </div>
 
@@ -577,23 +1104,32 @@ body {
 
         <div
             class="card qilin"
-            onclick="chooseLuck('qilin', this)">
+            onclick="chooseLuck('qilin', this)"
+        >
 
             <div class="card-image">
 
-                <div class="creature">
-                    🦌
-                </div>
+                <img
+                    class="creature-img"
+                    src="qilin.png"
+                    alt="Qilin"
+                >
 
             </div>
 
             <div class="card-info">
 
-                <div class="card-title" id="qilinTitle">
+                <div
+                    class="card-title"
+                    id="qilinTitle"
+                >
                     กิเลน
                 </div>
 
-                <div class="card-desc" id="qilinDesc">
+                <div
+                    class="card-desc"
+                    id="qilinDesc"
+                >
                     ความมั่งคั่งและสิริมงคล
                 </div>
 
@@ -606,23 +1142,32 @@ body {
 
         <div
             class="card toad"
-            onclick="chooseLuck('toad', this)">
+            onclick="chooseLuck('toad', this)"
+        >
 
             <div class="card-image">
 
-                <div class="creature">
-                    🐸
-                </div>
+                <img
+                    class="creature-img"
+                    src="toad.png"
+                    alt="Golden Toad"
+                >
 
             </div>
 
             <div class="card-info">
 
-                <div class="card-title" id="toadTitle">
+                <div
+                    class="card-title"
+                    id="toadTitle"
+                >
                     คางคกทอง
                 </div>
 
-                <div class="card-desc" id="toadDesc">
+                <div
+                    class="card-desc"
+                    id="toadDesc"
+                >
                     ความร่ำรวยและเงินทอง
                 </div>
 
@@ -630,31 +1175,44 @@ body {
 
         </div>
 
+
     </section>
 
 
-    <div class="instruction" id="instruction">
+    <!-- INSTRUCTION -->
+
+    <div
+        class="instruction"
+        id="instruction"
+    >
         <span>✦</span>
         เลือก 1 สัญลักษณ์ เพื่อรับโชคของคุณ
         <span>✦</span>
     </div>
 
 
+    <!-- FEATURES -->
+
     <section class="bottom-panel">
+
 
         <div class="feature">
 
-            <div class="feature-icon">🛡️</div>
+            <div class="feature-icon">
+                🛡️
+            </div>
 
             <div
                 class="feature-title"
-                id="feature1Title">
+                id="feature1Title"
+            >
                 มั่นคง ปลอดภัย
             </div>
 
             <div
                 class="feature-text"
-                id="feature1Text">
+                id="feature1Text"
+            >
                 ระบบมาตรฐานสากล
             </div>
 
@@ -663,17 +1221,21 @@ body {
 
         <div class="feature">
 
-            <div class="feature-icon">🎁</div>
+            <div class="feature-icon">
+                🎁
+            </div>
 
             <div
                 class="feature-title"
-                id="feature2Title">
+                id="feature2Title"
+            >
                 โปรโมชั่นจัดเต็ม
             </div>
 
             <div
                 class="feature-text"
-                id="feature2Text">
+                id="feature2Text"
+            >
                 ทุกวันไม่มีวันหยุด
             </div>
 
@@ -682,71 +1244,112 @@ body {
 
         <div class="feature">
 
-            <div class="feature-icon">⚡</div>
+            <div class="feature-icon">
+                ⚡
+            </div>
 
             <div
                 class="feature-title"
-                id="feature3Title">
+                id="feature3Title"
+            >
                 ฝาก-ถอน รวดเร็ว
             </div>
 
             <div
                 class="feature-text"
-                id="feature3Text">
+                id="feature3Text"
+            >
                 ตลอด 24 ชั่วโมง
             </div>
 
         </div>
 
+
     </section>
+
 
 </div>
 
 
-<!-- REVEAL ANIMATION -->
+<!-- =====================================
+     REVEAL SCREEN
+===================================== -->
 
-<div class="reveal" id="reveal">
+<div
+    class="reveal"
+    id="reveal"
+>
 
-    <div class="reveal-symbol" id="revealSymbol">
-        ✨
-    </div>
+    <img
+        class="result-art"
+        id="revealArt"
+        src="dragon.png"
+        alt=""
+    >
 
-    <div class="reveal-text" id="revealText">
+    <div
+        class="reveal-text"
+        id="revealText"
+    >
         กำลังเปิดโชคของคุณ...
     </div>
 
 </div>
 
 
-<!-- RESULT -->
+<!-- =====================================
+     RESULT SCREEN
+===================================== -->
 
-<div class="result-screen" id="resultScreen">
+<div
+    class="result-screen"
+    id="resultScreen"
+>
 
     <div class="result-box">
 
-        <div class="result-small" id="resultSmall">
+
+        <div
+            class="result-small"
+            id="resultSmall"
+        >
             สัญลักษณ์แห่งโชคของคุณคือ
         </div>
 
-        <div class="result-creature" id="resultCreature">
-            🐉
-        </div>
 
-        <div class="result-title" id="resultTitle">
+        <img
+            class="result-art"
+            id="resultArt"
+            src="dragon.png"
+            alt=""
+        >
+
+
+        <div
+            class="result-title"
+            id="resultTitle"
+        >
             มังกร
         </div>
 
-        <div class="result-message" id="resultMessage">
+
+        <div
+            class="result-message"
+            id="resultMessage"
+        >
             พลังแห่งมังกรกำลังนำพาความโชคดี
             และโอกาสใหม่ ๆ มาสู่คุณ
         </div>
 
+
         <button
             class="play-again"
             id="playAgain"
-            onclick="playAgain()">
+            onclick="playAgain()"
+        >
             ✨ เล่นอีกครั้ง
         </button>
+
 
     </div>
 
@@ -755,40 +1358,64 @@ body {
 
 <script>
 
-/* =========================
-   LANGUAGE
-========================= */
+/* =====================================
+   LANGUAGE DATA
+===================================== */
 
 const text = {
 
     th: {
 
-        title: "เลือกโชคของคุณ",
-        subtitle: "สัญลักษณ์ไหนเรียกหาโชคของคุณ?",
+        title:
+            "เลือกโชคของคุณ",
 
-        dragon: "มังกร",
-        dragonDesc: "พลังและโชคลาภ",
+        subtitle:
+            "สัญลักษณ์ไหนเรียกหาโชคของคุณ?",
 
-        qilin: "กิเลน",
-        qilinDesc: "ความมั่งคั่งและสิริมงคล",
+        dragon:
+            "มังกร",
 
-        toad: "คางคกทอง",
-        toadDesc: "ความร่ำรวยและเงินทอง",
+        dragonDesc:
+            "พลังและโชคลาภ",
 
-        instruction: "เลือก 1 สัญลักษณ์ เพื่อรับโชคของคุณ",
+        qilin:
+            "กิเลน",
 
-        feature1Title: "มั่นคง ปลอดภัย",
-        feature1Text: "ระบบมาตรฐานสากล",
+        qilinDesc:
+            "ความมั่งคั่งและสิริมงคล",
 
-        feature2Title: "โปรโมชั่นจัดเต็ม",
-        feature2Text: "ทุกวันไม่มีวันหยุด",
+        toad:
+            "คางคกทอง",
 
-        feature3Title: "ฝาก-ถอน รวดเร็ว",
-        feature3Text: "ตลอด 24 ชั่วโมง",
+        toadDesc:
+            "ความร่ำรวยและเงินทอง",
 
-        reveal: "กำลังเปิดโชคของคุณ...",
+        instruction:
+            "เลือก 1 สัญลักษณ์ เพื่อรับโชคของคุณ",
 
-        resultSmall: "สัญลักษณ์แห่งโชคของคุณคือ",
+        feature1Title:
+            "มั่นคง ปลอดภัย",
+
+        feature1Text:
+            "ระบบมาตรฐานสากล",
+
+        feature2Title:
+            "โปรโมชั่นจัดเต็ม",
+
+        feature2Text:
+            "ทุกวันไม่มีวันหยุด",
+
+        feature3Title:
+            "ฝาก-ถอน รวดเร็ว",
+
+        feature3Text:
+            "ตลอด 24 ชั่วโมง",
+
+        reveal:
+            "กำลังเปิดโชคของคุณ...",
+
+        resultSmall:
+            "สัญลักษณ์แห่งโชคของคุณคือ",
 
         dragonResult:
             "พลังแห่งมังกรกำลังนำพาความโชคดี และโอกาสใหม่ ๆ มาสู่คุณ",
@@ -799,41 +1426,66 @@ const text = {
         toadResult:
             "คางคกทองสื่อถึงความมั่งคั่ง เงินทอง และโอกาสที่ดี",
 
-        again: "✨ เล่นอีกครั้ง"
+        again:
+            "✨ เล่นอีกครั้ง"
     },
 
 
     en: {
 
-        title: "Choose Your Luck",
-        subtitle: "Which symbol is calling your fortune?",
+        title:
+            "Choose Your Luck",
 
-        dragon: "Dragon",
-        dragonDesc: "Power & Fortune",
+        subtitle:
+            "Which symbol is calling your fortune?",
 
-        qilin: "Qilin",
-        qilinDesc: "Prosperity & Blessings",
+        dragon:
+            "Dragon",
 
-        toad: "Golden Toad",
-        toadDesc: "Wealth & Money",
+        dragonDesc:
+            "Power & Fortune",
 
-        instruction: "Choose 1 symbol to reveal your luck",
+        qilin:
+            "Qilin",
 
-        feature1Title: "Secure & Trusted",
-        feature1Text: "International standards",
+        qilinDesc:
+            "Prosperity & Blessings",
 
-        feature2Title: "Daily Promotions",
-        feature2Text: "Rewards every day",
+        toad:
+            "Golden Toad",
 
-        feature3Title: "Fast & Easy",
-        feature3Text: "Available 24 hours",
+        toadDesc:
+            "Wealth & Money",
 
-        reveal: "Revealing your luck...",
+        instruction:
+            "Choose 1 symbol to reveal your luck",
 
-        resultSmall: "Your lucky symbol is",
+        feature1Title:
+            "Secure & Trusted",
+
+        feature1Text:
+            "International standards",
+
+        feature2Title:
+            "Daily Promotions",
+
+        feature2Text:
+            "Rewards every day",
+
+        feature3Title:
+            "Fast & Easy",
+
+        feature3Text:
+            "Available 24 hours",
+
+        reveal:
+            "Revealing your luck...",
+
+        resultSmall:
+            "Your lucky symbol is",
 
         dragonResult:
-            "The Dragon brings power, fortune and exciting new opportunities your way.",
+            "The Dragon represents power, fortune and exciting new opportunities.",
 
         qilinResult:
             "The Qilin represents prosperity, harmony and auspicious fortune.",
@@ -841,20 +1493,57 @@ const text = {
         toadResult:
             "The Golden Toad symbolizes wealth, abundance and financial fortune.",
 
-        again: "✨ Play Again"
+        again:
+            "✨ Play Again"
     }
 
 };
 
 
+/* =====================================
+   GAME DATA
+===================================== */
+
+const luckData = {
+
+    dragon: {
+
+        image:
+            "dragon.png"
+
+    },
+
+    qilin: {
+
+        image:
+            "qilin.png"
+
+    },
+
+    toad: {
+
+        image:
+            "toad.png"
+
+    }
+
+};
+
+
+/* =====================================
+   GAME VARIABLES
+===================================== */
+
 let currentLanguage = "th";
+
 let selectedLuck = null;
+
 let busy = false;
 
 
-/* =========================
-   CHANGE LANGUAGE
-========================= */
+/* =====================================
+   LANGUAGE SWITCH
+===================================== */
 
 function setLanguage(language) {
 
@@ -862,178 +1551,330 @@ function setLanguage(language) {
 
     const t = text[language];
 
-    document.getElementById("mainTitle").textContent = t.title;
-    document.getElementById("subtitle").textContent = t.subtitle;
 
-    document.getElementById("dragonTitle").textContent = t.dragon;
-    document.getElementById("dragonDesc").textContent = t.dragonDesc;
+    document
+        .getElementById("mainTitle")
+        .textContent =
+        t.title;
 
-    document.getElementById("qilinTitle").textContent = t.qilin;
-    document.getElementById("qilinDesc").textContent = t.qilinDesc;
 
-    document.getElementById("toadTitle").textContent = t.toad;
-    document.getElementById("toadDesc").textContent = t.toadDesc;
+    document
+        .getElementById("subtitle")
+        .textContent =
+        t.subtitle;
 
-    document.getElementById("instruction").innerHTML =
+
+    document
+        .getElementById("dragonTitle")
+        .textContent =
+        t.dragon;
+
+
+    document
+        .getElementById("dragonDesc")
+        .textContent =
+        t.dragonDesc;
+
+
+    document
+        .getElementById("qilinTitle")
+        .textContent =
+        t.qilin;
+
+
+    document
+        .getElementById("qilinDesc")
+        .textContent =
+        t.qilinDesc;
+
+
+    document
+        .getElementById("toadTitle")
+        .textContent =
+        t.toad;
+
+
+    document
+        .getElementById("toadDesc")
+        .textContent =
+        t.toadDesc;
+
+
+    document
+        .getElementById("instruction")
+        .innerHTML =
         '<span>✦</span> ' +
         t.instruction +
         ' <span>✦</span>';
 
-    document.getElementById("feature1Title").textContent =
+
+    document
+        .getElementById("feature1Title")
+        .textContent =
         t.feature1Title;
 
-    document.getElementById("feature1Text").textContent =
+
+    document
+        .getElementById("feature1Text")
+        .textContent =
         t.feature1Text;
 
-    document.getElementById("feature2Title").textContent =
+
+    document
+        .getElementById("feature2Title")
+        .textContent =
         t.feature2Title;
 
-    document.getElementById("feature2Text").textContent =
+
+    document
+        .getElementById("feature2Text")
+        .textContent =
         t.feature2Text;
 
-    document.getElementById("feature3Title").textContent =
+
+    document
+        .getElementById("feature3Title")
+        .textContent =
         t.feature3Title;
 
-    document.getElementById("feature3Text").textContent =
+
+    document
+        .getElementById("feature3Text")
+        .textContent =
         t.feature3Text;
 
-    document.getElementById("thBtn").classList.toggle(
-        "active",
-        language === "th"
-    );
 
-    document.getElementById("enBtn").classList.toggle(
-        "active",
-        language === "en"
-    );
+    document
+        .getElementById("thBtn")
+        .classList
+        .toggle(
+            "active",
+            language === "th"
+        );
+
+
+    document
+        .getElementById("enBtn")
+        .classList
+        .toggle(
+            "active",
+            language === "en"
+        );
+
+
+    /* Update reveal text if visible */
+
+    document
+        .getElementById("revealText")
+        .textContent =
+        t.reveal;
 }
 
 
-/* =========================
+/* =====================================
    CHOOSE LUCK
-========================= */
+===================================== */
 
 function chooseLuck(type, card) {
 
-    if (busy) return;
+    if (busy) {
+        return;
+    }
 
     busy = true;
+
     selectedLuck = type;
 
-    const choices = document.getElementById("choices");
 
-    choices.classList.add("has-selection");
+    const choices =
+        document.getElementById("choices");
 
-    card.classList.add("selected");
+
+    choices.classList.add(
+        "has-selection"
+    );
+
+
+    card.classList.add(
+        "selected"
+    );
+
+
+    /* Wait for card animation */
 
     setTimeout(() => {
 
-        const reveal = document.getElementById("reveal");
 
-        const symbol = document.getElementById("revealSymbol");
+        const reveal =
+            document.getElementById("reveal");
 
-        const revealText = document.getElementById("revealText");
 
-        const symbols = {
-            dragon: "🐉",
-            qilin: "🦌",
-            toad: "🐸"
-        };
+        const revealArt =
+            document.getElementById("revealArt");
 
-        symbol.textContent = symbols[type];
+
+        const revealText =
+            document.getElementById("revealText");
+
+
+        revealArt.src =
+            luckData[type].image;
+
 
         revealText.textContent =
             text[currentLanguage].reveal;
 
-        reveal.classList.add("show");
+
+        reveal.classList.add(
+            "show"
+        );
+
+
+        /* Reveal duration */
 
         setTimeout(() => {
 
-            reveal.classList.remove("show");
+
+            reveal.classList.remove(
+                "show"
+            );
+
 
             showResult(type);
 
-        }, 1500);
+
+        }, 1600);
+
 
     }, 500);
 }
 
 
-/* =========================
-   RESULT
-========================= */
+/* =====================================
+   SHOW RESULT
+===================================== */
 
 function showResult(type) {
 
-    const t = text[currentLanguage];
+    const t =
+        text[currentLanguage];
 
-    const symbols = {
-        dragon: "🐉",
-        qilin: "🦌",
-        toad: "🐸"
+
+    const titleMap = {
+
+        dragon:
+            t.dragon,
+
+        qilin:
+            t.qilin,
+
+        toad:
+            t.toad
     };
 
-    const titles = {
-        dragon: t.dragon,
-        qilin: t.qilin,
-        toad: t.toad
+
+    const messageMap = {
+
+        dragon:
+            t.dragonResult,
+
+        qilin:
+            t.qilinResult,
+
+        toad:
+            t.toadResult
     };
 
-    const messages = {
-        dragon: t.dragonResult,
-        qilin: t.qilinResult,
-        toad: t.toadResult
-    };
 
-    document.getElementById("resultCreature").textContent =
-        symbols[type];
+    const resultArt =
+        document.getElementById(
+            "resultArt"
+        );
 
-    document.getElementById("resultTitle").textContent =
-        titles[type];
 
-    document.getElementById("resultMessage").textContent =
-        messages[type];
+    resultArt.src =
+        luckData[type].image;
 
-    document.getElementById("resultSmall").textContent =
+
+    resultArt.alt =
+        titleMap[type];
+
+
+    document
+        .getElementById("resultSmall")
+        .textContent =
         t.resultSmall;
 
-    document.getElementById("playAgain").textContent =
+
+    document
+        .getElementById("resultTitle")
+        .textContent =
+        titleMap[type];
+
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        messageMap[type];
+
+
+    document
+        .getElementById("playAgain")
+        .textContent =
         t.again;
 
-    document.getElementById("resultScreen").classList.add("show");
-}
-
-
-/* =========================
-   PLAY AGAIN
-========================= */
-
-function playAgain() {
 
     document
         .getElementById("resultScreen")
-        .classList.remove("show");
+        .classList
+        .add("show");
+}
+
+
+/* =====================================
+   PLAY AGAIN
+===================================== */
+
+function playAgain() {
+
+
+    document
+        .getElementById("resultScreen")
+        .classList
+        .remove("show");
+
 
     document
         .getElementById("choices")
-        .classList.remove("has-selection");
+        .classList
+        .remove("has-selection");
+
 
     document
         .querySelectorAll(".card")
         .forEach(card => {
-            card.classList.remove("selected");
+
+            card.classList.remove(
+                "selected"
+            );
+
         });
 
+
     selectedLuck = null;
+
     busy = false;
 }
 
 
-/* =========================
+/* =====================================
    TELEGRAM MINI APP
-========================= */
+===================================== */
 
-if (window.Telegram && Telegram.WebApp) {
+if (
+    window.Telegram &&
+    Telegram.WebApp
+) {
 
     Telegram.WebApp.ready();
 
@@ -1042,7 +1883,9 @@ if (window.Telegram && Telegram.WebApp) {
 }
 
 
-/* Start in Thai */
+/* =====================================
+   START LANGUAGE
+===================================== */
 
 setLanguage("th");
 
