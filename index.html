@@ -1,89 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luck Arcade</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>AURA69 - Luck Arcade</title>
 
     <style>
         * {
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #090909;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: Arial, "Tahoma", sans-serif;
+            background:
+                radial-gradient(
+                    circle at 50% 20%,
+                    #102b65 0%,
+                    #05070d 42%,
+                    #000000 100%
+                );
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+
+            background:
+                radial-gradient(
+                    circle at 20% 30%,
+                    rgba(0, 80, 255, 0.12),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(255, 190, 0, 0.08),
+                    transparent 30%
+                );
         }
 
         .app {
+            position: relative;
             width: 100%;
-            max-width: 500px;
-            padding: 30px 20px;
+            max-width: 520px;
+            min-height: 100vh;
+
+            margin: auto;
+            padding: 28px 18px 40px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        h1 {
-            font-size: 32px;
+        /* =========================
+           LANGUAGE SWITCH
+        ========================= */
+
+        .language {
+            align-self: flex-end;
+
+            display: flex;
+            gap: 6px;
+
             margin-bottom: 10px;
         }
 
-        .subtitle {
-            color: #aaa;
-            margin-bottom: 40px;
+        .language button {
+            border: 1px solid rgba(255, 210, 70, 0.3);
+            background: rgba(10, 20, 40, 0.7);
+
+            color: #9fa9bd;
+
+            padding: 6px 10px;
+            border-radius: 8px;
+
+            font-size: 11px;
+            cursor: pointer;
         }
 
+        .language button.active {
+            color: #f7cf50;
+            border-color: #f7cf50;
+        }
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .logo {
+            width: 190px;
+            max-width: 65%;
+            height: auto;
+
+            margin-bottom: 20px;
+
+            filter:
+                drop-shadow(
+                    0 0 10px rgba(0, 90, 255, 0.35)
+                )
+                drop-shadow(
+                    0 0 12px rgba(255, 200, 40, 0.15)
+                );
+        }
+
+        /* =========================
+           TITLE
+        ========================= */
+
+        .title {
+            margin: 0;
+
+            font-size: 27px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-align: center;
+        }
+
+        .subtitle {
+            margin-top: 9px;
+
+            color: #aeb8cc;
+
+            font-size: 14px;
+
+            text-align: center;
+        }
+
+        .gold-line {
+            width: 80px;
+            height: 2px;
+
+            margin: 18px auto 28px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #f7c94a,
+                    transparent
+                );
+        }
+
+        /* =========================
+           CHOICES
+        ========================= */
+
         .choices {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 10px;
         }
 
         .choice {
-            width: 100px;
-            height: 130px;
-            border: 1px solid #555;
+            position: relative;
+
+            min-height: 150px;
+
+            border:
+                1px solid
+                rgba(255, 207, 74, 0.3);
+
             border-radius: 18px;
-            background: #151515;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 39, 78, 0.95),
+                    rgba(5, 8, 16, 0.98)
+                );
+
             color: white;
+
             cursor: pointer;
-            font-size: 16px;
+
+            padding: 14px 6px;
+
+            transition:
+                transform 0.2s,
+                border-color 0.2s,
+                box-shadow 0.2s;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.45);
+        }
+
+        .choice:active {
+            transform: scale(0.94);
         }
 
         .choice:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+
+            border-color: #f5c84b;
+
+            box-shadow:
+                0 0 20px rgba(0, 90, 255, 0.25),
+                0 0 20px rgba(255, 200, 50, 0.12);
         }
 
         .symbol {
             display: block;
-            font-size: 45px;
-            margin-bottom: 12px;
+
+            font-size: 48px;
+
+            margin: 8px 0 12px;
         }
+
+        .choice-name {
+            display: block;
+
+            font-size: 14px;
+            font-weight: bold;
+
+            letter-spacing: 0.5px;
+        }
+
+        .choice-description {
+            display: block;
+
+            margin-top: 7px;
+
+            color: #9fa9bd;
+
+            font-size: 10px;
+        }
+
+        /* =========================
+           RESULT
+        ========================= */
 
         #result {
             display: none;
+
+            width: 100%;
+
+            text-align: center;
+
+            animation:
+                reveal 0.7s ease;
         }
 
-        #resultSymbol {
-            font-size: 80px;
+        @keyframes reveal {
+
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        button {
-            transition: 0.2s;
+        .result-symbol {
+            font-size: 100px;
+
+            margin: 20px 0;
+
+            animation:
+                glow 1.5s infinite alternate;
         }
 
-        .play-again {
-            margin-top: 25px;
-            padding: 14px 25px;
+        @keyframes glow {
+
+            from {
+                filter:
+                    drop-shadow(
+                        0 0 5px
+                        rgba(255,255,255,0.2)
+                    );
+
+                transform: scale(1);
+            }
+
+            to {
+                filter:
+                    drop-shadow(
+                        0 0 25px
+                        rgba(255,200,60,0.8)
+                    );
+
+                transform: scale(1.06);
+            }
+        }
+
+        .result-label {
+            color: #f5c84b;
+
+            font-size: 12px;
+
+            letter-spacing: 3px;
+
+            font-weight: bold;
+        }
+
+        .result-title {
+            margin: 10px 0;
+
+            font-size: 32px;
+
+            letter-spacing: 1px;
+        }
+
+        .result-text {
+            color: #aeb8cc;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .main-button {
+            margin-top: 30px;
+
+            width: 100%;
+            max-width: 300px;
+
+            padding: 16px 25px;
+
             border: none;
-            border-radius: 12px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f9d65a,
+                    #c98b16
+                );
+
+            color: #090909;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 20px
+                rgba(230, 170, 30, 0.25);
+        }
+
+        .main-button:active {
+            transform: scale(0.97);
+        }
+
+        .secondary-button {
+            margin-top: 12px;
+
+            width: 100%;
+            max-width: 300px;
+
+            padding: 14px 25px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.25);
+
+            border-radius: 14px;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 14px;
+
             cursor: pointer;
         }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            margin-top: auto;
+
+            padding-top: 35px;
+
+            color: #596273;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 360px) {
+
+            .choice {
+                min-height: 135px;
+            }
+
+            .symbol {
+                font-size: 40px;
+            }
+
+            .choice-name {
+                font-size: 12px;
+            }
+
+            .choice-description {
+                font-size: 9px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+        }
+
     </style>
 </head>
 
@@ -91,85 +443,446 @@
 
 <div class="app">
 
-    <div id="game">
-        <h1>LUCK ARCADE</h1>
+    <!-- LANGUAGE -->
 
-        <div class="subtitle">
-            Choose Your Luck
+    <div class="language">
+
+        <button
+            id="thaiButton"
+            class="active"
+            onclick="setLanguage('th')">
+
+            ไทย
+
+        </button>
+
+        <button
+            id="englishButton"
+            onclick="setLanguage('en')">
+
+            EN
+
+        </button>
+
+    </div>
+
+
+    <!-- AURA69 LOGO -->
+
+    <img
+        class="logo"
+        src="aura69.png"
+        alt="AURA69">
+
+
+    <!-- =========================
+         GAME SCREEN
+    ========================= -->
+
+    <div id="game">
+
+        <h1
+            id="gameTitle"
+            class="title">
+
+            เลือกโชคของคุณ
+
+        </h1>
+
+
+        <div
+            id="gameSubtitle"
+            class="subtitle">
+
+            สัญลักษณ์ไหนเรียกหาโชคของคุณ?
+
         </div>
+
+
+        <div class="gold-line"></div>
+
 
         <div class="choices">
 
-            <button class="choice" onclick="chooseLuck('Dragon', '🐉')">
-                <span class="symbol">🐉</span>
-                Dragon
+
+            <!-- DRAGON -->
+
+            <button
+                class="choice"
+                onclick="chooseLuck('DRAGON', '🐉')">
+
+                <span class="symbol">
+                    🐉
+                </span>
+
+                <span
+                    id="dragonName"
+                    class="choice-name">
+
+                    มังกร
+
+                </span>
+
+                <span
+                    id="dragonDescription"
+                    class="choice-description">
+
+                    พลังและโชคลาภ
+
+                </span>
+
             </button>
 
-            <button class="choice" onclick="chooseLuck('Qilin', '🦌')">
-                <span class="symbol">🦌</span>
-                Qilin
+
+            <!-- QILIN -->
+
+            <button
+                class="choice"
+                onclick="chooseLuck('QILIN', '🦌')">
+
+                <span class="symbol">
+                    🦌
+                </span>
+
+                <span
+                    id="qilinName"
+                    class="choice-name">
+
+                    กิเลน
+
+                </span>
+
+                <span
+                    id="qilinDescription"
+                    class="choice-description">
+
+                    ความมั่งคั่ง
+
+                </span>
+
             </button>
 
-            <button class="choice" onclick="chooseLuck('Toad', '🐸')">
-                <span class="symbol">🐸</span>
-                Toad
+
+            <!-- GOLDEN TOAD -->
+
+            <button
+                class="choice"
+                onclick="chooseLuck('TOAD', '🐸')">
+
+                <span class="symbol">
+                    🐸
+                </span>
+
+                <span
+                    id="toadName"
+                    class="choice-name">
+
+                    คางคกทอง
+
+                </span>
+
+                <span
+                    id="toadDescription"
+                    class="choice-description">
+
+                    เงินทอง
+
+                </span>
+
             </button>
+
 
         </div>
+
     </div>
+
+
+    <!-- =========================
+         RESULT SCREEN
+    ========================= -->
 
     <div id="result">
 
-        <div id="resultSymbol"></div>
+        <div
+            id="resultLabel"
+            class="result-label">
 
-        <h1 id="resultTitle"></h1>
+            โชคของคุณวันนี้
 
-        <p id="resultText"></p>
+        </div>
 
-        <button class="play-again" onclick="playAgain()">
-            PLAY AGAIN
+
+        <div
+            id="resultSymbol"
+            class="result-symbol">
+        </div>
+
+
+        <h1
+            id="resultTitle"
+            class="result-title">
+        </h1>
+
+
+        <p
+            id="resultText"
+            class="result-text">
+        </p>
+
+
+        <button
+            id="websiteButton"
+            class="main-button"
+            onclick="visitWebsite()">
+
+            เข้าสู่ AURA69
+
         </button>
+
+
+        <button
+            id="againButton"
+            class="secondary-button"
+            onclick="playAgain()">
+
+            เล่นอีกครั้ง
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="footer"
+        class="footer">
+
+        AURA69 • LUCK ARCADE
 
     </div>
 
 </div>
 
+
 <script>
+
+let currentLanguage = "th";
+
+
+/* =========================
+   LANGUAGE SYSTEM
+========================= */
+
+function setLanguage(language) {
+
+    currentLanguage = language;
+
+
+    const thaiButton =
+        document.getElementById("thaiButton");
+
+    const englishButton =
+        document.getElementById("englishButton");
+
+
+    if (language === "th") {
+
+        thaiButton.classList.add("active");
+
+        englishButton.classList.remove("active");
+
+
+        document.documentElement.lang = "th";
+
+
+        document.getElementById("gameTitle").innerText =
+            "เลือกโชคของคุณ";
+
+        document.getElementById("gameSubtitle").innerText =
+            "สัญลักษณ์ไหนเรียกหาโชคของคุณ?";
+
+
+        document.getElementById("dragonName").innerText =
+            "มังกร";
+
+        document.getElementById("dragonDescription").innerText =
+            "พลังและโชคลาภ";
+
+
+        document.getElementById("qilinName").innerText =
+            "กิเลน";
+
+        document.getElementById("qilinDescription").innerText =
+            "ความมั่งคั่ง";
+
+
+        document.getElementById("toadName").innerText =
+            "คางคกทอง";
+
+        document.getElementById("toadDescription").innerText =
+            "เงินทอง";
+
+
+        document.getElementById("resultLabel").innerText =
+            "โชคของคุณวันนี้";
+
+        document.getElementById("websiteButton").innerText =
+            "เข้าสู่ AURA69";
+
+        document.getElementById("againButton").innerText =
+            "เล่นอีกครั้ง";
+
+    }
+
+    else {
+
+        thaiButton.classList.remove("active");
+
+        englishButton.classList.add("active");
+
+
+        document.documentElement.lang = "en";
+
+
+        document.getElementById("gameTitle").innerText =
+            "CHOOSE YOUR LUCK";
+
+        document.getElementById("gameSubtitle").innerText =
+            "Which symbol calls you?";
+
+
+        document.getElementById("dragonName").innerText =
+            "DRAGON";
+
+        document.getElementById("dragonDescription").innerText =
+            "POWER & FORTUNE";
+
+
+        document.getElementById("qilinName").innerText =
+            "QILIN";
+
+        document.getElementById("qilinDescription").innerText =
+            "PROSPERITY";
+
+
+        document.getElementById("toadName").innerText =
+            "GOLDEN TOAD";
+
+        document.getElementById("toadDescription").innerText =
+            "WEALTH";
+
+
+        document.getElementById("resultLabel").innerText =
+            "YOUR LUCK TODAY";
+
+        document.getElementById("websiteButton").innerText =
+            "ENTER AURA69";
+
+        document.getElementById("againButton").innerText =
+            "PLAY AGAIN";
+
+    }
+
+}
+
+
+/* =========================
+   GAME
+========================= */
 
 function chooseLuck(name, symbol) {
 
-    document.getElementById("game").style.display = "none";
+    document.getElementById("game").style.display =
+        "none";
 
-    document.getElementById("result").style.display = "block";
+    document.getElementById("result").style.display =
+        "block";
 
-    document.getElementById("resultSymbol").innerText = symbol;
 
-    document.getElementById("resultTitle").innerText =
-        name.toUpperCase();
+    document.getElementById("resultSymbol").innerText =
+        symbol;
 
-    if (name === "Dragon") {
 
-        document.getElementById("resultText").innerText =
-            "Power and fortune.";
+    if (name === "DRAGON") {
 
-    } else if (name === "Qilin") {
+        document.getElementById("resultTitle").innerText =
+            currentLanguage === "th"
+                ? "พลังและโชคลาภ"
+                : "POWER & FORTUNE";
 
-        document.getElementById("resultText").innerText =
-            "Prosperity and auspicious fortune.";
-
-    } else {
 
         document.getElementById("resultText").innerText =
-            "Wealth and abundance.";
+            currentLanguage === "th"
+                ? "มังกร สัญลักษณ์แห่งพลัง อำนาจ และโชคลาภ"
+                : "The Dragon represents power, strength and fortune.";
 
     }
+
+
+    else if (name === "QILIN") {
+
+        document.getElementById("resultTitle").innerText =
+            currentLanguage === "th"
+                ? "ความมั่งคั่ง"
+                : "PROSPERITY";
+
+
+        document.getElementById("resultText").innerText =
+            currentLanguage === "th"
+                ? "กิเลน สัญลักษณ์แห่งความสงบ สิริมงคล และความเจริญรุ่งเรือง"
+                : "The Qilin represents harmony, auspiciousness and prosperity.";
+
+    }
+
+
+    else {
+
+        document.getElementById("resultTitle").innerText =
+            currentLanguage === "th"
+                ? "เงินทอง"
+                : "WEALTH";
+
+
+        document.getElementById("resultText").innerText =
+            currentLanguage === "th"
+                ? "คางคกทอง สัญลักษณ์แห่งความมั่งคั่งและเงินทอง"
+                : "The Golden Toad represents wealth and abundance.";
+
+    }
+
 }
+
+
+/* =========================
+   PLAY AGAIN
+========================= */
 
 function playAgain() {
 
-    document.getElementById("result").style.display = "none";
+    document.getElementById("result").style.display =
+        "none";
 
-    document.getElementById("game").style.display = "block";
+    document.getElementById("game").style.display =
+        "block";
+
+}
+
+
+/* =========================
+   WEBSITE
+========================= */
+
+function visitWebsite() {
+
+    /*
+       CHANGE THIS TO YOUR REAL
+       AURA69 WEBSITE ADDRESS
+    */
+
+    window.open(
+        "https://YOUR-WEBSITE-HERE.com",
+        "_blank"
+    );
+
 }
 
 </script>
