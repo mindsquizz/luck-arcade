@@ -498,41 +498,6 @@ body {
 }
 
 /* =========================
-   DAILY FORTUNE
-========================= */
-
-.daily-status {
-  text-align: center;
-  min-height: 18px;
-  margin-top: 12px;
-  color: #d8c27a;
-  font-size: 11px;
-  letter-spacing: .4px;
-  text-shadow: 0 0 12px rgba(212,175,55,.16);
-}
-
-.choice.locked {
-  opacity: .45;
-  filter: saturate(.65);
-  cursor: default;
-  pointer-events: none;
-}
-
-.choice.locked::after {
-  content: "✓ TODAY'S LUCK";
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 5px 8px;
-  border-radius: 12px;
-  background: rgba(212,175,55,.14);
-  border: 1px solid rgba(212,175,55,.32);
-  color: #d8c27a;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-
-/* =========================
    PARTICLES
 ========================= */
 
@@ -736,12 +701,160 @@ body {
   }
 }
 
+
+/* =========================
+   AURA69 CUSTOM POPUP
+   Replaces browser alert()
+========================= */
+.aura-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 4, 10, .76);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.aura-popup-overlay.show {
+  display: flex;
+  animation: auraPopupFade .22s ease both;
+}
+
+.aura-popup {
+  width: min(100%, 390px);
+  position: relative;
+  padding: 28px 24px 22px;
+  border: 1px solid rgba(212,175,55,.55);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212,175,55,.16), transparent 48%),
+    linear-gradient(145deg, rgba(18,37,66,.98), rgba(3,9,18,.99));
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.62),
+    0 0 38px rgba(212,175,55,.16),
+    inset 0 1px rgba(255,255,255,.10);
+  text-align: center;
+  transform: translateY(8px) scale(.97);
+  animation: auraPopupIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.aura-popup::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(212,175,55,.10);
+  border-radius: 17px;
+  pointer-events: none;
+}
+
+.aura-popup-logo {
+  width: 88px;
+  height: 44px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 0 14px rgba(212,175,55,.28));
+}
+
+.aura-popup-brand {
+  color: #d8c27a;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  margin-bottom: 13px;
+}
+
+.aura-popup-message {
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.65;
+  white-space: pre-line;
+  text-shadow: 0 1px 10px rgba(0,0,0,.25);
+}
+
+.aura-popup-ok {
+  width: 100%;
+  margin-top: 22px;
+  padding: 13px 20px;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f1d36a, #b98b24);
+  color: #111;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow:
+    0 0 24px rgba(212,175,55,.28),
+    inset 0 1px rgba(255,255,255,.7);
+  transition: transform .16s ease, filter .16s ease;
+}
+
+.aura-popup-ok:active {
+  transform: scale(.98);
+  filter: brightness(.94);
+}
+
+@keyframes auraPopupFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes auraPopupIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-popup-overlay,
+  .aura-popup {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="app">
+
+  <!-- =====================
+       AURA69 CUSTOM POPUP
+       Replaces browser alert()
+  ====================== -->
+  <div
+    id="auraPopup"
+    class="aura-popup-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="auraPopupBrand"
+    onclick="closeAuraPopup(event)"
+  >
+    <div class="aura-popup" onclick="event.stopPropagation()">
+      <img src="aura69.png" class="aura-popup-logo" alt="AURA69">
+      <div class="aura-popup-brand" id="auraPopupBrand">AURA69</div>
+      <div class="aura-popup-message" id="auraPopupMessage"></div>
+      <button
+        type="button"
+        class="aura-popup-ok"
+        id="auraPopupOk"
+        onclick="closeAuraPopup()"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+
 
   <!-- =====================
        OPENING
@@ -800,7 +913,6 @@ body {
       เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ
     </div>
 
-    <div class="daily-status" id="dailyStatus"></div>
 
     <div class="choices">
 
@@ -929,11 +1041,22 @@ body {
 
 
 <script>
+
 /* ==================================================
    SETTINGS
 ================================================== */
 
+/*
+   ใส่ URL เว็บไซต์ AURA69 ของคุณตรงนี้ภายหลัง
+
+   ตัวอย่าง:
+   const AURA69_URL = "https://yourwebsite.com";
+
+   ตอนนี้ปล่อยว่างไว้ก่อน
+*/
+
 const AURA69_URL = "https://69aura11.com/";
+
 
 /* ==================================================
    LANGUAGE
@@ -941,245 +1064,121 @@ const AURA69_URL = "https://69aura11.com/";
 
 let language = "th";
 
+
 const translations = {
+
   th: {
+
     title: "เลือกโชคของคุณ",
-    subtitle: "เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ",
-    dragon: "🐉 มังกร",
-    qilin: "🦌 กิเลน",
-    toad: "🐸 คางคกทอง",
-    reveal: "กำลังเปิดโชคของคุณ...",
-    resultTitle: "✨ โชคของคุณถูกเปิดแล้ว ✨",
-    fortuneLabel: "คำทำนายของคุณ",
-    dragonName: "🐉 มังกร",
-    qilinName: "🦌 กิเลน",
-    toadName: "🐸 คางคกทอง",
-    auraCTA: "✨ รับโชคต่อที่ AURA69",
-    again: "↻ กลับไปดูโชคของวันนี้",
-    againLocked: "✓ เปิดโชควันนี้แล้ว • กลับมาใหม่พรุ่งนี้",
-    dailyPlayed: "✨ คุณเปิดโชคของวันนี้แล้ว • กลับมาใหม่พรุ่งนี้",
-    dailyReady: "✨ วันนี้คุณมีโชคหนึ่งครั้งรออยู่",
-    disclaimer: "เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์ ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง"
+
+    subtitle:
+      "เลือกหนึ่งสัญลักษณ์ แล้วเปิดโชคของคุณ",
+
+    dragon:
+      "🐉 มังกร",
+
+    qilin:
+      "🦌 กิเลน",
+
+    toad:
+      "🐸 คางคกทอง",
+
+    reveal:
+      "กำลังเปิดโชคของคุณ...",
+
+    resultTitle:
+      "✨ โชคของคุณถูกเปิดแล้ว ✨",
+
+    fortuneLabel:
+      "คำทำนายของคุณ",
+
+    dragonFortune:
+      "พลังแห่งความมั่นใจกำลังพาคุณไปสู่โอกาสใหม่ จงเชื่อในตัวเองและกล้าที่จะก้าวไปข้างหน้า",
+
+    qilinFortune:
+      "จังหวะแห่งความก้าวหน้าและสิ่งดี ๆ กำลังเข้ามา เปิดใจรับโอกาสใหม่ที่กำลังปรากฏตรงหน้า",
+
+    toadFortune:
+      "พลังแห่งทรัพย์และความอุดมสมบูรณ์กำลังเปิดออก ใช้โอกาสอย่างฉลาดและสร้างจังหวะของตัวเอง",
+
+    dragonName:
+      "🐉 มังกร",
+
+    qilinName:
+      "🦌 กิเลน",
+
+    toadName:
+      "🐸 คางคกทอง",
+
+    auraCTA:
+      "✨ รับโชคต่อที่ AURA69",
+
+    again:
+      "↻ เล่นอีกครั้ง",
+
+    disclaimer:
+      "เกมนี้จัดทำเพื่อความบันเทิงและประสบการณ์แบรนด์ ผลลัพธ์ในเกมไม่มีผลต่อการเดิมพันหรือรางวัลเงินจริง"
+
   },
 
+
   en: {
-    title: "Choose Your Luck",
-    subtitle: "Choose one symbol and reveal your luck",
-    dragon: "🐉 Dragon",
-    qilin: "🦌 Qilin",
-    toad: "🐸 Golden Toad",
-    reveal: "Revealing your luck...",
-    resultTitle: "✨ Your Luck Has Been Revealed ✨",
-    fortuneLabel: "YOUR FORTUNE",
-    dragonName: "🐉 Dragon",
-    qilinName: "🦌 Qilin",
-    toadName: "🐸 Golden Toad",
-    auraCTA: "✨ Continue Your Luck at AURA69",
-    again: "↻ View Today's Luck",
-    againLocked: "✓ Today's luck is already revealed • Come back tomorrow",
-    dailyPlayed: "✨ Today's luck has already been revealed • Come back tomorrow",
-    dailyReady: "✨ You have one luck reveal waiting today",
-    disclaimer: "This game is created for entertainment and brand experience. Game results do not affect real-money betting or rewards."
+
+    title:
+      "Choose Your Luck",
+
+    subtitle:
+      "Choose one symbol and reveal your luck",
+
+    dragon:
+      "🐉 Dragon",
+
+    qilin:
+      "🦌 Qilin",
+
+    toad:
+      "🐸 Golden Toad",
+
+    reveal:
+      "Revealing your luck...",
+
+    resultTitle:
+      "✨ Your Luck Has Been Revealed ✨",
+
+    fortuneLabel:
+      "YOUR FORTUNE",
+
+    dragonFortune:
+      "The power of confidence is opening new opportunities for you. Trust yourself and dare to move forward.",
+
+    qilinFortune:
+      "A wave of progress and positive opportunities is approaching. Stay open to the possibilities appearing before you.",
+
+    toadFortune:
+      "The energy of wealth and abundance is opening up. Use opportunities wisely and create your own momentum.",
+
+    dragonName:
+      "🐉 Dragon",
+
+    qilinName:
+      "🦌 Qilin",
+
+    toadName:
+      "🐸 Golden Toad",
+
+    auraCTA:
+      "✨ Continue Your Luck at AURA69",
+
+    again:
+      "↻ Play Again",
+
+    disclaimer:
+      "This game is created for entertainment and brand experience. Game results do not affect real-money betting or rewards."
+
   }
+
 };
 
-/* ==================================================
-   DAILY FORTUNE POOL
-   Only this index.html is needed.
-   Each day, one fortune is randomly selected and
-   saved on the user's device for that day.
-================================================== */
-
-const fortunePools = {
-  dragon: [
-    {
-      th: "พลังแห่งความมั่นใจกำลังพาคุณไปสู่โอกาสใหม่ จงเชื่อในตัวเองและกล้าที่จะก้าวไปข้างหน้า",
-      en: "The power of confidence is opening new opportunities for you. Trust yourself and dare to move forward."
-    },
-    {
-      th: "จังหวะของคุณกำลังมา สิ่งที่รอคอยอาจเริ่มขยับในแบบที่คุณคาดไม่ถึง",
-      en: "Your timing is changing. Something you've been waiting for may begin moving in an unexpected way."
-    },
-    {
-      th: "ความกล้าหนึ่งครั้งอาจเปิดประตูหลายบาน อย่าปล่อยให้ความลังเลหยุดโอกาสของคุณ",
-      en: "One brave decision can open many doors. Don't let hesitation stop your opportunity."
-    },
-    {
-      th: "วันนี้เหมาะกับการเริ่มต้นสิ่งที่คุณคิดมานาน พลังของการลงมือทำจะนำทางคุณ",
-      en: "Today favors a fresh start. The energy of taking action will guide you forward."
-    },
-    {
-      th: "มีสัญญาณแห่งความก้าวหน้าอยู่ใกล้ตัว จงสังเกตโอกาสเล็ก ๆ ที่กำลังปรากฏ",
-      en: "Signs of progress are close. Pay attention to the small opportunities appearing around you."
-    },
-    {
-      th: "เมื่อใจนิ่ง คุณจะมองเห็นทางเลือกที่ดีที่สุดชัดขึ้น เชื่อสัญชาตญาณของตัวเอง",
-      en: "When your mind is calm, the best choice becomes clearer. Trust your intuition."
-    },
-    {
-      th: "พลังของคุณโดดเด่นกว่าที่คิด วันนี้เหมาะกับการแสดงความสามารถและความเป็นผู้นำ",
-      en: "Your energy is stronger than you think. Today is a good day to show your ability and leadership."
-    },
-    {
-      th: "เรื่องที่ดูเหมือนช้าอาจกำลังจัดจังหวะให้เหมาะสม อดทนอีกนิดแล้วเดินหน้าต่อ",
-      en: "What seems slow may simply be finding the right timing. Be patient and keep moving."
-    },
-    {
-      th: "โอกาสดีมักมากับการตัดสินใจที่ชัดเจน เลือกสิ่งที่ทำให้คุณเติบโต",
-      en: "Good opportunities often come with clear decisions. Choose what helps you grow."
-    },
-    {
-      th: "วันนี้พลังแห่งการเริ่มใหม่อยู่กับคุณ ปล่อยสิ่งเก่าแล้วเปิดพื้นที่ให้สิ่งที่ดีกว่า",
-      en: "The energy of a new beginning is with you today. Release the old and make room for better things."
-    }
-  ],
-
-  qilin: [
-    {
-      th: "จังหวะแห่งความก้าวหน้าและสิ่งดี ๆ กำลังเข้ามา เปิดใจรับโอกาสใหม่ที่กำลังปรากฏตรงหน้า",
-      en: "A wave of progress and positive opportunities is approaching. Stay open to the possibilities appearing before you."
-    },
-    {
-      th: "ความสงบและความสมดุลจะช่วยให้คุณเห็นทางที่เหมาะสมที่สุดในวันนี้",
-      en: "Calmness and balance will help you see the path that suits you best today."
-    },
-    {
-      th: "สิ่งดี ๆ อาจมาในรูปแบบที่เรียบง่าย อย่ามองข้ามโอกาสเล็ก ๆ รอบตัว",
-      en: "Good things may arrive in simple forms. Don't overlook the small opportunities around you."
-    },
-    {
-      th: "คนดีและพลังดีมีแนวโน้มเข้ามาใกล้ตัว เปิดพื้นที่ให้มิตรภาพและความร่วมมือ",
-      en: "Positive people and energy may draw closer. Make room for friendship and collaboration."
-    },
-    {
-      th: "วันนี้เหมาะกับการวางแผนระยะยาว สิ่งที่เริ่มอย่างมีระบบจะเติบโตได้มั่นคง",
-      en: "Today is good for long-term planning. What begins with structure can grow steadily."
-    },
-    {
-      th: "ความตั้งใจที่ดีของคุณกำลังสะสมเป็นผลลัพธ์ อย่ารีบตัดสินว่าความพยายามสูญเปล่า",
-      en: "Your good intentions are building toward results. Don't assume your efforts are wasted."
-    },
-    {
-      th: "ข่าวดีหรือความคืบหน้าอาจมาจากช่องทางที่คุณไม่ได้คาดไว้ จงเปิดใจและรับฟัง",
-      en: "Good news or progress may come from an unexpected direction. Stay open and listen."
-    },
-    {
-      th: "ความมั่นคงกำลังค่อย ๆ ก่อตัว สิ่งที่ทำสม่ำเสมอวันนี้จะกลายเป็นพลังในวันข้างหน้า",
-      en: "Stability is gradually forming. What you do consistently today can become strength for tomorrow."
-    },
-    {
-      th: "หากมีเรื่องให้เลือก จงเลือกทางที่นำความสบายใจและความก้าวหน้าไปพร้อมกัน",
-      en: "When faced with a choice, choose the path that brings both peace of mind and progress."
-    },
-    {
-      th: "พลังแห่งความเมตตาและความจริงใจจะเปิดทางให้คุณในแบบที่คาดไม่ถึง",
-      en: "Kindness and sincerity can open a door for you in an unexpected way."
-    }
-  ],
-
-  toad: [
-    {
-      th: "พลังแห่งทรัพย์และความอุดมสมบูรณ์กำลังเปิดออก ใช้โอกาสอย่างฉลาดและสร้างจังหวะของตัวเอง",
-      en: "The energy of wealth and abundance is opening up. Use opportunities wisely and create your own momentum."
-    },
-    {
-      th: "โอกาสด้านการเงินอาจเริ่มจากเรื่องเล็ก ๆ จัดการสิ่งที่มีให้ดีแล้วผลลัพธ์จะค่อย ๆ เติบโต",
-      en: "A financial opportunity may begin with something small. Manage what you have well and let it grow."
-    },
-    {
-      th: "วันนี้เหมาะกับการจัดระเบียบเรื่องเงินและเป้าหมาย เมื่อชัดเจนแล้วโอกาสจะมองเห็นง่ายขึ้น",
-      en: "Today is good for organizing your finances and goals. Clarity makes opportunities easier to see."
-    },
-    {
-      th: "สิ่งที่ลงทุนด้วยเวลาและความตั้งใจมีโอกาสให้ผลตอบแทนในอนาคต อย่าหยุดสร้างคุณค่า",
-      en: "What you invest with time and intention can reward you later. Keep creating value."
-    },
-    {
-      th: "จังหวะแห่งความอุดมสมบูรณ์กำลังขยับ ใช้ทรัพยากรอย่างมีสติแล้วให้โอกาสทำงานแทนคุณ",
-      en: "The energy of abundance is shifting. Use your resources wisely and let opportunities work for you."
-    },
-    {
-      th: "วันนี้อาจมีไอเดียที่เปลี่ยนมุมมองเรื่องรายได้ จดไว้และค่อย ๆ เปลี่ยนให้เป็นแผน",
-      en: "An idea today may change how you view income. Write it down and turn it into a plan."
-    },
-    {
-      th: "ความมั่งคั่งไม่ได้มาเพียงจากโชค แต่จากการเลือกที่ดีซ้ำ ๆ วันนี้คืออีกหนึ่งก้าว",
-      en: "Wealth comes not only from luck, but from making good choices repeatedly. Today is another step."
-    },
-    {
-      th: "โอกาสที่เหมาะสมอาจมาพร้อมความรับผิดชอบที่มากขึ้น หากพร้อมเติบโต อย่ากลัวที่จะรับมัน",
-      en: "The right opportunity may come with greater responsibility. If you're ready to grow, don't fear it."
-    },
-    {
-      th: "พลังแห่งการเก็บเกี่ยวกำลังมา สิ่งที่คุณทำต่อเนื่องเริ่มมีโอกาสเห็นผลชัดขึ้น",
-      en: "Harvest energy is approaching. What you've done consistently may soon show clearer results."
-    },
-    {
-      th: "เปิดใจรับสิ่งใหม่ แต่ใช้เหตุผลนำทาง โชคที่ดีมักอยู่ข้างคนที่พร้อมและมีสติ",
-      en: "Welcome the new, but let reason guide you. Good fortune often favors those who are prepared and mindful."
-    }
-  ]
-};
-
-/* ==================================================
-   DAILY STORAGE
-================================================== */
-
-const DAILY_STORAGE_KEY = "aura69_daily_fortune_v2";
-let selected = null;
-let dailyRecord = null;
-let currentFortune = null;
-
-function todayKey() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function loadDailyRecord() {
-  try {
-    const raw = localStorage.getItem(DAILY_STORAGE_KEY);
-    if (!raw) return null;
-
-    const record = JSON.parse(raw);
-
-    if (
-      record &&
-      record.date === todayKey() &&
-      fortunePools[record.type] &&
-      Number.isInteger(record.index) &&
-      fortunePools[record.type][record.index]
-    ) {
-      return record;
-    }
-
-    return null;
-  } catch (e) {
-    return null;
-  }
-}
-
-function saveDailyRecord(record) {
-  dailyRecord = record;
-
-  try {
-    localStorage.setItem(
-      DAILY_STORAGE_KEY,
-      JSON.stringify(record)
-    );
-  } catch (e) {}
-}
-
-function getStoredFortune(record) {
-  if (!record || !fortunePools[record.type]) return null;
-  return fortunePools[record.type][record.index] || null;
-}
-
-function hasPlayedToday() {
-  return !!dailyRecord && dailyRecord.date === todayKey();
-}
 
 /* ==================================================
    AUDIO
@@ -1188,7 +1187,9 @@ function hasPlayedToday() {
 let audioCtx = null;
 let soundEnabled = true;
 
+
 function initAudio() {
+
   if (!audioCtx) {
     audioCtx =
       new (window.AudioContext ||
@@ -1200,12 +1201,14 @@ function initAudio() {
   }
 }
 
+
 function tone(
   frequency,
   duration,
   type = "sine",
   volume = 0.04
 ) {
+
   if (!soundEnabled) return;
 
   initAudio();
@@ -1217,7 +1220,9 @@ function tone(
     audioCtx.createGain();
 
   oscillator.type = type;
-  oscillator.frequency.value = frequency;
+
+  oscillator.frequency.value =
+    frequency;
 
   gain.gain.setValueAtTime(
     volume,
@@ -1239,11 +1244,14 @@ function tone(
   );
 }
 
+
 function tapSound() {
   tone(500, .08, "sine", .035);
 }
 
+
 function revealSound() {
+
   tone(350, .18, "sine", .035);
 
   setTimeout(() => {
@@ -1253,30 +1261,39 @@ function revealSound() {
   setTimeout(() => {
     tone(760, .35, "sine", .055);
   }, 240);
+
 }
+
 
 /* ==================================================
    HAPTICS
 ================================================== */
 
 function vibrate(pattern) {
+
   if (
     navigator.vibrate &&
     window.Telegram &&
     window.Telegram.WebApp
   ) {
+
     try {
       navigator.vibrate(pattern);
     } catch(e) {}
+
   }
+
 }
+
 
 /* ==================================================
    OPEN GAME
 ================================================== */
 
 function startGame() {
+
   initAudio();
+
   tapSound();
 
   document
@@ -1287,53 +1304,24 @@ function startGame() {
     .getElementById("main")
     .style.display = "block";
 
-  dailyRecord = loadDailyRecord();
-
-  if (hasPlayedToday()) {
-    updateDailyStatus();
-
-    setTimeout(() => {
-      showResult(
-        dailyRecord.type,
-        getStoredFortune(dailyRecord)
-      );
-    }, 120);
-  } else {
-    updateDailyStatus();
-  }
 }
+
 
 /* ==================================================
    CHOOSE
 ================================================== */
 
+let selected = null;
+
+
 function choose(type) {
-  if (hasPlayedToday()) {
-    showResult(
-      dailyRecord.type,
-      getStoredFortune(dailyRecord)
-    );
-    return;
-  }
 
   selected = type;
 
-  const pool = fortunePools[type];
-  const index = Math.floor(Math.random() * pool.length);
-  const fortune = pool[index];
-
-  /* Save immediately so double-taps cannot create
-     a second result during the reveal animation. */
-  saveDailyRecord({
-    date: todayKey(),
-    type: type,
-    index: index
-  });
-
-  currentFortune = fortune;
-
   initAudio();
+
   tapSound();
+
   vibrate(25);
 
   const reveal =
@@ -1345,43 +1333,61 @@ function choose(type) {
   const revealText =
     document.getElementById("revealText");
 
+
   const imageMap = {
+
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
+
   };
+
 
   revealImg.src =
     imageMap[type];
 
+
   revealText.textContent =
     translations[language].reveal;
+
 
   reveal.style.display =
     "flex";
 
+
   createParticles();
 
-  setTimeout(() => {
-    revealSound();
-    vibrate([30, 40, 70]);
-  }, 700);
 
   setTimeout(() => {
-    showResult(type, fortune);
+
+    revealSound();
+
+    vibrate([30, 40, 70]);
+
+  }, 700);
+
+
+  setTimeout(() => {
+
+    showResult(type);
+
   }, 2100);
+
 }
+
 
 /* ==================================================
    RESULT
 ================================================== */
 
-function showResult(type, fortune = null) {
+function showResult(type) {
+
   const reveal =
     document.getElementById("reveal");
 
   reveal.style.display =
     "none";
+
 
   const result =
     document.getElementById("result");
@@ -1389,135 +1395,135 @@ function showResult(type, fortune = null) {
   const resultImg =
     document.getElementById("resultImg");
 
+
   const imageMap = {
+
     dragon: "dragon.png",
     qilin: "qilin.png",
     toad: "toad.png"
+
   };
 
-  selected = type;
-  currentFortune =
-    fortune ||
-    getStoredFortune(dailyRecord) ||
-    fortunePools[type][0];
 
   resultImg.src =
     imageMap[type];
 
+
   updateResultText(type);
+
 
   result.style.display =
     "block";
 
-  updateDailyStatus();
 }
+
 
 /* ==================================================
    RESULT TEXT
 ================================================== */
 
 function updateResultText(type) {
+
   const t =
     translations[language];
+
 
   document
     .getElementById("resultTitle")
     .textContent =
       t.resultTitle;
 
+
   document
     .getElementById("fortuneLabel")
     .textContent =
       t.fortuneLabel;
+
 
   document
     .getElementById("auraCTA")
     .textContent =
       t.auraCTA;
 
+
   document
     .getElementById("againBtn")
     .textContent =
-      hasPlayedToday()
-        ? t.againLocked
-        : t.again;
+      t.again;
+
 
   document
     .getElementById("disclaimer")
     .textContent =
       t.disclaimer;
 
+
   let character = "";
+  let fortune = "";
+
 
   if (type === "dragon") {
-    character = t.dragonName;
+
+    character =
+      t.dragonName;
+
+    fortune =
+      t.dragonFortune;
+
   }
+
 
   if (type === "qilin") {
-    character = t.qilinName;
+
+    character =
+      t.qilinName;
+
+    fortune =
+      t.qilinFortune;
+
   }
 
+
   if (type === "toad") {
-    character = t.toadName;
+
+    character =
+      t.toadName;
+
+    fortune =
+      t.toadFortune;
+
   }
+
 
   document
     .getElementById("resultCharacter")
     .textContent =
       character;
 
-  const fortuneText =
-    currentFortune
-      ? currentFortune[language]
-      : "";
 
   document
     .getElementById("fortuneText")
     .textContent =
-      fortuneText;
+      fortune;
+
 }
 
-/* ==================================================
-   DAILY STATUS
-================================================== */
-
-function updateDailyStatus() {
-  const status =
-    document.getElementById("dailyStatus");
-
-  if (!status) return;
-
-  const t =
-    translations[language];
-
-  status.textContent =
-    hasPlayedToday()
-      ? t.dailyPlayed
-      : t.dailyReady;
-
-  document
-    .querySelectorAll(".choice")
-    .forEach(card => {
-      if (hasPlayedToday()) {
-        card.classList.add("locked");
-      } else {
-        card.classList.remove("locked");
-      }
-    });
-}
 
 /* ==================================================
    LANGUAGE
 ================================================== */
 
 function toggleLanguage() {
+
   language =
     language === "th"
       ? "en"
       : "th";
 
+
   const t =
     translations[language];
+
 
   document
     .getElementById("langButton")
@@ -1526,55 +1532,55 @@ function toggleLanguage() {
         ? "EN"
         : "ไทย";
 
+
   document
     .getElementById("title")
     .textContent =
       t.title;
+
 
   document
     .getElementById("subtitle")
     .textContent =
       t.subtitle;
 
+
   document
     .getElementById("dragonName")
     .textContent =
       t.dragonName;
+
 
   document
     .getElementById("qilinName")
     .textContent =
       t.qilinName;
 
+
   document
     .getElementById("toadName")
     .textContent =
       t.toadName;
 
-  updateDailyStatus();
 
   if (selected) {
+
     updateResultText(selected);
+
   }
+
 }
+
 
 /* ==================================================
    PLAY AGAIN
 ================================================== */
 
 function playAgain() {
+
   tapSound();
+
   vibrate(20);
-
-  if (hasPlayedToday()) {
-    alert(
-      language === "th"
-        ? "คุณเปิดโชคของวันนี้ไปแล้ว ✨\nกลับมาใหม่พรุ่งนี้นะ"
-        : "You have already revealed today's luck ✨\nCome back tomorrow."
-    );
-
-    return;
-  }
 
   document
     .getElementById("result")
@@ -1585,67 +1591,139 @@ function playAgain() {
     .style.display = "block";
 
   selected = null;
-  currentFortune = null;
-  updateDailyStatus();
+
 }
+
 
 /* ==================================================
    AURA69 CTA
 ================================================== */
 
+
+/* ==================================================
+   AURA69 CUSTOM POPUP
+   Replaces browser alert()
+================================================== */
+
+function showAuraPopup(message) {
+  const popup = document.getElementById("auraPopup");
+  const messageEl = document.getElementById("auraPopupMessage");
+  const okEl = document.getElementById("auraPopupOk");
+
+  if (!popup || !messageEl || !okEl) {
+    return;
+  }
+
+  messageEl.textContent = message;
+
+  okEl.textContent =
+    language === "th"
+      ? "ตกลง"
+      : "OK";
+
+  popup.classList.add("show");
+
+  setTimeout(() => {
+    okEl.focus();
+  }, 40);
+}
+
+function closeAuraPopup(event) {
+  if (event && event.target !== event.currentTarget) {
+    return;
+  }
+
+  const popup = document.getElementById("auraPopup");
+
+  if (popup) {
+    popup.classList.remove("show");
+  }
+}
+
+
 function auraCTA() {
+
   tapSound();
+
   vibrate(25);
 
+
   if (AURA69_URL) {
+
     window.open(
       AURA69_URL,
       "_blank"
     );
+
+  } else {
+
+    showAuraPopup(
+      language === "th"
+        ? "ใส่ลิงก์เว็บไซต์ AURA69 ใน AURA69_URL ก่อนใช้งานปุ่มนี้"
+        : "Add your AURA69 website URL to AURA69_URL before using this button."
+    );
+
   }
+
 }
+
 
 /* ==================================================
    PARTICLES
 ================================================== */
 
 function createParticles() {
+
   const reveal =
     document.getElementById("reveal");
 
+
   for (let i = 0; i < 28; i++) {
+
     const p =
       document.createElement("div");
 
     p.className =
       "particle";
 
+
     p.style.left =
       (Math.random() * 100) + "%";
 
+
     p.style.top =
       (Math.random() * 100) + "%";
+
 
     p.style.setProperty(
       "--x",
       Math.random()
     );
 
+
     p.style.setProperty(
       "--y",
       Math.random()
     );
 
+
     p.style.animationDelay =
       (Math.random() * .8) + "s";
 
+
     reveal.appendChild(p);
 
+
     setTimeout(() => {
+
       p.remove();
+
     }, 2800);
+
   }
+
 }
+
 
 /* ==================================================
    TELEGRAM
@@ -1655,14 +1733,17 @@ if (
   window.Telegram &&
   window.Telegram.WebApp
 ) {
+
   try {
+
     window.Telegram.WebApp.ready();
+
     window.Telegram.WebApp.expand();
+
   } catch(e) {}
+
 }
 
-/* Load today's saved result if one exists. */
-dailyRecord = loadDailyRecord();
 </script>
 
 </body>
