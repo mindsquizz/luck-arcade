@@ -2,1042 +2,905 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
-<title>AURA69 — เลือกโชคของคุณ</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>AURA69 — Choose Your Luck</title>
 
 <style>
-
-/* =========================================
-   RESET
-========================================= */
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-
-  font-family:
-    Arial,
-    "Noto Sans Thai",
-    sans-serif;
-
-  background:#020817;
-  color:#fff;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #020611;
+    color: white;
+    overflow-x: hidden;
 }
 
-button{
-  font-family:inherit;
-  cursor:pointer;
+body {
+    min-height: 100vh;
 }
 
+/* =========================
+   LANGUAGE
+========================= */
 
-/* =========================================
-   SCREENS
-========================================= */
+.language {
+    position: fixed;
+    top: 18px;
+    right: 15px;
+    z-index: 500;
 
-.screen{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+    display: flex;
+    gap: 4px;
+
+    padding: 4px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(212,167,67,.25);
+
+    backdrop-filter: blur(10px);
 }
 
-.hidden{
-  display:none !important;
+.language button {
+    border: 0;
+    background: transparent;
+
+    color: rgba(255,255,255,.55);
+
+    padding: 6px 10px;
+    border-radius: 14px;
+
+    font-size: 11px;
+    font-weight: bold;
 }
 
-
-/* =========================================
-   BACKGROUND
-========================================= */
-
-body{
-  background:
-    radial-gradient(
-      circle at 50% 15%,
-      rgba(27,67,130,.34),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(211,165,49,.13),
-      transparent 45%
-    ),
-    #020817;
+.language button.active {
+    background: linear-gradient(135deg,#d4af37,#f6d875);
+    color: #111;
 }
 
 
-/* =========================================
-   TOP BUTTONS
-========================================= */
-
-.lang{
-  position:absolute;
-  top:17px;
-  right:17px;
-  z-index:100;
-
-  padding:8px 13px;
-
-  border-radius:20px;
-
-  border:1px solid rgba(238,201,101,.32);
-
-  background:rgba(3,12,28,.75);
-
-  color:#e8c968;
-
-  font-size:11px;
-  letter-spacing:.4px;
-
-  backdrop-filter:blur(12px);
-}
-
-.sound{
-  position:absolute;
-  top:17px;
-  left:17px;
-  z-index:100;
-
-  width:38px;
-  height:38px;
-
-  padding:0;
-
-  border-radius:50%;
-
-  border:1px solid rgba(238,201,101,.32);
-
-  background:rgba(3,12,28,.75);
-
-  color:#e8c968;
-
-  font-size:16px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  backdrop-filter:blur(12px);
-}
-
-
-/* =========================================
+/* =========================
    OPENING SCREEN
-========================================= */
+========================= */
 
-#opening{
-  display:flex;
+#home {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
 
-  flex-direction:column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  align-items:center;
-  justify-content:center;
+    overflow: hidden;
 
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(28,67,128,.26),
-      transparent 48%
-    ),
-    #020817;
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(25,60,120,.55),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 50% 60%,
+            rgba(212,167,67,.12),
+            transparent 45%
+        ),
+        linear-gradient(
+            180deg,
+            #071329 0%,
+            #020611 100%
+        );
+
+    transition:
+        opacity .8s ease,
+        visibility .8s ease;
 }
 
-.openGlow{
-  position:absolute;
-
-  width:310px;
-  height:310px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(224,180,67,.22),
-      transparent 68%
-    );
-
-  filter:blur(15px);
-
-  animation:openPulse 3.2s ease-in-out infinite;
+#home.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
-@keyframes openPulse{
+.home-content {
+    width: 100%;
+    max-width: 500px;
 
-  0%,100%{
-    transform:scale(.88);
-    opacity:.55;
-  }
+    text-align: center;
 
-  50%{
-    transform:scale(1.16);
-    opacity:1;
-  }
-}
-
-.openLogo{
-  position:relative;
-  z-index:2;
-
-  width:min(72vw,340px);
-
-  filter:
-    drop-shadow(0 0 16px rgba(224,180,67,.35))
-    drop-shadow(0 0 42px rgba(224,180,67,.16));
-
-  animation:logoFloat 3.2s ease-in-out infinite;
-}
-
-@keyframes logoFloat{
-
-  0%,100%{
-    transform:translateY(0);
-  }
-
-  50%{
-    transform:translateY(-8px);
-  }
-}
-
-.openTitle{
-  position:relative;
-  z-index:2;
-
-  margin-top:22px;
-
-  color:#d9bc63;
-
-  font-size:13px;
-
-  letter-spacing:2px;
-}
-
-.playBtn{
-  position:relative;
-  z-index:2;
-
-  margin-top:34px;
-
-  min-width:190px;
-
-  padding:16px 34px;
-
-  border-radius:30px;
-
-  border:1px solid rgba(255,228,145,.8);
-
-  background:
-    linear-gradient(
-      135deg,
-      #f1d37a,
-      #b98722
-    );
-
-  color:#07101e;
-
-  font-size:16px;
-  font-weight:bold;
-
-  box-shadow:
-    0 0 28px rgba(225,182,62,.24),
-    inset 0 1px rgba(255,255,255,.55);
-
-  transition:.2s;
-}
-
-.playBtn:active{
-  transform:scale(.94);
+    padding: 30px;
 }
 
 
-/* =========================================
-   GAME SCREEN
-========================================= */
-
-#game{
-
-  padding:
-    65px
-    18px
-    20px;
-
-  overflow:auto;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-
-  background:
-    radial-gradient(
-      circle at 50% 20%,
-      rgba(27,66,128,.24),
-      transparent 45%
-    ),
-    #020817;
-}
-
-
-/* HEADER */
-
-.header{
-  width:100%;
-  text-align:center;
-
-  margin-top:5px;
-}
-
-.brand{
-  color:#d9b95e;
-
-  font-size:10px;
-
-  letter-spacing:6px;
-
-  margin-bottom:10px;
-}
-
-.title{
-  margin:0;
-
-  font-size:28px;
-
-  font-weight:700;
-
-  background:
-    linear-gradient(
-      90deg,
-      #f4d77e,
-      #fff5c9,
-      #d5a83e
-    );
-
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.subtitle{
-  margin-top:9px;
-
-  color:#8999b2;
-
-  font-size:12px;
-}
-
-
-/* =========================================
-   LARGE CHARACTER CARDS
-========================================= */
-
-.cards{
-
-  width:100%;
-  max-width:430px;
-
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
-
-  gap:14px;
-
-  margin-top:28px;
-}
-
-
-/* LARGE CARD */
-
-.card{
-
-  position:relative;
-
-  min-height:205px;
-
-  overflow:hidden;
-
-  border-radius:24px;
-
-  border:
-    1px solid
-    rgba(221,184,76,.20);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(20,43,79,.95),
-      rgba(3,13,29,.98)
-    );
-
-  box-shadow:
-    0 15px 35px rgba(0,0,0,.32);
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-  justify-content:flex-end;
-
-  padding:
-    10px
-    8px
-    18px;
-
-  transition:
-    transform .22s ease,
-    border .22s ease,
-    box-shadow .22s ease;
-}
-
-
-/* GOLD SHINE */
-
-.card::before{
-
-  content:"";
-
-  position:absolute;
-
-  top:-60%;
-  left:-80%;
-
-  width:60%;
-  height:220%;
-
-  transform:rotate(25deg);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,226,132,.10),
-      transparent
-    );
-
-  transition:.7s;
-}
-
-.card:hover::before{
-  left:140%;
-}
-
-
-/* TOP GLOW */
-
-.card::after{
-
-  content:"";
-
-  position:absolute;
-
-  top:0;
-  left:10%;
-  right:10%;
-
-  height:1px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(245,211,116,.55),
-      transparent
-    );
-}
-
-
-/* ACTIVE */
-
-.card:active{
-
-  transform:scale(.95);
-
-  border-color:
-    rgba(242,203,91,.7);
-
-  box-shadow:
-    0 0 35px rgba(225,182,63,.18);
-}
-
-
-/* CHARACTER IMAGE */
-
-.creature{
-
-  position:absolute;
-
-  top:7px;
-
-  left:50%;
-
-  transform:
-    translateX(-50%);
-
-  width:165px;
-  height:165px;
-
-  object-fit:contain;
-
-  filter:
-    drop-shadow(
-      0 0 13px
-      rgba(235,193,73,.25)
-    );
-
-  transition:
-    transform .3s ease,
-    filter .3s ease;
-}
-
-.card:active .creature{
-
-  transform:
-    translateX(-50%)
-    scale(1.05);
-
-  filter:
-    drop-shadow(
-      0 0 23px
-      rgba(240,202,85,.55)
-    );
-}
-
-
-/* CARD TEXT */
-
-.cardInfo{
-
-  position:relative;
-
-  z-index:3;
-
-  width:100%;
-
-  text-align:center;
-}
-
-.name{
-
-  color:#f1d477;
-
-  font-size:17px;
-
-  font-weight:bold;
-
-  text-shadow:
-    0 1px 10px rgba(0,0,0,.5);
-}
-
-.en{
-
-  margin-top:3px;
-
-  color:#74849e;
-
-  font-size:8px;
-
-  letter-spacing:1.7px;
-}
-
-.meaning{
-
-  margin-top:6px;
-
-  color:#b9c4d5;
-
-  font-size:10px;
-
-  line-height:1.35;
-}
-
-
-/* CHOOSE TEXT */
-
-.choose{
-
-  margin-top:22px;
-
-  color:#687991;
-
-  font-size:10px;
-
-  letter-spacing:2px;
-
-  text-transform:uppercase;
-}
-
-
-/* =========================================
-   REVEAL SCREEN
-========================================= */
-
-#reveal{
-
-  z-index:200;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(32,76,145,.54),
-      rgba(2,8,23,.98) 68%
-    );
-}
-
-.revealGlow{
-
-  position:absolute;
-
-  width:390px;
-  height:390px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(244,204,85,.30),
-      transparent 68%
-    );
-
-  filter:blur(5px);
-
-  animation:
-    revealPulse
-    1.35s
-    ease-in-out
-    infinite;
-}
-
-@keyframes revealPulse{
-
-  0%,100%{
-    transform:scale(.72);
-    opacity:.5;
-  }
-
-  50%{
-    transform:scale(1.2);
-    opacity:1;
-  }
-}
-
-
-/* RINGS */
-
-.ring{
-
-  position:absolute;
-
-  width:210px;
-  height:210px;
-
-  border-radius:50%;
-
-  border:
-    1px solid
-    rgba(240,201,89,.42);
-
-  animation:
-    ringExpand
-    2s
-    ease-out
-    infinite;
-}
-
-.ring.two{
-  animation-delay:.55s;
-}
-
-@keyframes ringExpand{
-
-  0%{
-    transform:scale(.35);
-    opacity:.9;
-  }
-
-  100%{
-    transform:scale(2.1);
-    opacity:0;
-  }
-}
-
-
-/* REVEAL CONTENT */
-
-.revealContent{
-
-  position:relative;
-
-  z-index:5;
-
-  width:100%;
-
-  text-align:center;
-}
-
-.revealText{
-
-  margin-bottom:12px;
-
-  color:#e7ca70;
-
-  font-size:12px;
-
-  letter-spacing:2px;
-}
-
-.revealImg{
-
-  width:min(78vw,360px);
-  height:360px;
-
-  object-fit:contain;
-
-  animation:
-    revealCharacter
-    1.8s
-    cubic-bezier(.2,.8,.2,1)
-    forwards;
-}
-
-@keyframes revealCharacter{
-
-  0%{
-
-    transform:
-      scale(.12)
-      rotate(-14deg);
-
-    opacity:0;
+/* =========================
+   HOME LOGO
+========================= */
+
+.home-logo {
+    width: min(240px, 65vw);
+
+    display: block;
+    margin: 0 auto;
 
     filter:
-      blur(18px)
-      drop-shadow(0 0 0 transparent);
-  }
+        drop-shadow(0 0 12px rgba(246,216,117,.35))
+        drop-shadow(0 0 40px rgba(212,167,67,.18));
 
-  40%{
-    opacity:.65;
-  }
+    animation:
+        logoFloat 4s ease-in-out infinite;
+}
 
-  72%{
+@keyframes logoFloat {
 
-    transform:
-      scale(1.12)
-      rotate(4deg);
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+/* =========================
+   HOME TITLE
+========================= */
+
+.home-title {
+    margin-top: 35px;
+
+    font-size: clamp(28px,8vw,44px);
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #f6d875,
+            #fff
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.home-subtitle {
+    margin-top: 10px;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   GOLD LINE
+========================= */
+
+.gold-line {
+    width: 100px;
+    height: 1px;
+
+    margin: 24px auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d4af37,
+            transparent
+        );
+}
+
+
+/* =========================
+   PLAY BUTTON
+========================= */
+
+.play-button {
+    position: relative;
+
+    margin-top: 22px;
+
+    width: 190px;
+    height: 58px;
+
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px;
+
+    color: #111;
+
+    font-size: 17px;
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #b88a19,
+            #f6d875,
+            #d4af37
+        );
+
+    box-shadow:
+        0 0 20px rgba(212,167,67,.25),
+        0 12px 35px rgba(0,0,0,.45);
+
+    cursor: pointer;
+
+    animation:
+        buttonPulse 2s ease-in-out infinite;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.play-button:active {
+    transform: scale(.94);
+}
+
+@keyframes buttonPulse {
+
+    0%,100% {
+        box-shadow:
+            0 0 20px rgba(212,167,67,.25),
+            0 12px 35px rgba(0,0,0,.45);
+    }
+
+    50% {
+        box-shadow:
+            0 0 35px rgba(246,216,117,.5),
+            0 15px 45px rgba(0,0,0,.55);
+    }
+}
+
+
+/* =========================
+   MAIN GAME
+========================= */
+
+#game {
+    min-height: 100vh;
+
+    opacity: 0;
+
+    transition: opacity .8s ease;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(22,55,110,.45),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(212,167,67,.08),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            #071126 0%,
+            #020611 100%
+        );
+}
+
+#game.show {
+    opacity: 1;
+}
+
+
+/* =========================
+   MAIN LOGO
+========================= */
+
+.logo-wrap {
+    text-align: center;
+    padding-top: 25px;
+}
+
+.logo {
+    width: 145px;
+    max-width: 45vw;
+
+    display: block;
+    margin: auto;
 
     filter:
-      blur(0)
-      drop-shadow(
-        0 0 38px
-        rgba(244,204,89,.75)
-      );
-  }
+        drop-shadow(0 0 10px rgba(212,167,67,.35));
+}
 
-  100%{
 
-    transform:
-      scale(1)
-      rotate(0);
+/* =========================
+   GAME CONTAINER
+========================= */
 
-    opacity:1;
+.container {
+    width: 100%;
+    max-width: 620px;
+
+    margin: auto;
+
+    padding: 18px 18px 40px;
+
+    text-align: center;
+}
+
+.title {
+    margin-top: 12px;
+
+    font-size: clamp(28px,8vw,46px);
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #f6d875,
+            #fff
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    margin-top: 8px;
+
+    color: rgba(255,255,255,.62);
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 10px;
+
+    margin-top: 28px;
+}
+
+.card {
+    position: relative;
+
+    min-height: 235px;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
+
+    border: 1px solid rgba(212,167,67,.28);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 15px 40px rgba(0,0,0,.35);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.card::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(212,167,67,.15),
+            transparent 50%
+        );
+}
+
+.card:active {
+    transform: scale(.96);
+}
+
+.card.selected {
+    transform: scale(1.03);
+
+    border-color: #f6d875;
+
+    box-shadow:
+        0 0 0 1px rgba(246,216,117,.35),
+        0 0 30px rgba(212,167,67,.45),
+        0 20px 60px rgba(0,0,0,.6);
+}
+
+.creature-img {
+    position: absolute;
+
+    left: 50%;
+    top: 5px;
+
+    width: 125%;
+    height: 175px;
+
+    object-fit: contain;
+
+    transform: translateX(-50%);
 
     filter:
-      blur(0)
-      drop-shadow(
-        0 0 22px
-        rgba(244,204,89,.48)
-      );
-  }
+        drop-shadow(0 8px 15px rgba(0,0,0,.65));
+
+    transition:
+        transform .4s ease,
+        filter .4s ease;
 }
 
-.revealMessage{
-
-  margin-top:-10px;
-
-  color:#fff0b2;
-
-  font-size:17px;
-
-  font-weight:bold;
-
-  opacity:0;
-
-  animation:
-    messageIn
-    .6s
-    ease
-    1.4s
-    forwards;
+.card:hover .creature-img {
+    transform:
+        translateX(-50%)
+        scale(1.06);
 }
 
-@keyframes messageIn{
+.card.selected .creature-img {
+    transform:
+        translateX(-50%)
+        scale(1.12);
 
-  from{
-    opacity:0;
-    transform:translateY(12px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+    filter:
+        drop-shadow(0 0 18px rgba(246,216,117,.65))
+        drop-shadow(0 15px 25px rgba(0,0,0,.75));
 }
 
+.card-name {
+    position: absolute;
 
-/* =========================================
-   RESULT SCREEN
-========================================= */
+    left: 0;
+    right: 0;
+    bottom: 42px;
 
-#result{
-
-  z-index:150;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  padding:20px;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(22,57,111,.5),
-      #020817 72%
-    );
+    font-size: 15px;
+    font-weight: 800;
 }
 
-.resultBox{
+.card-desc {
+    position: absolute;
 
-  width:100%;
-  max-width:380px;
+    left: 0;
+    right: 0;
+    bottom: 19px;
 
-  padding:
-    25px
-    20px
-    22px;
+    color: rgba(255,255,255,.52);
 
-  text-align:center;
-
-  border-radius:28px;
-
-  border:
-    1px solid
-    rgba(237,199,91,.35);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(17,35,65,.97),
-      rgba(3,11,25,.99)
-    );
-
-  box-shadow:
-    0 25px 70px rgba(0,0,0,.55),
-    0 0 45px rgba(217,175,67,.10);
-}
-
-.resultImg{
-
-  width:230px;
-  height:230px;
-
-  object-fit:contain;
-
-  filter:
-    drop-shadow(
-      0 0 26px
-      rgba(236,197,80,.48)
-    );
-
-  animation:
-    resultFloat
-    3s
-    ease-in-out
-    infinite;
-}
-
-@keyframes resultFloat{
-
-  0%,100%{
-    transform:translateY(0);
-  }
-
-  50%{
-    transform:translateY(-8px);
-  }
-}
-
-.resultTitle{
-
-  margin-top:0;
-
-  color:#f4d477;
-
-  font-size:25px;
-
-  font-weight:bold;
-}
-
-.resultSub{
-
-  margin-top:5px;
-
-  color:#7f8ea7;
-
-  font-size:9px;
-
-  letter-spacing:2px;
-}
-
-.resultMeaning{
-
-  margin-top:13px;
-
-  color:#dce3ed;
-
-  font-size:13px;
-
-  line-height:1.55;
-}
-
-.again{
-
-  width:100%;
-
-  margin-top:22px;
-
-  padding:15px;
-
-  border-radius:25px;
-
-  border:
-    1px solid
-    rgba(239,205,104,.55);
-
-  background:
-    rgba(224,183,67,.05);
-
-  color:#f1cf70;
-
-  font-size:14px;
-
-  font-weight:bold;
-
-  transition:.2s;
-}
-
-.again:active{
-
-  transform:scale(.96);
-
-  background:
-    rgba(230,190,80,.10);
+    font-size: 10px;
 }
 
 
-/* =========================================
-   PARTICLES
-========================================= */
+/* =========================
+   REVEAL
+========================= */
 
-.particle{
+#reveal {
+    position: fixed;
+    inset: 0;
 
-  position:absolute;
+    z-index: 999;
 
-  width:3px;
-  height:3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  border-radius:50%;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(20,45,90,.55),
+            rgba(0,0,0,.98) 65%
+        );
 
-  background:#f0cf70;
+    opacity: 0;
+    visibility: hidden;
 
-  box-shadow:
-    0 0 8px #f0cf70;
-
-  pointer-events:none;
-
-  animation:
-    particleMove
-    2s
-    linear
-    forwards;
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
 }
 
-@keyframes particleMove{
+#reveal.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-  from{
+.reveal-content {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.reveal-glow {
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(246,216,117,.55),
+            rgba(212,167,67,.15) 35%,
+            transparent 70%
+        );
+
+    filter: blur(5px);
+
+    animation:
+        glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+
+    from {
+        transform: scale(.75);
+        opacity: .45;
+    }
+
+    to {
+        transform: scale(1.35);
+        opacity: 1;
+    }
+}
+
+.ring {
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    border:
+        1px solid rgba(246,216,117,.55);
+
+    border-radius: 50%;
+
+    animation:
+        ringExpand 2s ease-out infinite;
+}
+
+.ring:nth-child(2) {
+    animation-delay: .4s;
+}
+
+.ring:nth-child(3) {
+    animation-delay: .8s;
+}
+
+@keyframes ringExpand {
+
+    0% {
+        transform: scale(.3);
+        opacity: .8;
+    }
+
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.reveal-image {
+    position: relative;
+
+    z-index: 5;
+
+    width: min(82vw,430px);
+    height: min(58vh,430px);
+
+    object-fit: contain;
+
+    opacity: 0;
 
     transform:
-      translateY(0)
-      scale(1);
+        scale(.45)
+        rotate(-8deg);
 
-    opacity:1;
-  }
+    filter:
+        drop-shadow(0 0 30px rgba(246,216,117,.1));
 
-  to{
+    transition:
+        opacity .4s ease,
+        transform 1s cubic-bezier(.16,1,.3,1),
+        filter 1s ease;
+}
+
+#reveal.show .reveal-image {
+    opacity: 1;
 
     transform:
-      translateY(-170px)
-      scale(0);
+        scale(1)
+        rotate(0deg);
 
-    opacity:0;
-  }
+    filter:
+        drop-shadow(0 0 35px rgba(246,216,117,.65))
+        drop-shadow(0 20px 40px rgba(0,0,0,.8));
+}
+
+.reveal-text {
+    position: relative;
+
+    z-index: 10;
+
+    margin-top: -5px;
+
+    font-size: 15px;
+
+    color: rgba(255,255,255,.7);
+
+    letter-spacing: 2px;
+
+    animation:
+        textPulse 1.2s infinite alternate;
+}
+
+.reveal-text.done {
+    display: none;
+}
+
+@keyframes textPulse {
+
+    from {
+        opacity: .45;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.sparkle {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    background: #f6d875;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px #f6d875,
+        0 0 15px rgba(246,216,117,.8);
+
+    animation:
+        sparkleFloat 2s linear forwards;
+}
+
+@keyframes sparkleFloat {
+
+    0% {
+        opacity: 0;
+        transform:
+            translateY(30px)
+            scale(.4);
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translateY(-180px)
+            scale(1.2);
+    }
 }
 
 
-/* =========================================
-   SMALL PHONES
-========================================= */
+/* =========================
+   RESULT
+========================= */
 
-@media(max-width:360px){
+#result {
+    position: fixed;
+    inset: 0;
 
-  #game{
-    padding-left:12px;
-    padding-right:12px;
-  }
+    z-index: 1000;
 
-  .cards{
-    gap:10px;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  .card{
-    min-height:190px;
-  }
+    padding: 20px;
 
-  .creature{
-    width:150px;
-    height:150px;
-  }
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(15,40,80,.75),
+            rgba(1,5,15,.98) 70%
+        );
 
-  .name{
-    font-size:15px;
-  }
+    opacity: 0;
+    visibility: hidden;
 
-  .meaning{
-    font-size:9px;
-  }
-
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
 }
 
+#result.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.result-box {
+    width: min(92vw,430px);
+
+    padding: 26px 20px 24px;
+
+    text-align: center;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.10),
+            rgba(255,255,255,.035)
+        );
+
+    border:
+        1px solid rgba(246,216,117,.35);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.65),
+        0 0 40px rgba(212,167,67,.12);
+
+    backdrop-filter: blur(20px);
+
+    transform: scale(.85);
+
+    transition:
+        transform .6s cubic-bezier(.16,1,.3,1);
+}
+
+#result.show .result-box {
+    transform: scale(1);
+}
+
+.result-image {
+    width: 210px;
+    height: 210px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(0 0 25px rgba(246,216,117,.45));
+}
+
+.result-title {
+    margin-top: 5px;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #f6d875,
+            #fff
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.result-message {
+    margin-top: 10px;
+
+    color: rgba(255,255,255,.68);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.play-again {
+    margin-top: 22px;
+
+    border: 0;
+
+    border-radius: 999px;
+
+    padding: 13px 30px;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    color: #111;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c99d28,
+            #f6d875,
+            #c99d28
+        );
+
+    box-shadow:
+        0 8px 25px rgba(212,167,67,.25);
+
+    cursor: pointer;
+}
+
+.play-again:active {
+    transform: scale(.95);
+}
+
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width:700px) {
+
+    .cards {
+        gap: 18px;
+    }
+
+    .card {
+        min-height: 310px;
+    }
+
+    .creature-img {
+        height: 230px;
+    }
+
+    .card-name {
+        bottom: 50px;
+        font-size: 17px;
+    }
+
+    .card-desc {
+        bottom: 25px;
+        font-size: 11px;
+    }
+}
 </style>
 </head>
 
@@ -1045,1203 +908,644 @@ body{
 <body>
 
 
-<!-- =========================================
-     OPENING
-========================================= -->
+<!-- LANGUAGE -->
 
-<section
-  id="opening"
-  class="screen"
->
-
-  <button
-    id="soundBtn"
-    class="sound"
-  >
-    🔊
-  </button>
-
-  <button
-    id="langBtn"
-    class="lang"
-  >
-    ไทย / EN
-  </button>
-
-  <div class="openGlow"></div>
-
-  <img
-    class="openLogo"
-    src="aura69.png"
-    alt="AURA69"
-  >
-
-  <div
-    id="openTitle"
-    class="openTitle"
-  >
-    เลือกโชคของคุณ
-  </div>
-
-  <button
-    id="playBtn"
-    class="playBtn"
-  >
-    เล่น
-  </button>
-
-</section>
-
-
-<!-- =========================================
-     GAME
-========================================= -->
-
-<section
-  id="game"
-  class="screen hidden"
->
-
-  <button
-    id="gameSoundBtn"
-    class="sound"
-  >
-    🔊
-  </button>
-
-  <button
-    id="gameLangBtn"
-    class="lang"
-  >
-    ไทย / EN
-  </button>
-
-
-  <div class="header">
-
-    <div class="brand">
-      AURA69
-    </div>
-
-    <h1
-      id="title"
-      class="title"
-    >
-      เลือกโชคของคุณ
-    </h1>
-
-    <div
-      id="subtitle"
-      class="subtitle"
-    >
-      เลือกหนึ่งสัญลักษณ์เพื่อเปิดโชค
-    </div>
-
-  </div>
-
-
-  <div class="cards">
-
-
-    <!-- =====================================
-         DRAGON
-    ====================================== -->
-
-    <div
-      class="card"
-      data-choice="dragon"
-    >
-
-      <img
-        class="creature"
-        src="dragon.png"
-        alt="Dragon"
-      >
-
-      <div class="cardInfo">
-
-        <div class="name">
-          🐉 มังกร
-        </div>
-
-        <div class="en">
-          DRAGON
-        </div>
-
-        <div class="meaning">
-          พลัง อำนาจ และความมั่งคั่ง
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =====================================
-         QILIN
-    ====================================== -->
-
-    <div
-      class="card"
-      data-choice="qilin"
-    >
-
-      <img
-        class="creature"
-        src="qilin.png"
-        alt="Qilin"
-      >
-
-      <div class="cardInfo">
-
-        <div class="name">
-          🦌 กิเลน
-        </div>
-
-        <div class="en">
-          QILIN
-        </div>
-
-        <div class="meaning">
-          โชคดี และความเจริญรุ่งเรือง
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =====================================
-         GOLDEN TOAD
-    ====================================== -->
-
-    <div
-      class="card"
-      data-choice="toad"
-    >
-
-      <img
-        class="creature"
-        src="toad.png"
-        alt="Golden Toad"
-      >
-
-      <div class="cardInfo">
-
-        <div class="name">
-          🐸 คางคกทอง
-        </div>
-
-        <div class="en">
-          GOLDEN TOAD
-        </div>
-
-        <div class="meaning">
-          เงินทอง และความมั่งคั่ง
-        </div>
-
-      </div>
-
-    </div>
-
-
-  </div>
-
-
-  <div
-    id="chooseText"
-    class="choose"
-  >
-    เลือกหนึ่ง
-  </div>
-
-</section>
-
-
-<!-- =========================================
-     REVEAL
-========================================= -->
-
-<section
-  id="reveal"
-  class="screen hidden"
->
-
-  <div class="revealGlow"></div>
-
-  <div class="ring"></div>
-
-  <div class="ring two"></div>
-
-
-  <div class="revealContent">
-
-    <div
-      id="revealText"
-      class="revealText"
-    >
-      กำลังเปิดโชคของคุณ...
-    </div>
-
-    <img
-      id="revealImg"
-      class="revealImg"
-      src=""
-      alt=""
-    >
-
-    <div
-      id="revealMessage"
-      class="revealMessage"
-    >
-      ✨ โชคกำลังเปิด ✨
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================
-     RESULT
-========================================= -->
-
-<section
-  id="result"
-  class="screen hidden"
->
-
-  <div class="resultBox">
-
-    <img
-      id="resultImg"
-      class="resultImg"
-      src=""
-      alt=""
-    >
-
-    <div
-      id="resultTitle"
-      class="resultTitle"
-    >
-    </div>
-
-    <div
-      id="resultSub"
-      class="resultSub"
-    >
-    </div>
-
-    <div
-      id="resultMeaning"
-      class="resultMeaning"
-    >
-    </div>
+<div class="language">
 
     <button
-      id="againBtn"
-      class="again"
-    >
-      เล่นอีกครั้ง
+        id="thBtn"
+        class="active"
+        onclick="setLanguage('th')">
+        ไทย
     </button>
 
-  </div>
+    <button
+        id="enBtn"
+        onclick="setLanguage('en')">
+        EN
+    </button>
 
-</section>
+</div>
+
+
+<!-- =========================
+     HOME SCREEN
+========================= -->
+
+<div id="home">
+
+    <div class="home-content">
+
+        <img
+            class="home-logo"
+            src="aura69.png"
+            alt="AURA69"
+        >
+
+        <div
+            class="home-title"
+            id="homeTitle">
+            Choose Your Luck
+        </div>
+
+        <div
+            class="home-subtitle"
+            id="homeSubtitle">
+            เปิดโชคของคุณ
+        </div>
+
+        <div class="gold-line"></div>
+
+        <button
+            class="play-button"
+            onclick="startGame()"
+            id="playButton">
+            PLAY
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME
+========================= -->
+
+<div id="game">
+
+    <div class="logo-wrap">
+
+        <img
+            class="logo"
+            src="aura69.png"
+            alt="AURA69">
+
+    </div>
+
+
+    <div class="container">
+
+        <div
+            class="title"
+            id="title">
+            เลือกโชคของคุณ
+        </div>
+
+        <div
+            class="subtitle"
+            id="subtitle">
+            เลือกหนึ่งสัญลักษณ์ แล้วเปิดคำทำนายแห่งโชคของคุณ
+        </div>
+
+        <div class="gold-line"></div>
+
+
+        <div class="cards">
+
+
+            <!-- DRAGON -->
+
+            <div
+                class="card"
+                onclick="chooseLuck('dragon',this)">
+
+                <img
+                    class="creature-img"
+                    src="dragon.png"
+                    alt="Dragon">
+
+                <div
+                    class="card-name"
+                    data-th="มังกร"
+                    data-en="Dragon">
+                    มังกร
+                </div>
+
+                <div
+                    class="card-desc"
+                    data-th="พลัง • อำนาจ"
+                    data-en="Power • Strength">
+                    พลัง • อำนาจ
+                </div>
+
+            </div>
+
+
+            <!-- QILIN -->
+
+            <div
+                class="card"
+                onclick="chooseLuck('qilin',this)">
+
+                <img
+                    class="creature-img"
+                    src="qilin.png"
+                    alt="Qilin">
+
+                <div
+                    class="card-name"
+                    data-th="กิเลน"
+                    data-en="Qilin">
+                    กิเลน
+                </div>
+
+                <div
+                    class="card-desc"
+                    data-th="โชคลาภ • สิริมงคล"
+                    data-en="Prosperity • Fortune">
+                    โชคลาภ • สิริมงคล
+                </div>
+
+            </div>
+
+
+            <!-- TOAD -->
+
+            <div
+                class="card"
+                onclick="chooseLuck('toad',this)">
+
+                <img
+                    class="creature-img"
+                    src="toad.png"
+                    alt="Golden Toad">
+
+                <div
+                    class="card-name"
+                    data-th="คางคกทอง"
+                    data-en="Golden Toad">
+                    คางคกทอง
+                </div>
+
+                <div
+                    class="card-desc"
+                    data-th="ทรัพย์ • ความมั่งคั่ง"
+                    data-en="Wealth • Abundance">
+                    ทรัพย์ • ความมั่งคั่ง
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     REVEAL
+========================= -->
+
+<div id="reveal">
+
+    <div class="reveal-content">
+
+        <div class="reveal-glow"></div>
+
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+
+        <img
+            id="revealImage"
+            class="reveal-image"
+            src=""
+            alt="">
+
+        <div
+            id="revealText"
+            class="reveal-text">
+            กำลังเปิดโชคของคุณ...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<div id="result">
+
+    <div class="result-box">
+
+        <img
+            id="resultImage"
+            class="result-image"
+            src=""
+            alt="">
+
+        <div
+            id="resultTitle"
+            class="result-title">
+            โชคของคุณ
+        </div>
+
+        <div
+            id="resultMessage"
+            class="result-message">
+        </div>
+
+        <button
+            class="play-again"
+            onclick="playAgain()"
+            id="playAgain">
+            เล่นอีกครั้ง
+        </button>
+
+    </div>
+
+</div>
 
 
 <script>
 
-/* =========================================
+/* =========================
    TELEGRAM
-========================================= */
+========================= */
 
-const tg = window.Telegram?.WebApp;
+if (window.Telegram && Telegram.WebApp) {
 
-if(tg){
-
-  tg.ready();
-
-  tg.expand();
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
 
 }
 
 
-/* =========================================
-   AUDIO
-========================================= */
-
-let audioCtx = null;
-
-let soundEnabled = true;
-
-
-function initAudio(){
-
-  try{
-
-    if(!audioCtx){
-
-      audioCtx =
-        new (
-          window.AudioContext ||
-          window.webkitAudioContext
-        )();
-
-    }
-
-    if(
-      audioCtx.state === "suspended"
-    ){
-
-      audioCtx.resume();
-
-    }
-
-  }catch(e){
-
-    console.log(
-      "Audio unavailable"
-    );
-
-  }
-
-}
-
-
-function tone(
-  frequency,
-  duration,
-  type="sine",
-  volume=.05,
-  delay=0
-){
-
-  if(
-    !soundEnabled ||
-    !audioCtx
-  ){
-
-    return;
-
-  }
-
-  try{
-
-    const osc =
-      audioCtx.createOscillator();
-
-    const gain =
-      audioCtx.createGain();
-
-
-    osc.type = type;
-
-    osc.frequency.value =
-      frequency;
-
-
-    gain.gain.setValueAtTime(
-      0,
-      audioCtx.currentTime + delay
-    );
-
-    gain.gain.linearRampToValueAtTime(
-      volume,
-      audioCtx.currentTime +
-      delay +
-      .01
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      .001,
-      audioCtx.currentTime +
-      delay +
-      duration
-    );
-
-
-    osc.connect(gain);
-
-    gain.connect(
-      audioCtx.destination
-    );
-
-
-    osc.start(
-      audioCtx.currentTime +
-      delay
-    );
-
-    osc.stop(
-      audioCtx.currentTime +
-      delay +
-      duration +
-      .03
-    );
-
-  }catch(e){}
-
-}
-
-
-/* =========================================
-   SOUND EFFECTS
-========================================= */
-
-function tapSound(){
-
-  tone(
-    620,
-    .08,
-    "sine",
-    .045
-  );
-
-  tone(
-    880,
-    .07,
-    "sine",
-    .025,
-    .035
-  );
-
-}
-
-
-function revealSound(){
-
-  tone(
-    260,
-    .35,
-    "sine",
-    .04
-  );
-
-  tone(
-    330,
-    .35,
-    "sine",
-    .04,
-    .12
-  );
-
-  tone(
-    440,
-    .4,
-    "sine",
-    .045,
-    .24
-  );
-
-  tone(
-    660,
-    .5,
-    "triangle",
-    .055,
-    .38
-  );
-
-}
-
-
-function successSound(){
-
-  tone(
-    523,
-    .28,
-    "sine",
-    .045
-  );
-
-  tone(
-    659,
-    .28,
-    "sine",
-    .045,
-    .08
-  );
-
-  tone(
-    784,
-    .45,
-    "sine",
-    .05,
-    .16
-  );
-
-  tone(
-    1046,
-    .55,
-    "triangle",
-    .04,
-    .28
-  );
-
-}
-
-
-/* =========================================
-   TELEGRAM HAPTIC
-========================================= */
-
-function haptic(type="light"){
-
-  try{
-
-    if(
-      tg &&
-      tg.HapticFeedback
-    ){
-
-      if(
-        type === "success"
-      ){
-
-        tg.HapticFeedback
-          .notificationOccurred(
-            "success"
-          );
-
-      }else{
-
-        tg.HapticFeedback
-          .impactOccurred(
-            type
-          );
-
-      }
-
-    }
-
-  }catch(e){}
-
-}
-
-
-/* =========================================
+/* =========================
    LANGUAGE
-========================================= */
+========================= */
 
-let thai = true;
-
-
-const translations = {
-
-  th:{
-
-    openTitle:
-      "เลือกโชคของคุณ",
-
-    play:
-      "เล่น",
-
-    title:
-      "เลือกโชคของคุณ",
-
-    subtitle:
-      "เลือกหนึ่งสัญลักษณ์เพื่อเปิดโชค",
-
-    choose:
-      "เลือกหนึ่ง",
-
-    reveal:
-      "กำลังเปิดโชคของคุณ...",
-
-    revealMessage:
-      "✨ โชคกำลังเปิด ✨",
-
-    again:
-      "เล่นอีกครั้ง",
+let currentLanguage = "th";
 
 
-    dragon:{
-      title:"🐉 มังกร",
-      en:"DRAGON",
-      meaning:"พลัง อำนาจ และความมั่งคั่ง",
-      result:"โชคแห่งพลัง"
-    },
+function setLanguage(lang) {
 
-    qilin:{
-      title:"🦌 กิเลน",
-      en:"QILIN",
-      meaning:"โชคดี และความเจริญรุ่งเรือง",
-      result:"โชคแห่งความรุ่งเรือง"
-    },
+    currentLanguage = lang;
 
-    toad:{
-      title:"🐸 คางคกทอง",
-      en:"GOLDEN TOAD",
-      meaning:"เงินทอง และความมั่งคั่ง",
-      result:"โชคแห่งความมั่งคั่ง"
+
+    document
+        .getElementById("thBtn")
+        .classList
+        .toggle("active", lang === "th");
+
+
+    document
+        .getElementById("enBtn")
+        .classList
+        .toggle("active", lang === "en");
+
+
+    if (lang === "th") {
+
+        document.getElementById("homeTitle")
+            .textContent = "เลือกโชคของคุณ";
+
+        document.getElementById("homeSubtitle")
+            .textContent = "เปิดโชคของคุณ";
+
+        document.getElementById("title")
+            .textContent = "เลือกโชคของคุณ";
+
+        document.getElementById("subtitle")
+            .textContent =
+            "เลือกหนึ่งสัญลักษณ์ แล้วเปิดคำทำนายแห่งโชคของคุณ";
+
+        document.getElementById("playAgain")
+            .textContent = "เล่นอีกครั้ง";
+
+    } else {
+
+        document.getElementById("homeTitle")
+            .textContent = "Choose Your Luck";
+
+        document.getElementById("homeSubtitle")
+            .textContent = "Reveal your fortune";
+
+        document.getElementById("title")
+            .textContent = "Choose Your Luck";
+
+        document.getElementById("subtitle")
+            .textContent =
+            "Choose one symbol and reveal your fortune";
+
+        document.getElementById("playAgain")
+            .textContent = "Play Again";
+
     }
 
-  },
 
+    document
+        .querySelectorAll("[data-th]")
+        .forEach(el => {
 
-  en:{
+            el.textContent =
+                lang === "th"
+                    ? el.dataset.th
+                    : el.dataset.en;
 
-    openTitle:
-      "Choose Your Luck",
-
-    play:
-      "PLAY",
-
-    title:
-      "Choose Your Luck",
-
-    subtitle:
-      "Choose one symbol to reveal your luck",
-
-    choose:
-      "CHOOSE ONE",
-
-    reveal:
-      "REVEALING YOUR LUCK...",
-
-    revealMessage:
-      "✨ YOUR LUCK IS OPENING ✨",
-
-    again:
-      "PLAY AGAIN",
-
-
-    dragon:{
-      title:"🐉 Dragon",
-      en:"DRAGON",
-      meaning:"Power, fortune & wealth",
-      result:"Luck of Power"
-    },
-
-    qilin:{
-      title:"🦌 Qilin",
-      en:"QILIN",
-      meaning:"Prosperity, fortune & harmony",
-      result:"Luck of Prosperity"
-    },
-
-    toad:{
-      title:"🐸 Golden Toad",
-      en:"GOLDEN TOAD",
-      meaning:"Wealth, money & abundance",
-      result:"Luck of Wealth"
-    }
-
-  }
-
-};
-
-
-/* =========================================
-   UPDATE LANGUAGE
-========================================= */
-
-function updateLanguage(){
-
-  const t =
-    thai
-      ? translations.th
-      : translations.en;
-
-
-  document
-    .getElementById("openTitle")
-    .textContent =
-      t.openTitle;
-
-
-  document
-    .getElementById("playBtn")
-    .textContent =
-      t.play;
-
-
-  document
-    .getElementById("title")
-    .textContent =
-      t.title;
-
-
-  document
-    .getElementById("subtitle")
-    .textContent =
-      t.subtitle;
-
-
-  document
-    .getElementById("chooseText")
-    .textContent =
-      t.choose;
-
-
-  document
-    .getElementById("revealText")
-    .textContent =
-      t.reveal;
-
-
-  document
-    .getElementById("revealMessage")
-    .textContent =
-      t.revealMessage;
-
-
-  document
-    .getElementById("againBtn")
-    .textContent =
-      t.again;
-
-
-  document
-    .querySelectorAll(".card")
-    .forEach(card=>{
-
-      const choice =
-        card.dataset.choice;
-
-      const data =
-        t[choice];
-
-
-      card
-        .querySelector(".name")
-        .textContent =
-          data.title;
-
-
-      card
-        .querySelector(".en")
-        .textContent =
-          data.en;
-
-
-      card
-        .querySelector(".meaning")
-        .textContent =
-          data.meaning;
-
-    });
+        });
 
 }
 
 
-/* =========================================
-   SCREEN CONTROL
-========================================= */
+/* =========================
+   START GAME
+========================= */
 
-const opening =
-  document.getElementById(
-    "opening"
-  );
+function startGame() {
 
-const game =
-  document.getElementById(
-    "game"
-  );
+    const home =
+        document.getElementById("home");
 
-const reveal =
-  document.getElementById(
-    "reveal"
-  );
-
-const result =
-  document.getElementById(
-    "result"
-  );
+    const game =
+        document.getElementById("game");
 
 
-function showScreen(screen){
+    home.classList.add("hide");
 
-  [
-    opening,
-    game,
-    reveal,
-    result
-  ].forEach(
-    x =>
-      x.classList.add(
-        "hidden"
-      )
-  );
 
-  screen.classList.remove(
-    "hidden"
-  );
+    setTimeout(() => {
+
+        game.classList.add("show");
+
+    }, 250);
 
 }
 
 
-/* =========================================
-   PARTICLES
-========================================= */
-
-function particles(){
-
-  for(
-    let i=0;
-    i<32;
-    i++
-  ){
-
-    const p =
-      document.createElement(
-        "div"
-      );
-
-
-    p.className =
-      "particle";
-
-
-    p.style.left =
-      Math.random()*100 +
-      "%";
-
-
-    p.style.top =
-      (
-        45 +
-        Math.random()*45
-      ) +
-      "%";
-
-
-    p.style.animationDelay =
-      Math.random()*.8 +
-      "s";
-
-
-    p.style.animationDuration =
-      (
-        1.4 +
-        Math.random()*1.3
-      ) +
-      "s";
-
-
-    reveal.appendChild(p);
-
-
-    setTimeout(
-      ()=>p.remove(),
-      3000
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   PLAY
-========================================= */
-
-document
-  .getElementById("playBtn")
-  .addEventListener(
-    "click",
-    ()=>{
-
-      initAudio();
-
-      tapSound();
-
-      haptic("light");
-
-      showScreen(game);
-
-    }
-  );
-
-
-/* =========================================
-   LANGUAGE
-========================================= */
-
-function toggleLanguage(){
-
-  thai = !thai;
-
-  updateLanguage();
-
-  initAudio();
-
-  tapSound();
-
-}
-
-
-document
-  .getElementById("langBtn")
-  .addEventListener(
-    "click",
-    toggleLanguage
-  );
-
-
-document
-  .getElementById("gameLangBtn")
-  .addEventListener(
-    "click",
-    toggleLanguage
-  );
-
-
-/* =========================================
-   SOUND BUTTON
-========================================= */
-
-function toggleSound(){
-
-  soundEnabled =
-    !soundEnabled;
-
-
-  const icon =
-    soundEnabled
-      ? "🔊"
-      : "🔇";
-
-
-  document
-    .getElementById(
-      "soundBtn"
-    )
-    .textContent =
-      icon;
-
-
-  document
-    .getElementById(
-      "gameSoundBtn"
-    )
-    .textContent =
-      icon;
-
-
-  if(soundEnabled){
-
-    initAudio();
-
-    tone(
-      700,
-      .1,
-      "sine",
-      .04
-    );
-
-  }
-
-}
-
-
-document
-  .getElementById(
-    "soundBtn"
-  )
-  .addEventListener(
-    "click",
-    toggleSound
-  );
-
-
-document
-  .getElementById(
-    "gameSoundBtn"
-  )
-  .addEventListener(
-    "click",
-    toggleSound
-  );
-
-
-/* =========================================
+/* =========================
    GAME DATA
-========================================= */
+========================= */
 
-const gameData = {
+const luckData = {
 
-  dragon:{
-    image:"dragon.png"
-  },
+    dragon: {
 
-  qilin:{
-    image:"qilin.png"
-  },
+        image: "dragon.png",
 
-  toad:{
-    image:"toad.png"
-  }
+        th: {
+            title: "มังกรแห่งพลัง",
+            message:
+            "พลังและความกล้ากำลังเปิดทางให้คุณ ก้าวไปข้างหน้าด้วยความมั่นใจ และอย่ากลัวที่จะเลือกสิ่งที่ยิ่งใหญ่"
+        },
+
+        en: {
+            title: "Dragon of Power",
+            message:
+            "Power and courage are opening a new path for you. Move forward with confidence and embrace bold choices."
+        }
+
+    },
+
+
+    qilin: {
+
+        image: "qilin.png",
+
+        th: {
+            title: "กิเลนแห่งสิริมงคล",
+            message:
+            "พลังแห่งความสงบและโชคดีอยู่รอบตัวคุณ จังหวะใหม่กำลังเข้ามา เปิดใจรับโอกาสที่กำลังเกิดขึ้น"
+        },
+
+        en: {
+            title: "Qilin of Fortune",
+            message:
+            "A peaceful energy surrounds you. A new opportunity may be closer than you think. Stay open and trust your timing."
+        }
+
+    },
+
+
+    toad: {
+
+        image: "toad.png",
+
+        th: {
+            title: "คางคกทองแห่งทรัพย์",
+            message:
+            "สัญลักษณ์แห่งความมั่งคั่งกำลังส่งพลังให้คุณ มองเห็นคุณค่าของโอกาสเล็ก ๆ และเปลี่ยนมันให้กลายเป็นสิ่งที่ยิ่งใหญ่"
+        },
+
+        en: {
+            title: "Golden Toad of Wealth",
+            message:
+            "The energy of abundance surrounds you. Notice the small opportunities around you and turn them into something meaningful."
+        }
+
+    }
 
 };
 
 
-/* =========================================
-   CHARACTER SELECTION
-========================================= */
-
-document
-  .querySelectorAll(".card")
-  .forEach(card=>{
-
-    card.addEventListener(
-      "click",
-      ()=>{
-
-        initAudio();
+let isPlaying = false;
 
 
-        const choice =
-          card.dataset.choice;
+/* =========================
+   CHOOSE LUCK
+========================= */
+
+function chooseLuck(type, card) {
+
+    if (isPlaying) return;
+
+    isPlaying = true;
 
 
-        tapSound();
-
-        haptic("medium");
-
-
-        const data =
-          gameData[choice];
-
-
-        document
-          .getElementById(
-            "revealImg"
-          )
-          .src =
-            data.image;
-
-
-        document
-          .getElementById(
-            "revealImg"
-          )
-          .alt =
-            choice;
-
-
-        showScreen(reveal);
-
-
-        particles();
-
-
-        revealSound();
-
-
-        setTimeout(
-          ()=>{
-
-            successSound();
-
-            haptic(
-              "success"
-            );
-
-          },
-          1300
+    document
+        .querySelectorAll(".card")
+        .forEach(c =>
+            c.classList.remove("selected")
         );
 
 
-        setTimeout(
-          ()=>{
-            showResult(
-              choice
-            );
-          },
-          2700
-        );
-
-      }
-    );
-
-  });
+    card.classList.add("selected");
 
 
-/* =========================================
-   RESULT
-========================================= */
-
-function showResult(choice){
-
-  const t =
-    thai
-      ? translations.th
-      : translations.en;
+    const data =
+        luckData[type];
 
 
-  const data =
-    t[choice];
+    const reveal =
+        document.getElementById("reveal");
+
+    const revealImage =
+        document.getElementById("revealImage");
+
+    const revealText =
+        document.getElementById("revealText");
 
 
-  document
-    .getElementById(
-      "resultImg"
-    )
-    .src =
-      gameData[
-        choice
-      ].image;
+    revealImage.src =
+        data.image;
 
 
-  document
-    .getElementById(
-      "resultTitle"
-    )
-    .textContent =
-      data.result;
+    revealText.classList.remove("done");
 
 
-  document
-    .getElementById(
-      "resultSub"
-    )
-    .textContent =
-      data.en;
+    revealText.textContent =
+        currentLanguage === "th"
+            ? "กำลังเปิดโชคของคุณ..."
+            : "Revealing your luck...";
 
 
-  document
-    .getElementById(
-      "resultMeaning"
-    )
-    .textContent =
-      data.meaning;
+    createSparkles();
 
 
-  showScreen(result);
+    reveal.classList.add("show");
+
+
+    setTimeout(() => {
+
+        revealText.classList.add("done");
+
+    },1200);
+
+
+    setTimeout(() => {
+
+        showResult(type);
+
+    },2400);
 
 }
 
 
-/* =========================================
-   PLAY AGAIN
-========================================= */
+/* =========================
+   SPARKLES
+========================= */
 
-document
-  .getElementById(
-    "againBtn"
-  )
-  .addEventListener(
-    "click",
-    ()=>{
+function createSparkles() {
 
-      initAudio();
+    const container =
+        document.querySelector(".reveal-content");
 
-      tapSound();
 
-      haptic("light");
+    for(let i=0;i<28;i++) {
 
-      showScreen(game);
+        const sparkle =
+            document.createElement("div");
+
+
+        sparkle.className =
+            "sparkle";
+
+
+        sparkle.style.left =
+            Math.random()*100 + "%";
+
+
+        sparkle.style.top =
+            (45 + Math.random()*40) + "%";
+
+
+        sparkle.style.animationDelay =
+            Math.random()*.9 + "s";
+
+
+        sparkle.style.animationDuration =
+            (1.2 + Math.random()*1.4) + "s";
+
+
+        container.appendChild(sparkle);
+
+
+        setTimeout(() => {
+
+            sparkle.remove();
+
+        },3000);
 
     }
-  );
+
+}
 
 
-/* =========================================
-   START
-========================================= */
+/* =========================
+   RESULT
+========================= */
 
-updateLanguage();
+function showResult(type) {
+
+    const data =
+        luckData[type];
+
+
+    const reveal =
+        document.getElementById("reveal");
+
+
+    const result =
+        document.getElementById("result");
+
+
+    const resultImage =
+        document.getElementById("resultImage");
+
+
+    const resultTitle =
+        document.getElementById("resultTitle");
+
+
+    const resultMessage =
+        document.getElementById("resultMessage");
+
+
+    resultImage.src =
+        data.image;
+
+
+    resultTitle.textContent =
+        currentLanguage === "th"
+            ? data.th.title
+            : data.en.title;
+
+
+    resultMessage.textContent =
+        currentLanguage === "th"
+            ? data.th.message
+            : data.en.message;
+
+
+    reveal.classList.remove("show");
+
+
+    setTimeout(() => {
+
+        result.classList.add("show");
+
+    },350);
+
+}
+
+
+/* =========================
+   PLAY AGAIN
+========================= */
+
+function playAgain() {
+
+    document
+        .getElementById("result")
+        .classList
+        .remove("show");
+
+
+    document
+        .querySelectorAll(".card")
+        .forEach(c =>
+            c.classList.remove("selected")
+        );
+
+
+    isPlaying = false;
+
+}
 
 </script>
 
