@@ -2,40 +2,53 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>AURA69 — Choose Your Luck</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>AURA69 — เลือกโชคของคุณ</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
+
+/* =========================================
+   RESET
+========================================= */
 
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   margin:0;
   padding:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  font-family:Arial,Helvetica,sans-serif;
+
+  font-family:
+    Arial,
+    "Noto Sans Thai",
+    sans-serif;
+
   background:#020817;
-  color:white;
+  color:#fff;
 }
 
-body{
-  background:
-    radial-gradient(circle at 50% 20%,rgba(23,62,120,.35),transparent 45%),
-    radial-gradient(circle at 50% 100%,rgba(212,166,58,.12),transparent 45%),
-    #020817;
+button{
+  font-family:inherit;
+  cursor:pointer;
 }
 
-/* =========================
-   GLOBAL
-========================= */
+
+/* =========================================
+   SCREENS
+========================================= */
 
 .screen{
   position:absolute;
@@ -45,115 +58,154 @@ body{
 }
 
 .hidden{
-  display:none!important;
+  display:none !important;
 }
 
-/* =========================
-   LANGUAGE
-========================= */
+
+/* =========================================
+   BACKGROUND
+========================================= */
+
+body{
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(27,67,130,.34),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(211,165,49,.13),
+      transparent 45%
+    ),
+    #020817;
+}
+
+
+/* =========================================
+   TOP BUTTONS
+========================================= */
 
 .lang{
   position:absolute;
-  top:18px;
-  right:18px;
-  z-index:50;
+  top:17px;
+  right:17px;
+  z-index:100;
 
-  border:1px solid rgba(255,215,120,.35);
-  background:rgba(4,12,28,.75);
-  backdrop-filter:blur(12px);
-
-  color:#f4d47b;
   padding:8px 13px;
+
   border-radius:20px;
 
-  font-size:12px;
-  letter-spacing:.5px;
-}
+  border:1px solid rgba(238,201,101,.32);
 
-/* =========================
-   SOUND BUTTON
-========================= */
+  background:rgba(3,12,28,.75);
+
+  color:#e8c968;
+
+  font-size:11px;
+  letter-spacing:.4px;
+
+  backdrop-filter:blur(12px);
+}
 
 .sound{
   position:absolute;
-  top:18px;
-  left:18px;
-  z-index:50;
+  top:17px;
+  left:17px;
+  z-index:100;
 
   width:38px;
   height:38px;
 
+  padding:0;
+
   border-radius:50%;
 
-  border:1px solid rgba(255,215,120,.3);
-  background:rgba(4,12,28,.75);
-  backdrop-filter:blur(12px);
+  border:1px solid rgba(238,201,101,.32);
 
-  color:#f4d47b;
-  font-size:17px;
+  background:rgba(3,12,28,.75);
+
+  color:#e8c968;
+
+  font-size:16px;
 
   display:flex;
   align-items:center;
   justify-content:center;
+
+  backdrop-filter:blur(12px);
 }
 
-/* =========================
-   OPENING
-========================= */
+
+/* =========================================
+   OPENING SCREEN
+========================================= */
 
 #opening{
   display:flex;
-  align-items:center;
-  justify-content:center;
+
   flex-direction:column;
 
+  align-items:center;
+  justify-content:center;
+
   background:
-    radial-gradient(circle at center,
-      rgba(35,79,145,.28),
-      transparent 42%),
+    radial-gradient(
+      circle at center,
+      rgba(28,67,128,.26),
+      transparent 48%
+    ),
     #020817;
 }
 
 .openGlow{
   position:absolute;
-  width:280px;
-  height:280px;
 
-  background:radial-gradient(
-    circle,
-    rgba(226,181,67,.22),
-    transparent 70%
-  );
+  width:310px;
+  height:310px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(224,180,67,.22),
+      transparent 68%
+    );
 
   filter:blur(15px);
 
-  animation:pulse 3s ease-in-out infinite;
+  animation:openPulse 3.2s ease-in-out infinite;
 }
 
-@keyframes pulse{
+@keyframes openPulse{
+
   0%,100%{
-    transform:scale(.9);
-    opacity:.6;
+    transform:scale(.88);
+    opacity:.55;
   }
 
   50%{
-    transform:scale(1.15);
+    transform:scale(1.16);
     opacity:1;
   }
 }
 
 .openLogo{
   position:relative;
-  width:min(70vw,330px);
+  z-index:2;
+
+  width:min(72vw,340px);
 
   filter:
-    drop-shadow(0 0 15px rgba(220,170,50,.35))
-    drop-shadow(0 0 40px rgba(220,170,50,.15));
+    drop-shadow(0 0 16px rgba(224,180,67,.35))
+    drop-shadow(0 0 42px rgba(224,180,67,.16));
 
-  animation:logoFloat 3s ease-in-out infinite;
+  animation:logoFloat 3.2s ease-in-out infinite;
 }
 
 @keyframes logoFloat{
+
   0%,100%{
     transform:translateY(0);
   }
@@ -164,42 +216,47 @@ body{
 }
 
 .openTitle{
-  margin-top:25px;
+  position:relative;
+  z-index:2;
 
-  font-size:12px;
-  letter-spacing:4px;
+  margin-top:22px;
 
-  color:#d7b95e;
-  text-transform:uppercase;
+  color:#d9bc63;
+
+  font-size:13px;
+
+  letter-spacing:2px;
 }
 
 .playBtn{
   position:relative;
+  z-index:2;
 
-  margin-top:35px;
+  margin-top:34px;
 
-  min-width:180px;
-  padding:16px 30px;
+  min-width:190px;
+
+  padding:16px 34px;
 
   border-radius:30px;
 
-  border:1px solid rgba(255,224,139,.8);
+  border:1px solid rgba(255,228,145,.8);
 
   background:
     linear-gradient(
       135deg,
-      #e9c866,
+      #f1d37a,
       #b98722
     );
 
-  color:#08101e;
+  color:#07101e;
 
-  font-weight:bold;
   font-size:16px;
+  font-weight:bold;
 
   box-shadow:
-    0 0 25px rgba(225,183,67,.25),
-    inset 0 1px rgba(255,255,255,.45);
+    0 0 28px rgba(225,182,62,.24),
+    inset 0 1px rgba(255,255,255,.55);
 
   transition:.2s;
 }
@@ -208,43 +265,66 @@ body{
   transform:scale(.94);
 }
 
-/* =========================
-   GAME
-========================= */
+
+/* =========================================
+   GAME SCREEN
+========================================= */
 
 #game{
-  padding:65px 18px 20px;
+
+  padding:
+    65px
+    18px
+    20px;
+
+  overflow:auto;
 
   display:flex;
   flex-direction:column;
   align-items:center;
 
-  overflow:auto;
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(27,66,128,.24),
+      transparent 45%
+    ),
+    #020817;
 }
 
+
+/* HEADER */
+
 .header{
+  width:100%;
   text-align:center;
+
   margin-top:5px;
 }
 
 .brand{
-  color:#d8b85d;
-  font-size:11px;
-  letter-spacing:5px;
-  margin-bottom:12px;
+  color:#d9b95e;
+
+  font-size:10px;
+
+  letter-spacing:6px;
+
+  margin-bottom:10px;
 }
 
 .title{
-  font-size:28px;
-  font-weight:700;
   margin:0;
+
+  font-size:28px;
+
+  font-weight:700;
 
   background:
     linear-gradient(
       90deg,
-      #f9df8b,
-      #fff5c7,
-      #d9ad42
+      #f4d77e,
+      #fff5c9,
+      #d5a83e
     );
 
   -webkit-background-clip:text;
@@ -253,306 +333,460 @@ body{
 
 .subtitle{
   margin-top:9px;
-  font-size:13px;
-  color:#94a4bd;
+
+  color:#8999b2;
+
+  font-size:12px;
 }
 
+
+/* =========================================
+   LARGE CHARACTER CARDS
+========================================= */
+
 .cards{
+
   width:100%;
   max-width:430px;
 
-  display:flex;
-  flex-direction:column;
-  gap:13px;
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:14px;
 
   margin-top:28px;
 }
 
+
+/* LARGE CARD */
+
 .card{
+
   position:relative;
 
-  min-height:115px;
-
-  border-radius:22px;
+  min-height:205px;
 
   overflow:hidden;
 
-  border:1px solid rgba(220,185,90,.18);
+  border-radius:24px;
+
+  border:
+    1px solid
+    rgba(221,184,76,.20);
 
   background:
     linear-gradient(
-      135deg,
-      rgba(18,37,70,.95),
-      rgba(5,15,31,.98)
+      145deg,
+      rgba(20,43,79,.95),
+      rgba(3,13,29,.98)
     );
 
   box-shadow:
-    0 12px 30px rgba(0,0,0,.28);
+    0 15px 35px rgba(0,0,0,.32);
 
   display:flex;
-  align-items:center;
 
-  padding:10px;
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:flex-end;
+
+  padding:
+    10px
+    8px
+    18px;
 
   transition:
-    transform .25s,
-    border .25s,
-    box-shadow .25s;
+    transform .22s ease,
+    border .22s ease,
+    box-shadow .22s ease;
 }
 
-.card:active{
-  transform:scale(.97);
-}
 
-.card::after{
+/* GOLD SHINE */
+
+.card::before{
+
   content:"";
 
   position:absolute;
-  inset:0;
+
+  top:-60%;
+  left:-80%;
+
+  width:60%;
+  height:220%;
+
+  transform:rotate(25deg);
 
   background:
     linear-gradient(
       90deg,
       transparent,
-      rgba(255,215,120,.06),
+      rgba(255,226,132,.10),
       transparent
     );
 
-  transform:translateX(-100%);
+  transition:.7s;
 }
 
-.card:hover::after{
-  animation:shine .8s;
+.card:hover::before{
+  left:140%;
 }
 
-@keyframes shine{
-  to{
-    transform:translateX(100%);
-  }
+
+/* TOP GLOW */
+
+.card::after{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:10%;
+  right:10%;
+
+  height:1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(245,211,116,.55),
+      transparent
+    );
 }
+
+
+/* ACTIVE */
+
+.card:active{
+
+  transform:scale(.95);
+
+  border-color:
+    rgba(242,203,91,.7);
+
+  box-shadow:
+    0 0 35px rgba(225,182,63,.18);
+}
+
+
+/* CHARACTER IMAGE */
 
 .creature{
-  position:relative;
-  z-index:2;
 
-  width:105px;
-  height:95px;
+  position:absolute;
+
+  top:7px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  width:165px;
+  height:165px;
 
   object-fit:contain;
 
   filter:
-    drop-shadow(0 0 10px rgba(230,190,70,.2));
+    drop-shadow(
+      0 0 13px
+      rgba(235,193,73,.25)
+    );
 
-  transition:.3s;
+  transition:
+    transform .3s ease,
+    filter .3s ease;
 }
 
-.card:hover .creature{
-  transform:scale(1.06);
+.card:active .creature{
+
+  transform:
+    translateX(-50%)
+    scale(1.05);
+
+  filter:
+    drop-shadow(
+      0 0 23px
+      rgba(240,202,85,.55)
+    );
 }
 
-.info{
+
+/* CARD TEXT */
+
+.cardInfo{
+
   position:relative;
-  z-index:2;
 
-  padding-left:12px;
-  flex:1;
+  z-index:3;
+
+  width:100%;
+
+  text-align:center;
 }
 
 .name{
-  font-size:18px;
+
+  color:#f1d477;
+
+  font-size:17px;
+
   font-weight:bold;
 
-  color:#f5d477;
+  text-shadow:
+    0 1px 10px rgba(0,0,0,.5);
 }
 
 .en{
-  font-size:10px;
-  color:#8291aa;
+
   margin-top:3px;
-  letter-spacing:1px;
+
+  color:#74849e;
+
+  font-size:8px;
+
+  letter-spacing:1.7px;
 }
 
 .meaning{
-  font-size:12px;
-  color:#d7dfeb;
-  margin-top:9px;
-  line-height:1.4;
+
+  margin-top:6px;
+
+  color:#b9c4d5;
+
+  font-size:10px;
+
+  line-height:1.35;
 }
+
+
+/* CHOOSE TEXT */
 
 .choose{
-  margin-top:24px;
 
-  color:#65758f;
+  margin-top:22px;
 
-  font-size:11px;
-  letter-spacing:1px;
+  color:#687991;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+
+  text-transform:uppercase;
 }
 
-/* =========================
-   REVEAL
-========================= */
+
+/* =========================================
+   REVEAL SCREEN
+========================================= */
 
 #reveal{
-  z-index:100;
+
+  z-index:200;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
   background:
     radial-gradient(
       circle at center,
-      rgba(31,73,138,.55),
-      rgba(2,8,23,.97) 65%
+      rgba(32,76,145,.54),
+      rgba(2,8,23,.98) 68%
     );
-
-  opacity:1;
 }
 
 .revealGlow{
+
   position:absolute;
 
-  width:380px;
-  height:380px;
+  width:390px;
+  height:390px;
 
   border-radius:50%;
 
   background:
     radial-gradient(
       circle,
-      rgba(242,197,82,.30),
+      rgba(244,204,85,.30),
       transparent 68%
     );
 
-  animation:revealPulse 1.4s ease-in-out infinite;
+  filter:blur(5px);
+
+  animation:
+    revealPulse
+    1.35s
+    ease-in-out
+    infinite;
 }
 
 @keyframes revealPulse{
 
   0%,100%{
-    transform:scale(.75);
+    transform:scale(.72);
     opacity:.5;
   }
 
   50%{
-    transform:scale(1.25);
+    transform:scale(1.2);
     opacity:1;
   }
 }
 
+
+/* RINGS */
+
 .ring{
+
   position:absolute;
 
-  width:220px;
-  height:220px;
+  width:210px;
+  height:210px;
 
   border-radius:50%;
 
-  border:1px solid rgba(241,202,92,.4);
+  border:
+    1px solid
+    rgba(240,201,89,.42);
 
-  animation:ringExpand 2s ease-out infinite;
+  animation:
+    ringExpand
+    2s
+    ease-out
+    infinite;
 }
 
 .ring.two{
-  animation-delay:.5s;
+  animation-delay:.55s;
 }
 
 @keyframes ringExpand{
 
   0%{
-    transform:scale(.4);
+    transform:scale(.35);
     opacity:.9;
   }
 
   100%{
-    transform:scale(2);
+    transform:scale(2.1);
     opacity:0;
   }
 }
 
+
+/* REVEAL CONTENT */
+
 .revealContent{
+
   position:relative;
+
   z-index:5;
 
-  text-align:center;
-
   width:100%;
+
+  text-align:center;
 }
 
 .revealText{
-  font-size:13px;
+
+  margin-bottom:12px;
+
+  color:#e7ca70;
+
+  font-size:12px;
+
   letter-spacing:2px;
-
-  color:#e6cb78;
-
-  margin-bottom:25px;
 }
 
 .revealImg{
-  width:min(72vw,330px);
-  height:330px;
+
+  width:min(78vw,360px);
+  height:360px;
 
   object-fit:contain;
 
-  filter:
-    drop-shadow(0 0 20px rgba(244,204,89,.45));
-
   animation:
-    revealCharacter 1.8s cubic-bezier(.2,.8,.2,1) forwards;
+    revealCharacter
+    1.8s
+    cubic-bezier(.2,.8,.2,1)
+    forwards;
 }
 
 @keyframes revealCharacter{
 
   0%{
+
     transform:
-      scale(.15)
-      rotate(-12deg);
+      scale(.12)
+      rotate(-14deg);
 
     opacity:0;
+
     filter:
       blur(18px)
       drop-shadow(0 0 0 transparent);
   }
 
-  45%{
-    opacity:.7;
+  40%{
+    opacity:.65;
   }
 
-  75%{
+  72%{
+
     transform:
       scale(1.12)
       rotate(4deg);
 
     filter:
       blur(0)
-      drop-shadow(0 0 35px rgba(244,204,89,.75));
+      drop-shadow(
+        0 0 38px
+        rgba(244,204,89,.75)
+      );
   }
 
   100%{
+
     transform:
       scale(1)
-      rotate(0deg);
+      rotate(0);
 
     opacity:1;
 
     filter:
       blur(0)
-      drop-shadow(0 0 20px rgba(244,204,89,.45));
+      drop-shadow(
+        0 0 22px
+        rgba(244,204,89,.48)
+      );
   }
 }
 
 .revealMessage{
-  margin-top:15px;
 
-  font-size:18px;
+  margin-top:-10px;
+
+  color:#fff0b2;
+
+  font-size:17px;
+
   font-weight:bold;
-
-  color:#fff0b1;
 
   opacity:0;
 
   animation:
-    messageIn .6s ease 1.45s forwards;
+    messageIn
+    .6s
+    ease
+    1.4s
+    forwards;
 }
 
 @keyframes messageIn{
@@ -568,61 +802,78 @@ body{
   }
 }
 
-/* =========================
-   RESULT
-========================= */
+
+/* =========================================
+   RESULT SCREEN
+========================================= */
 
 #result{
-  z-index:90;
+
+  z-index:150;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
-  padding:25px;
+  padding:20px;
 
   background:
     radial-gradient(
       circle at center,
-      rgba(18,52,102,.5),
-      #020817 70%
+      rgba(22,57,111,.5),
+      #020817 72%
     );
 }
 
 .resultBox{
+
   width:100%;
   max-width:380px;
 
-  text-align:center;
+  padding:
+    25px
+    20px
+    22px;
 
-  padding:30px 20px;
+  text-align:center;
 
   border-radius:28px;
 
-  border:1px solid rgba(237,199,91,.35);
+  border:
+    1px solid
+    rgba(237,199,91,.35);
 
   background:
     linear-gradient(
       145deg,
-      rgba(17,34,63,.96),
-      rgba(3,11,25,.98)
+      rgba(17,35,65,.97),
+      rgba(3,11,25,.99)
     );
 
   box-shadow:
-    0 25px 70px rgba(0,0,0,.5),
-    0 0 45px rgba(217,175,67,.1);
+    0 25px 70px rgba(0,0,0,.55),
+    0 0 45px rgba(217,175,67,.10);
 }
 
 .resultImg{
-  width:210px;
-  height:210px;
+
+  width:230px;
+  height:230px;
 
   object-fit:contain;
 
   filter:
-    drop-shadow(0 0 25px rgba(236,197,80,.45));
+    drop-shadow(
+      0 0 26px
+      rgba(236,197,80,.48)
+    );
 
-  animation:resultFloat 3s ease-in-out infinite;
+  animation:
+    resultFloat
+    3s
+    ease-in-out
+    infinite;
 }
 
 @keyframes resultFloat{
@@ -637,59 +888,79 @@ body{
 }
 
 .resultTitle{
-  font-size:25px;
-  color:#f5d477;
 
-  margin-top:5px;
+  margin-top:0;
+
+  color:#f4d477;
+
+  font-size:25px;
+
+  font-weight:bold;
 }
 
 .resultSub{
-  color:#9eabc0;
-  font-size:12px;
-  margin-top:6px;
+
+  margin-top:5px;
+
+  color:#7f8ea7;
+
+  font-size:9px;
+
+  letter-spacing:2px;
 }
 
 .resultMeaning{
-  margin-top:15px;
 
-  color:#e4e9f2;
+  margin-top:13px;
+
+  color:#dce3ed;
 
   font-size:13px;
-  line-height:1.6;
+
+  line-height:1.55;
 }
 
 .again{
-  margin-top:25px;
 
   width:100%;
+
+  margin-top:22px;
 
   padding:15px;
 
   border-radius:25px;
 
-  border:1px solid rgba(239,205,104,.6);
+  border:
+    1px solid
+    rgba(239,205,104,.55);
 
-  background:transparent;
+  background:
+    rgba(224,183,67,.05);
 
   color:#f1cf70;
 
-  font-weight:bold;
-
   font-size:14px;
+
+  font-weight:bold;
 
   transition:.2s;
 }
 
 .again:active{
+
   transform:scale(.96);
-  background:rgba(230,190,80,.08);
+
+  background:
+    rgba(230,190,80,.10);
 }
 
-/* =========================
+
+/* =========================================
    PARTICLES
-========================= */
+========================================= */
 
 .particle{
+
   position:absolute;
 
   width:3px;
@@ -699,40 +970,103 @@ body{
 
   background:#f0cf70;
 
-  box-shadow:0 0 8px #f0cf70;
+  box-shadow:
+    0 0 8px #f0cf70;
 
   pointer-events:none;
 
-  animation:particleMove 2s linear forwards;
+  animation:
+    particleMove
+    2s
+    linear
+    forwards;
 }
 
 @keyframes particleMove{
 
   from{
-    transform:translateY(0) scale(1);
+
+    transform:
+      translateY(0)
+      scale(1);
+
     opacity:1;
   }
 
   to{
-    transform:translateY(-160px) scale(0);
+
+    transform:
+      translateY(-170px)
+      scale(0);
+
     opacity:0;
   }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media(max-width:360px){
+
+  #game{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .cards{
+    gap:10px;
+  }
+
+  .card{
+    min-height:190px;
+  }
+
+  .creature{
+    width:150px;
+    height:150px;
+  }
+
+  .name{
+    font-size:15px;
+  }
+
+  .meaning{
+    font-size:9px;
+  }
+
 }
 
 </style>
 </head>
 
+
 <body>
 
-<!-- =========================
+
+<!-- =========================================
      OPENING
-========================= -->
+========================================= -->
 
-<section id="opening" class="screen">
+<section
+  id="opening"
+  class="screen"
+>
 
-  <button id="soundBtn" class="sound">🔊</button>
+  <button
+    id="soundBtn"
+    class="sound"
+  >
+    🔊
+  </button>
 
-  <button id="langBtn" class="lang">ไทย / EN</button>
+  <button
+    id="langBtn"
+    class="lang"
+  >
+    ไทย / EN
+  </button>
 
   <div class="openGlow"></div>
 
@@ -742,26 +1076,46 @@ body{
     alt="AURA69"
   >
 
-  <div id="openTitle" class="openTitle">
-    CHOOSE YOUR LUCK
+  <div
+    id="openTitle"
+    class="openTitle"
+  >
+    เลือกโชคของคุณ
   </div>
 
-  <button id="playBtn" class="playBtn">
-    PLAY
+  <button
+    id="playBtn"
+    class="playBtn"
+  >
+    เล่น
   </button>
 
 </section>
 
 
-<!-- =========================
+<!-- =========================================
      GAME
-========================= -->
+========================================= -->
 
-<section id="game" class="screen hidden">
+<section
+  id="game"
+  class="screen hidden"
+>
 
-  <button id="gameSoundBtn" class="sound">🔊</button>
+  <button
+    id="gameSoundBtn"
+    class="sound"
+  >
+    🔊
+  </button>
 
-  <button id="gameLangBtn" class="lang">ไทย / EN</button>
+  <button
+    id="gameLangBtn"
+    class="lang"
+  >
+    ไทย / EN
+  </button>
+
 
   <div class="header">
 
@@ -769,11 +1123,17 @@ body{
       AURA69
     </div>
 
-    <h1 id="title" class="title">
+    <h1
+      id="title"
+      class="title"
+    >
       เลือกโชคของคุณ
     </h1>
 
-    <div id="subtitle" class="subtitle">
+    <div
+      id="subtitle"
+      class="subtitle"
+    >
       เลือกหนึ่งสัญลักษณ์เพื่อเปิดโชค
     </div>
 
@@ -782,9 +1142,15 @@ body{
 
   <div class="cards">
 
-    <!-- DRAGON -->
 
-    <div class="card" data-choice="dragon">
+    <!-- =====================================
+         DRAGON
+    ====================================== -->
+
+    <div
+      class="card"
+      data-choice="dragon"
+    >
 
       <img
         class="creature"
@@ -792,7 +1158,7 @@ body{
         alt="Dragon"
       >
 
-      <div class="info">
+      <div class="cardInfo">
 
         <div class="name">
           🐉 มังกร
@@ -811,9 +1177,14 @@ body{
     </div>
 
 
-    <!-- QILIN -->
+    <!-- =====================================
+         QILIN
+    ====================================== -->
 
-    <div class="card" data-choice="qilin">
+    <div
+      class="card"
+      data-choice="qilin"
+    >
 
       <img
         class="creature"
@@ -821,7 +1192,7 @@ body{
         alt="Qilin"
       >
 
-      <div class="info">
+      <div class="cardInfo">
 
         <div class="name">
           🦌 กิเลน
@@ -832,7 +1203,7 @@ body{
         </div>
 
         <div class="meaning">
-          โชคดี ความเจริญรุ่งเรือง
+          โชคดี และความเจริญรุ่งเรือง
         </div>
 
       </div>
@@ -840,9 +1211,14 @@ body{
     </div>
 
 
-    <!-- TOAD -->
+    <!-- =====================================
+         GOLDEN TOAD
+    ====================================== -->
 
-    <div class="card" data-choice="toad">
+    <div
+      class="card"
+      data-choice="toad"
+    >
 
       <img
         class="creature"
@@ -850,7 +1226,7 @@ body{
         alt="Golden Toad"
       >
 
-      <div class="info">
+      <div class="cardInfo">
 
         <div class="name">
           🐸 คางคกทอง
@@ -861,36 +1237,49 @@ body{
         </div>
 
         <div class="meaning">
-          เงินทอง ความมั่งคั่ง
+          เงินทอง และความมั่งคั่ง
         </div>
 
       </div>
 
     </div>
 
+
   </div>
 
-  <div id="chooseText" class="choose">
-    CHOOSE ONE
+
+  <div
+    id="chooseText"
+    class="choose"
+  >
+    เลือกหนึ่ง
   </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =========================================
      REVEAL
-========================= -->
+========================================= -->
 
-<section id="reveal" class="screen hidden">
+<section
+  id="reveal"
+  class="screen hidden"
+>
 
   <div class="revealGlow"></div>
 
   <div class="ring"></div>
+
   <div class="ring two"></div>
+
 
   <div class="revealContent">
 
-    <div id="revealText" class="revealText">
+    <div
+      id="revealText"
+      class="revealText"
+    >
       กำลังเปิดโชคของคุณ...
     </div>
 
@@ -901,7 +1290,10 @@ body{
       alt=""
     >
 
-    <div id="revealMessage" class="revealMessage">
+    <div
+      id="revealMessage"
+      class="revealMessage"
+    >
       ✨ โชคกำลังเปิด ✨
     </div>
 
@@ -910,11 +1302,14 @@ body{
 </section>
 
 
-<!-- =========================
+<!-- =========================================
      RESULT
-========================= -->
+========================================= -->
 
-<section id="result" class="screen hidden">
+<section
+  id="result"
+  class="screen hidden"
+>
 
   <div class="resultBox">
 
@@ -925,16 +1320,28 @@ body{
       alt=""
     >
 
-    <div id="resultTitle" class="resultTitle">
+    <div
+      id="resultTitle"
+      class="resultTitle"
+    >
     </div>
 
-    <div id="resultSub" class="resultSub">
+    <div
+      id="resultSub"
+      class="resultSub"
+    >
     </div>
 
-    <div id="resultMeaning" class="resultMeaning">
+    <div
+      id="resultMeaning"
+      class="resultMeaning"
+    >
     </div>
 
-    <button id="againBtn" class="again">
+    <button
+      id="againBtn"
+      class="again"
+    >
       เล่นอีกครั้ง
     </button>
 
@@ -945,9 +1352,9 @@ body{
 
 <script>
 
-/* ==========================================
+/* =========================================
    TELEGRAM
-========================================== */
+========================================= */
 
 const tg = window.Telegram?.WebApp;
 
@@ -960,10 +1367,9 @@ if(tg){
 }
 
 
-/* ==========================================
-   AUDIO ENGINE
-   No external files needed
-========================================== */
+/* =========================================
+   AUDIO
+========================================= */
 
 let audioCtx = null;
 
@@ -977,12 +1383,16 @@ function initAudio(){
     if(!audioCtx){
 
       audioCtx =
-        new (window.AudioContext ||
-        window.webkitAudioContext)();
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
 
     }
 
-    if(audioCtx.state === "suspended"){
+    if(
+      audioCtx.state === "suspended"
+    ){
 
       audioCtx.resume();
 
@@ -990,7 +1400,9 @@ function initAudio(){
 
   }catch(e){
 
-    console.log("Audio unavailable");
+    console.log(
+      "Audio unavailable"
+    );
 
   }
 
@@ -1005,7 +1417,14 @@ function tone(
   delay=0
 ){
 
-  if(!soundEnabled || !audioCtx) return;
+  if(
+    !soundEnabled ||
+    !audioCtx
+  ){
+
+    return;
+
+  }
 
   try{
 
@@ -1015,10 +1434,12 @@ function tone(
     const gain =
       audioCtx.createGain();
 
+
     osc.type = type;
 
     osc.frequency.value =
       frequency;
+
 
     gain.gain.setValueAtTime(
       0,
@@ -1027,19 +1448,29 @@ function tone(
 
     gain.gain.linearRampToValueAtTime(
       volume,
-      audioCtx.currentTime + delay + .01
+      audioCtx.currentTime +
+      delay +
+      .01
     );
 
     gain.gain.exponentialRampToValueAtTime(
       .001,
-      audioCtx.currentTime + delay + duration
+      audioCtx.currentTime +
+      delay +
+      duration
     );
 
+
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
+
+    gain.connect(
+      audioCtx.destination
+    );
+
 
     osc.start(
-      audioCtx.currentTime + delay
+      audioCtx.currentTime +
+      delay
     );
 
     osc.stop(
@@ -1054,9 +1485,9 @@ function tone(
 }
 
 
-/* ==========================================
+/* =========================================
    SOUND EFFECTS
-========================================== */
+========================================= */
 
 function tapSound(){
 
@@ -1150,9 +1581,9 @@ function successSound(){
 }
 
 
-/* ==========================================
-   HAPTIC
-========================================== */
+/* =========================================
+   TELEGRAM HAPTIC
+========================================= */
 
 function haptic(type="light"){
 
@@ -1163,7 +1594,9 @@ function haptic(type="light"){
       tg.HapticFeedback
     ){
 
-      if(type === "success"){
+      if(
+        type === "success"
+      ){
 
         tg.HapticFeedback
           .notificationOccurred(
@@ -1186,9 +1619,9 @@ function haptic(type="light"){
 }
 
 
-/* ==========================================
+/* =========================================
    LANGUAGE
-========================================== */
+========================================= */
 
 let thai = true;
 
@@ -1196,60 +1629,99 @@ let thai = true;
 const translations = {
 
   th:{
-    title:"เลือกโชคของคุณ",
-    subtitle:"เลือกหนึ่งสัญลักษณ์เพื่อเปิดโชค",
-    choose:"เลือกหนึ่ง",
-    reveal:"กำลังเปิดโชคของคุณ...",
-    revealMessage:"✨ โชคกำลังเปิด ✨",
-    again:"เล่นอีกครั้ง",
+
+    openTitle:
+      "เลือกโชคของคุณ",
+
+    play:
+      "เล่น",
+
+    title:
+      "เลือกโชคของคุณ",
+
+    subtitle:
+      "เลือกหนึ่งสัญลักษณ์เพื่อเปิดโชค",
+
+    choose:
+      "เลือกหนึ่ง",
+
+    reveal:
+      "กำลังเปิดโชคของคุณ...",
+
+    revealMessage:
+      "✨ โชคกำลังเปิด ✨",
+
+    again:
+      "เล่นอีกครั้ง",
+
 
     dragon:{
-      title:"มังกร",
+      title:"🐉 มังกร",
       en:"DRAGON",
       meaning:"พลัง อำนาจ และความมั่งคั่ง",
       result:"โชคแห่งพลัง"
     },
 
     qilin:{
-      title:"กิเลน",
+      title:"🦌 กิเลน",
       en:"QILIN",
-      meaning:"โชคดี ความเจริญรุ่งเรือง",
+      meaning:"โชคดี และความเจริญรุ่งเรือง",
       result:"โชคแห่งความรุ่งเรือง"
     },
 
     toad:{
-      title:"คางคกทอง",
+      title:"🐸 คางคกทอง",
       en:"GOLDEN TOAD",
-      meaning:"เงินทอง ความมั่งคั่ง",
+      meaning:"เงินทอง และความมั่งคั่ง",
       result:"โชคแห่งความมั่งคั่ง"
     }
 
   },
 
+
   en:{
-    title:"Choose Your Luck",
-    subtitle:"Choose one symbol to reveal your luck",
-    choose:"CHOOSE ONE",
-    reveal:"REVEALING YOUR LUCK...",
-    revealMessage:"✨ YOUR LUCK IS OPENING ✨",
-    again:"PLAY AGAIN",
+
+    openTitle:
+      "Choose Your Luck",
+
+    play:
+      "PLAY",
+
+    title:
+      "Choose Your Luck",
+
+    subtitle:
+      "Choose one symbol to reveal your luck",
+
+    choose:
+      "CHOOSE ONE",
+
+    reveal:
+      "REVEALING YOUR LUCK...",
+
+    revealMessage:
+      "✨ YOUR LUCK IS OPENING ✨",
+
+    again:
+      "PLAY AGAIN",
+
 
     dragon:{
-      title:"Dragon",
+      title:"🐉 Dragon",
       en:"DRAGON",
       meaning:"Power, fortune & wealth",
       result:"Luck of Power"
     },
 
     qilin:{
-      title:"Qilin",
+      title:"🦌 Qilin",
       en:"QILIN",
       meaning:"Prosperity, fortune & harmony",
       result:"Luck of Prosperity"
     },
 
     toad:{
-      title:"Golden Toad",
+      title:"🐸 Golden Toad",
       en:"GOLDEN TOAD",
       meaning:"Wealth, money & abundance",
       result:"Luck of Wealth"
@@ -1260,6 +1732,10 @@ const translations = {
 };
 
 
+/* =========================================
+   UPDATE LANGUAGE
+========================================= */
+
 function updateLanguage(){
 
   const t =
@@ -1267,70 +1743,111 @@ function updateLanguage(){
       ? translations.th
       : translations.en;
 
-  document.getElementById("title")
-    .textContent = t.title;
 
-  document.getElementById("subtitle")
-    .textContent = t.subtitle;
-
-  document.getElementById("chooseText")
-    .textContent = t.choose;
-
-  document.getElementById("revealText")
-    .textContent = t.reveal;
-
-  document.getElementById("revealMessage")
-    .textContent = t.revealMessage;
-
-  document.getElementById("againBtn")
-    .textContent = t.again;
+  document
+    .getElementById("openTitle")
+    .textContent =
+      t.openTitle;
 
 
-  const cards =
-    document.querySelectorAll(".card");
+  document
+    .getElementById("playBtn")
+    .textContent =
+      t.play;
 
-  cards.forEach(card=>{
 
-    const choice =
-      card.dataset.choice;
+  document
+    .getElementById("title")
+    .textContent =
+      t.title;
 
-    const data =
-      t[choice];
 
-    card.querySelector(".name")
-      .textContent =
-      choice === "dragon"
-        ? (thai ? "🐉 มังกร" : "🐉 Dragon")
-        : choice === "qilin"
-        ? (thai ? "🦌 กิเลน" : "🦌 Qilin")
-        : (thai ? "🐸 คางคกทอง" : "🐸 Golden Toad");
+  document
+    .getElementById("subtitle")
+    .textContent =
+      t.subtitle;
 
-    card.querySelector(".en")
-      .textContent = data.en;
 
-    card.querySelector(".meaning")
-      .textContent = data.meaning;
+  document
+    .getElementById("chooseText")
+    .textContent =
+      t.choose;
 
-  });
+
+  document
+    .getElementById("revealText")
+    .textContent =
+      t.reveal;
+
+
+  document
+    .getElementById("revealMessage")
+    .textContent =
+      t.revealMessage;
+
+
+  document
+    .getElementById("againBtn")
+    .textContent =
+      t.again;
+
+
+  document
+    .querySelectorAll(".card")
+    .forEach(card=>{
+
+      const choice =
+        card.dataset.choice;
+
+      const data =
+        t[choice];
+
+
+      card
+        .querySelector(".name")
+        .textContent =
+          data.title;
+
+
+      card
+        .querySelector(".en")
+        .textContent =
+          data.en;
+
+
+      card
+        .querySelector(".meaning")
+        .textContent =
+          data.meaning;
+
+    });
 
 }
 
 
-/* ==========================================
-   SCREENS
-========================================== */
+/* =========================================
+   SCREEN CONTROL
+========================================= */
 
 const opening =
-  document.getElementById("opening");
+  document.getElementById(
+    "opening"
+  );
 
 const game =
-  document.getElementById("game");
+  document.getElementById(
+    "game"
+  );
 
 const reveal =
-  document.getElementById("reveal");
+  document.getElementById(
+    "reveal"
+  );
 
 const result =
-  document.getElementById("result");
+  document.getElementById(
+    "result"
+  );
 
 
 function showScreen(screen){
@@ -1340,41 +1857,70 @@ function showScreen(screen){
     game,
     reveal,
     result
-  ].forEach(x =>
-    x.classList.add("hidden")
+  ].forEach(
+    x =>
+      x.classList.add(
+        "hidden"
+      )
   );
 
-  screen.classList.remove("hidden");
+  screen.classList.remove(
+    "hidden"
+  );
 
 }
 
 
-/* ==========================================
+/* =========================================
    PARTICLES
-========================================== */
+========================================= */
 
 function particles(){
 
-  for(let i=0;i<28;i++){
+  for(
+    let i=0;
+    i<32;
+    i++
+  ){
 
     const p =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    p.className="particle";
+
+    p.className =
+      "particle";
+
 
     p.style.left =
-      Math.random()*100+"%";
+      Math.random()*100 +
+      "%";
+
 
     p.style.top =
-      (45 + Math.random()*45)+"%";
+      (
+        45 +
+        Math.random()*45
+      ) +
+      "%";
+
 
     p.style.animationDelay =
-      Math.random()*.8+"s";
+      Math.random()*.8 +
+      "s";
+
 
     p.style.animationDuration =
-      (1.4+Math.random()*1.3)+"s";
+      (
+        1.4 +
+        Math.random()*1.3
+      ) +
+      "s";
+
 
     reveal.appendChild(p);
+
 
     setTimeout(
       ()=>p.remove(),
@@ -1386,34 +1932,39 @@ function particles(){
 }
 
 
-/* ==========================================
+/* =========================================
    PLAY
-========================================== */
+========================================= */
 
 document
   .getElementById("playBtn")
-  .addEventListener("click",()=>{
+  .addEventListener(
+    "click",
+    ()=>{
 
-    initAudio();
+      initAudio();
 
-    tapSound();
+      tapSound();
 
-    haptic("light");
+      haptic("light");
 
-    showScreen(game);
+      showScreen(game);
 
-  });
+    }
+  );
 
 
-/* ==========================================
-   LANGUAGE BUTTONS
-========================================== */
+/* =========================================
+   LANGUAGE
+========================================= */
 
 function toggleLanguage(){
 
   thai = !thai;
 
   updateLanguage();
+
+  initAudio();
 
   tapSound();
 
@@ -1427,6 +1978,7 @@ document
     toggleLanguage
   );
 
+
 document
   .getElementById("gameLangBtn")
   .addEventListener(
@@ -1435,27 +1987,37 @@ document
   );
 
 
-/* ==========================================
+/* =========================================
    SOUND BUTTON
-========================================== */
+========================================= */
 
 function toggleSound(){
 
   soundEnabled =
     !soundEnabled;
 
+
   const icon =
     soundEnabled
       ? "🔊"
       : "🔇";
 
-  document
-    .getElementById("soundBtn")
-    .textContent = icon;
 
   document
-    .getElementById("gameSoundBtn")
-    .textContent = icon;
+    .getElementById(
+      "soundBtn"
+    )
+    .textContent =
+      icon;
+
+
+  document
+    .getElementById(
+      "gameSoundBtn"
+    )
+    .textContent =
+      icon;
+
 
   if(soundEnabled){
 
@@ -1474,23 +2036,28 @@ function toggleSound(){
 
 
 document
-  .getElementById("soundBtn")
+  .getElementById(
+    "soundBtn"
+  )
   .addEventListener(
     "click",
     toggleSound
   );
+
 
 document
-  .getElementById("gameSoundBtn")
+  .getElementById(
+    "gameSoundBtn"
+  )
   .addEventListener(
     "click",
     toggleSound
   );
 
 
-/* ==========================================
+/* =========================================
    GAME DATA
-========================================== */
+========================================= */
 
 const gameData = {
 
@@ -1509,9 +2076,9 @@ const gameData = {
 };
 
 
-/* ==========================================
-   CHOOSE
-========================================== */
+/* =========================================
+   CHARACTER SELECTION
+========================================= */
 
 document
   .querySelectorAll(".card")
@@ -1523,42 +2090,65 @@ document
 
         initAudio();
 
+
         const choice =
           card.dataset.choice;
+
 
         tapSound();
 
         haptic("medium");
 
+
         const data =
           gameData[choice];
 
-        document
-          .getElementById("revealImg")
-          .src = data.image;
 
         document
-          .getElementById("revealImg")
-          .alt = choice;
+          .getElementById(
+            "revealImg"
+          )
+          .src =
+            data.image;
+
+
+        document
+          .getElementById(
+            "revealImg"
+          )
+          .alt =
+            choice;
 
 
         showScreen(reveal);
 
+
         particles();
+
 
         revealSound();
 
+
         setTimeout(
           ()=>{
+
             successSound();
-            haptic("success");
+
+            haptic(
+              "success"
+            );
+
           },
           1300
         );
 
 
         setTimeout(
-          ()=>showResult(choice),
+          ()=>{
+            showResult(
+              choice
+            );
+          },
           2700
         );
 
@@ -1568,9 +2158,9 @@ document
   });
 
 
-/* ==========================================
+/* =========================================
    RESULT
-========================================== */
+========================================= */
 
 function showResult(choice){
 
@@ -1579,28 +2169,43 @@ function showResult(choice){
       ? translations.th
       : translations.en;
 
+
   const data =
     t[choice];
 
+
   document
-    .getElementById("resultImg")
+    .getElementById(
+      "resultImg"
+    )
     .src =
-    gameData[choice].image;
+      gameData[
+        choice
+      ].image;
+
 
   document
-    .getElementById("resultTitle")
+    .getElementById(
+      "resultTitle"
+    )
     .textContent =
-    data.result;
+      data.result;
+
 
   document
-    .getElementById("resultSub")
+    .getElementById(
+      "resultSub"
+    )
     .textContent =
-    data.en;
+      data.en;
+
 
   document
-    .getElementById("resultMeaning")
+    .getElementById(
+      "resultMeaning"
+    )
     .textContent =
-    data.meaning;
+      data.meaning;
 
 
   showScreen(result);
@@ -1608,12 +2213,14 @@ function showResult(choice){
 }
 
 
-/* ==========================================
+/* =========================================
    PLAY AGAIN
-========================================== */
+========================================= */
 
 document
-  .getElementById("againBtn")
+  .getElementById(
+    "againBtn"
+  )
   .addEventListener(
     "click",
     ()=>{
@@ -1630,9 +2237,9 @@ document
   );
 
 
-/* ==========================================
-   INITIAL LANGUAGE
-========================================== */
+/* =========================================
+   START
+========================================= */
 
 updateLanguage();
 
